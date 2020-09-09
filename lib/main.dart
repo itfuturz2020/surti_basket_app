@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/SplashScreen.dart';
 
 void main() => runApp(MyApp());

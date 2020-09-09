@@ -3,20 +3,20 @@ import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
-class CategoryComponent extends StatefulWidget {
+class SubCategoryComponent extends StatefulWidget {
   var category;
-  CategoryComponent(this.category);
+  SubCategoryComponent(this.category);
   @override
-  _CategoryComponentState createState() => _CategoryComponentState();
+  _SubCategoryComponentState createState() => _SubCategoryComponentState();
 }
 
-class _CategoryComponentState extends State<CategoryComponent> {
+class _SubCategoryComponentState extends State<SubCategoryComponent> {
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.push(context, SlideLeftRoute(page: SubCategoryScreen()));
+        //Navigator.push(context, SlideRightRoute(page: SubCategoryScreen()));
       },
       child: Container(
         decoration: BoxDecoration(

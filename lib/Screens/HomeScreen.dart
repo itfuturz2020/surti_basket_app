@@ -4,6 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
+import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -44,9 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
     },
     {
       "id": 4,
-      "CatName": "Pet Care",
-      "CateImage":
-          "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=50,w=145,h=140/app/images/category/cms_images/icon/icon_cat_5_v_3_500_1598001588.jpg"
+      "CatName": "Personal Care",
+      "CateImage": "https://www.shopickr.com/wp-content/uploads/2019/07/icon_cat_163_v_3_500_1553422430.jpg"
     },
     {
       "id": 5,
@@ -62,6 +65,37 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  List _Product = [
+    {
+      "id": 0,
+      "ProductName": "Onion",
+      "Price": "100",
+      "Image":
+      "https://www.shopnow.org.in/wp-content/uploads/2020/07/Ashirvaad-aata-tata-salt-dhara-oil-1-300x300.jpg"
+    },
+    {
+      "id": 1,
+      "ProductName": "Tomato",
+      "Price": "120",
+      "Image":
+      "https://media.istockphoto.com/photos/tomato-with-slice-isolated-with-clipping-path-picture-id941825878?k=6&m=941825878&s=612x612&w=0&h=GAQ-ypOITkWGGBYUwNDDh4_xjcjOM6Gf79FJMA-Kcfw="
+    },
+    {
+      "id": 2,
+      "ProductName": "Tide Washing Power",
+      "Price": "550",
+      "Image":
+      "https://5.imimg.com/data5/RQ/QL/TC/SELLER-32690784/green-bath-soaps-500x500.jpg"
+    },
+    {
+      "id": 3,
+      "ProductName": "Ashirvad Aata",
+      "Price": "170",
+      "Image":
+      "https://images-na.ssl-images-amazon.com/images/I/71-u8LysFmL._SL1000_.jpg"
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,24 +107,29 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(icon: Icon(Icons.account_box), onPressed: () {})
           ],
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Your Location",
-                      style: TextStyle(fontSize: 15, color: Colors.white)),
-                  Text("Sarjan Society",
-                      style: TextStyle(fontSize: 22, color: Colors.white)),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6.0, left: 6.0),
-                child: Icon(Icons.edit, size: 18),
-              )
-            ],
+          title: InkWell(
+            onTap: (){
+              Navigator.push(context, SlideLeftRoute(page: AddressScreen()));
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Your Location",
+                        style: TextStyle(fontSize: 15, color: Colors.white)),
+                    Text("Sarjan Society",
+                        style: TextStyle(fontSize: 22, color: Colors.white)),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6.0, left: 6.0),
+                  child: Icon(Icons.edit, size: 18),
+                )
+              ],
+            ),
           ),
         ),
         drawer: Drawer(),
@@ -131,11 +170,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Text(
-                          "Category",
-                          style: TextStyle(fontSize: 18, color: Colors.black87),
-                        ),
+                        padding: const EdgeInsets.all(4.0),
+                        child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration:
+                            BoxDecoration(border: Border.all(width: 0.5,color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Category",
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black87),
+                                  ),
+                                ),
+                                Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
+                              ],
+                            )),
                       ),
                       GridView.builder(
                         shrinkWrap: true,
@@ -160,18 +214,62 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration:
+                          BoxDecoration(border: Border.all(width: 0.5,color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Suggested Products..",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black87),
+                                ),
+                              ),
+                              Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
+                            ],
+                          )),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                child: ListView.builder(
+                   physics: NeverScrollableScrollPhysics(),
+                   itemCount: _Product.length,
+                   shrinkWrap: true,
+                    itemBuilder: (context , index){
+                  return ProductComponent(_Product[index]);
+                }),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
                         width: MediaQuery.of(context).size.width,
                           decoration:
                               BoxDecoration(border: Border.all(width: 0.5,color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Offers",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black87),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Offers",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black87),
+                                ),
                               ),
-                            ),
+                              Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
+                            ],
                           )),
                     ),
                   ),
@@ -190,8 +288,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 itemCount: _offerbannerlist.length,
               )
+
             ],
           ),
-        ));
+        ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: appPrimaryMaterialColor,
+      unselectedItemColor: Colors.grey,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
+      currentIndex: 0, // this will be set when a new tab is tapped
+      items: [
+        BottomNavigationBarItem(
+          icon: new Icon(Icons.home,size: 20),
+          title: new Text('Home',style: TextStyle(fontSize: 16),),
+        ),
+        BottomNavigationBarItem(
+          icon: new Icon(Icons.search),
+          title: new Text('Search',style: TextStyle(fontSize: 16)),
+        ),
+        BottomNavigationBarItem(
+          icon: new Icon(Icons.shopping_basket),
+          title: new Text('My Basket',style: TextStyle(fontSize: 16)),
+        ),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text('Profile',style: TextStyle(fontSize: 16))
+        )
+      ],
+    ),
+    );
   }
 }
