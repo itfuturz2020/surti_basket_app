@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          fontFamily: 'MarkaziText',
+          cursorColor: Colors.black54,
           primaryColor: appPrimaryMaterialColor,
           accentColor: appPrimaryMaterialColor),
     );

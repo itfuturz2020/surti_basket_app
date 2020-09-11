@@ -37,11 +37,15 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
                 height: 70,
               ),
             ),
-            Text(
-              "${widget.category["CatName"]}",
-              maxLines: 1,
-              softWrap: true,
-              textAlign: TextAlign.center,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "${widget.category["CatName"]}",
+                maxLines: 1,
+                softWrap: true,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12),
+              ),
             ),
           ],
         ),

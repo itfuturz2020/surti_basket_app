@@ -6,7 +6,9 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/Screens/ProfileScreen.dart';
 import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -105,29 +107,27 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
           actions: [
-            IconButton(icon: Icon(Icons.account_box), onPressed: () {})
+            IconButton(icon: Icon(Icons.account_box), onPressed: () {
+              Navigator.push(context, SlideLeftRoute(page: ProfileScreen()));
+            })
           ],
           title: InkWell(
             onTap: (){
               Navigator.push(context, SlideLeftRoute(page: AddressScreen()));
             },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Text("Your Location",
+                    style: TextStyle(fontSize: 13, color: Colors.white)),
+                Row(
                   children: [
-                    Text("Your Location",
-                        style: TextStyle(fontSize: 15, color: Colors.white)),
-                    Text("Sarjan Society",
-                        style: TextStyle(fontSize: 22, color: Colors.white)),
+                    Text("Surat",
+                        style: TextStyle(fontSize: 17, color: Colors.white)),
+                    Icon(Icons.location_on,size: 15)
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6.0, left: 6.0),
-                  child: Icon(Icons.edit, size: 18),
-                )
               ],
             ),
           ),
@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(
                                     "Category",
                                     style: TextStyle(
-                                        fontSize: 20, color: Colors.black87),
+                                        fontSize: 15, color: Colors.black87),
                                   ),
                                 ),
                                 Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   "Suggested Products..",
                                   style: TextStyle(
-                                      fontSize: 20, color: Colors.black87),
+                                      fontSize: 15, color: Colors.black87),
                                 ),
                               ),
                               Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
@@ -265,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   "Offers",
                                   style: TextStyle(
-                                      fontSize: 20, color: Colors.black87),
+                                      fontSize: 15, color: Colors.black87),
                                 ),
                               ),
                               Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
@@ -300,20 +300,20 @@ class _HomeScreenState extends State<HomeScreen> {
       currentIndex: 0, // this will be set when a new tab is tapped
       items: [
         BottomNavigationBarItem(
-          icon: new Icon(Icons.home,size: 20),
-          title: new Text('Home',style: TextStyle(fontSize: 16),),
+          icon: new Icon(Icons.home),
+          title: new Text('Home'),
         ),
         BottomNavigationBarItem(
           icon: new Icon(Icons.search),
-          title: new Text('Search',style: TextStyle(fontSize: 16)),
+          title: new Text('Search'),
         ),
         BottomNavigationBarItem(
           icon: new Icon(Icons.shopping_basket),
-          title: new Text('My Basket',style: TextStyle(fontSize: 16)),
+          title: new Text('My Basket'),
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text('Profile',style: TextStyle(fontSize: 16))
+            title: Text('Profile')
         )
       ],
     ),

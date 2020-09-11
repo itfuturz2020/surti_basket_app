@@ -36,24 +36,22 @@ class _ProductComponentState extends State<ProductComponent> {
                         children: [
                           Text(
                             "Fresh Onion",
-                            style: TextStyle(fontSize: 22),
+                            style: TextStyle(fontSize: 18),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text("1 KG", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                          Text("1 KG", style: TextStyle(fontSize: 15, color: Colors.grey)),
                           RichText(
                             text: TextSpan(
                                 text: 'MRP: ',
                                 style: TextStyle(
                                     color: Colors.grey,
-                                    fontFamily: 'MarkaziText',
-                                    fontSize: 20),
+                                    fontSize: 14),
                                 children: <TextSpan>[
                                   TextSpan(
                                     text: "${Inr_Rupee} 100",
                                     style: TextStyle(
                                         color: Colors.grey,
-                                        fontFamily: 'MarkaziText',
-                                        fontSize: 20,
+                                        fontSize: 14,
                                         decoration: TextDecoration.lineThrough),
                                   )
                                 ]),
@@ -62,7 +60,7 @@ class _ProductComponentState extends State<ProductComponent> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(" $Inr_Rupee 90",
-                                  style: TextStyle(fontSize: 24, color: Colors.black)),
+                                  style: TextStyle(fontSize: 18, color: Colors.black)),
                               Padding(
                                 padding: const EdgeInsets.only(right:8.0),
                                 child: SizedBox(
@@ -71,7 +69,7 @@ class _ProductComponentState extends State<ProductComponent> {
                                   child: FlatButton(
                                     color: Colors.redAccent,
                                     child: Text('Add',
-                                        style: TextStyle(color: Colors.white, fontSize: 18)),
+                                        style: TextStyle(color: Colors.white, fontSize: 15)),
                                     //`Text` to display
                                     onPressed: () {
                                     },

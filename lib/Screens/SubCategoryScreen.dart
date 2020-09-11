@@ -66,7 +66,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
-        title: Text("SubCategory",style: TextStyle(color: Colors.white)),
+        title: Text("SubCategory",style: TextStyle(color: Colors.white,fontSize: 18)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -116,7 +116,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                               child: Text(
                                 "Shop by SubCategory",
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.black87),
+                                    fontSize: 15, color: Colors.black87),
                               ),
                             ),
                             Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
