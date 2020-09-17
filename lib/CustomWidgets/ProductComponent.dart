@@ -3,7 +3,7 @@ import 'package:surti_basket_app/Common/Constant.dart';
 
 class ProductComponent extends StatefulWidget {
   var product;
-  ProductComponent(this.product);
+  ProductComponent({this.product});
   @override
   _ProductComponentState createState() => _ProductComponentState();
 }

@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                    itemCount: _Product.length,
                    shrinkWrap: true,
                     itemBuilder: (context , index){
-                  return ProductComponent(_Product[index]);
+                  return ProductComponent(product: _Product[index]);
                 }),
               ),
               Padding(
