@@ -15,11 +15,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+       statusBarIconBrightness: Brightness.light
+    ));
     return MaterialApp(
       title: 'Surti Basket',
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+          fontFamily: 'Lato',
           cursorColor: Colors.black54,
           primaryColor: appPrimaryMaterialColor,
           accentColor: appPrimaryMaterialColor),

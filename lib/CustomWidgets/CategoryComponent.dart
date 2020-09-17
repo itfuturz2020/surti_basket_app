@@ -44,7 +44,7 @@ class _CategoryComponentState extends State<CategoryComponent> {
                 maxLines: 1,
                 softWrap: true,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 11),
               ),
             ),
           ],

@@ -52,12 +52,38 @@ class _ProductListingState extends State<ProductListing> {
       ),
       body: Column(
         children: [
+          Container(
+            color: Colors.white,
+            height: 30,
+            child: Center(child: Text('ATTA,FLOOR & SOOJI',style: TextStyle(fontSize: 15),)),
+          ),
           Padding(
-            padding: const EdgeInsets.only(bottom:8.0),
-            child: Container(
-              color: Colors.white,
-              height: 30,
-              child: Center(child: Text('ATTA,FLOOR & SOOJI',style: TextStyle(fontSize: 15),)),
+            padding: const EdgeInsets.only(left:8.0,right: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('105 Items',style: TextStyle(fontSize: 15,color: Colors.black54)),
+                FlatButton(
+                  color: Colors.white,
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.black,
+                  splashColor: Colors.grey[200],
+                  onPressed: () {
+                  },
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right:6.0),
+                        child: Image.asset('assets/filter.png',color: Colors.black54,width: 20),
+                      ),
+                      Text(
+                        "Filter",
+                        style: TextStyle(fontSize: 14.0,color: Colors.black54),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
           ListView.builder(
