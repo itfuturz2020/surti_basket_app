@@ -4,11 +4,16 @@ import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class ProfileScreen extends StatefulWidget {
+  var ScreenName;
+  ProfileScreen(this.ScreenName);
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,5 +152,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Center(child: Text("Version 1.0.0")),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    print('${widget.ScreenName}');
   }
 }

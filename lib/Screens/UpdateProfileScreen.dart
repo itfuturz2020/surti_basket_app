@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
 import 'package:surti_basket_app/transitions/ShowUp.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+
 
 class UpdateProfileScreen extends StatefulWidget {
   @override
