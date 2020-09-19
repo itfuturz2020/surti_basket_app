@@ -50,7 +50,7 @@ class _ProductListingState extends State<ProductListing> {
         title: Text("Surti Basket",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
-      body: Column(
+      body: ListView(
         children: [
           Container(
             color: Colors.white,

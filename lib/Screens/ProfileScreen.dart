@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left:8.0),
-                    child: Image.asset('assets/shoppingbag.png',width: 25,color: Colors.black54),
+                    child: Image.asset('assets/shoppingcart.png',width: 25,color: Colors.black54),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left:12.0),

@@ -7,6 +7,7 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/ProfileScreen.dart';
 import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
@@ -324,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset('assets/home.png',width: 22,color: Colors.grey),
+                        Image.asset('assets/home.png',width: 20,color: Colors.grey),
                         Text("Home",
                             style: TextStyle(fontSize: 11))
                       ],
@@ -341,14 +342,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset('assets/grid.png',width: 22,color: Colors.grey[400]),
+                        Image.asset('assets/category.png',width: 20,color: Colors.grey),
                         Text("Category",
                             style: TextStyle(fontSize: 11))
                       ],
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, "/MyGuestList");
+                   // Navigator.pushNamed(context, "/MyGuestList");
                   },
                 ),
               ),
@@ -360,16 +361,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Icon(Icons.new_releases, size: 22),
-                        Text("Promote",
+                        Image.asset('assets/loupe.png', width: 20,color: Colors.grey),
+                        Text("Search",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 11))
+                            style: TextStyle(fontSize: 11,color: Colors.black))
                       ],
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/AdvertisementCreate');
+                   // Navigator.pushNamed(context, '/AdvertisementCreate');
                   },
                 ),
               ),
@@ -381,39 +381,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Icon(Icons.shopping_cart, size: 22),
+                        Image.asset('assets/shoppingcart.png', width: 22,color: Colors.grey),
                         Text("Mall",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 11))
+                            style: TextStyle(fontSize: 11))
                       ],
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, '/Mall');
+                    Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
                   },
                 ),
               ),
-              Flexible(
-                child: InkWell(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.person, size: 22,color: Colors.grey),
-                        Text("Profile",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 11))
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, '/MyProfile');
-                  },
-                ),
-              )
             ],
           ),
         ),

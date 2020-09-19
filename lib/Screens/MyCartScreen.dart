@@ -18,6 +18,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
         child: Row(
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("RS 450"),
                 Text("Saved 5 %"),
