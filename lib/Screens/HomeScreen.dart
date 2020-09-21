@@ -382,7 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Image.asset('assets/shoppingcart.png', width: 22,color: Colors.grey),
-                        Text("Mall",
+                        Text("My Cart",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 11))
                       ],
