@@ -44,9 +44,6 @@ class _ProductListingState extends State<ProductListing> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
         title: Text("Surti Basket",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),

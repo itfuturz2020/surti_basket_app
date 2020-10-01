@@ -63,9 +63,6 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       backgroundColor: Colors.grey[400],
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
         title: Text("SubCategory",style: TextStyle(color: Colors.white,fontSize: 18)),
       ),
       body: SingleChildScrollView(

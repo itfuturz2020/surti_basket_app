@@ -15,9 +15,6 @@ class _AddressScreenState extends State<AddressScreen> {
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
         title: Text("My Address",
             style: TextStyle(fontSize: 18, color: Colors.white)),
       ),

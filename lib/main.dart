@@ -26,6 +26,13 @@ class _MyAppState extends State<MyApp> {
           fontFamily: 'Lato',
           cursorColor: Colors.black54,
           primaryColor: appPrimaryMaterialColor,
+          appBarTheme: AppBarTheme(
+            centerTitle: true,
+            textTheme: TextTheme(
+              title: TextStyle(color: Colors.white,fontSize: 16)
+            ),
+            iconTheme: IconThemeData(color: Colors.white)
+          ),
           accentColor: appPrimaryMaterialColor),
     );
   }

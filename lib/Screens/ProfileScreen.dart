@@ -19,9 +19,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
         title: Text("My Profile",style: TextStyle(color: Colors.white,fontSize: 18)),
       ),
       body: SingleChildScrollView(

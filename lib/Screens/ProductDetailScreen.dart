@@ -33,9 +33,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
         title: Text("Product Detail",
             style: TextStyle(fontSize: 17, color: Colors.white)),
         actions: [

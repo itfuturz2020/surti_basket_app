@@ -9,6 +9,7 @@ import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/ProfileScreen.dart';
+import 'package:surti_basket_app/Screens/SearchProductPage.dart';
 import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
@@ -121,9 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
           backgroundColor: Colors.grey[400],
           appBar: AppBar(
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
             actions: [
               IconButton(icon: Icon(Icons.account_box), onPressed: () {
                 Navigator.push(context, SlideLeftRoute(page: ProfileScreen("Hello World")));
@@ -369,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   onTap: () {
-                   // Navigator.pushNamed(context, '/AdvertisementCreate');
+                    Navigator.push(context, FadeRoute(page: SearchProductPage()));
                   },
                 ),
               ),

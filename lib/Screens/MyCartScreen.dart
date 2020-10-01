@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/CustomWidgets/MyCartComponent.dart';
+import 'package:surti_basket_app/Screens/CheckOutPage.dart';
+import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class MyCartScreen extends StatefulWidget {
   @override
@@ -15,9 +18,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
         title: Text("My Cart",style: TextStyle(color: Colors.white,fontSize: 18)),
       ),
       body: ListView.builder(
@@ -56,7 +56,9 @@ class _MyCartScreenState extends State<MyCartScreen> {
                 color: Colors.red[400],
                 textColor: Colors.white,
                 splashColor: Colors.white24,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, SlideLeftRoute(page: CheckoutPage()));
+                },
                 child: Row(
                   children: [
                     Text(
