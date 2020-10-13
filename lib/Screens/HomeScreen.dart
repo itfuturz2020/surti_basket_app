@@ -2,6 +2,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
@@ -20,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   DateTime currentBackPressTime;
   List _offerbannerlist = [
     "https://www.bigbasket.com/media/uploads/banner_images/2009005_cooking-essential_460_25th.jpg",
@@ -56,7 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
     {
       "id": 4,
       "CatName": "Personal Care",
-      "CateImage": "https://www.shopickr.com/wp-content/uploads/2019/07/icon_cat_163_v_3_500_1553422430.jpg"
+      "CateImage":
+          "https://www.shopickr.com/wp-content/uploads/2019/07/icon_cat_163_v_3_500_1553422430.jpg"
     },
     {
       "id": 5,
@@ -78,28 +79,28 @@ class _HomeScreenState extends State<HomeScreen> {
       "ProductName": "Onion",
       "Price": "100",
       "Image":
-      "https://www.shopnow.org.in/wp-content/uploads/2020/07/Ashirvaad-aata-tata-salt-dhara-oil-1-300x300.jpg"
+          "https://www.shopnow.org.in/wp-content/uploads/2020/07/Ashirvaad-aata-tata-salt-dhara-oil-1-300x300.jpg"
     },
     {
       "id": 1,
       "ProductName": "Tomato",
       "Price": "120",
       "Image":
-      "https://media.istockphoto.com/photos/tomato-with-slice-isolated-with-clipping-path-picture-id941825878?k=6&m=941825878&s=612x612&w=0&h=GAQ-ypOITkWGGBYUwNDDh4_xjcjOM6Gf79FJMA-Kcfw="
+          "https://media.istockphoto.com/photos/tomato-with-slice-isolated-with-clipping-path-picture-id941825878?k=6&m=941825878&s=612x612&w=0&h=GAQ-ypOITkWGGBYUwNDDh4_xjcjOM6Gf79FJMA-Kcfw="
     },
     {
       "id": 2,
       "ProductName": "Tide Washing Power",
       "Price": "550",
       "Image":
-      "https://5.imimg.com/data5/RQ/QL/TC/SELLER-32690784/green-bath-soaps-500x500.jpg"
+          "https://5.imimg.com/data5/RQ/QL/TC/SELLER-32690784/green-bath-soaps-500x500.jpg"
     },
     {
       "id": 3,
       "ProductName": "Ashirvad Aata",
       "Price": "170",
       "Image":
-      "https://images-na.ssl-images-amazon.com/images/I/71-u8LysFmL._SL1000_.jpg"
+          "https://images-na.ssl-images-amazon.com/images/I/71-u8LysFmL._SL1000_.jpg"
     },
   ];
 
@@ -114,200 +115,231 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.value(true);
   }
 
+  _showDialog() async {
+    await Future.delayed(Duration(milliseconds: 50));
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PinCodePopup();
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _showDialog();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-          backgroundColor: Colors.grey[400],
-          appBar: AppBar(
-            actions: [
-              IconButton(icon: Icon(Icons.account_box), onPressed: () {
-                Navigator.push(context, SlideLeftRoute(page: ProfileScreen("Hello World")));
-              })
-            ],
-            title: InkWell(
-              onTap: (){
-                Navigator.push(context, SlideLeftRoute(page: AddressScreen()));
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Your Location",
-                      style: TextStyle(fontSize: 13, color: Colors.white)),
-                  Row(
-                    children: [
-                      Text("Surat",
-                          style: TextStyle(fontSize: 17, color: Colors.white)),
-                      Icon(Icons.location_on,size: 15)
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          drawer: Drawer(),
-          body: SingleChildScrollView(
+        backgroundColor: Colors.grey[400],
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                icon: Icon(Icons.account_box),
+                onPressed: () {
+                  Navigator.push(context,
+                      SlideLeftRoute(page: ProfileScreen("Hello World")));
+                })
+          ],
+          title: InkWell(
+            onTap: () {
+              Navigator.push(context, SlideLeftRoute(page: AddressScreen()));
+            },
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: SizedBox(
-                    height: 170.0,
-                    width: MediaQuery.of(context).size.width,
-                    child: Carousel(
-                      boxFit: BoxFit.cover,
-                      autoplay: true,
-                      animationCurve: Curves.fastOutSlowIn,
-                      animationDuration: Duration(milliseconds: 1000),
-                      dotSize: 4.0,
-                      dotIncreasedColor: Colors.black54,
-                      dotBgColor: Colors.transparent,
-                      dotPosition: DotPosition.bottomCenter,
-                      dotVerticalPadding: 10.0,
-                      showIndicator: true,
-                      indicatorBgPadding: 7.0,
-                      images: [
-                        NetworkImage(
-                            'https://www.jiomart.com/images/cms/aw_rbslider/slides/1596181546_Kitchen_superstar_web.jpg'),
-                        NetworkImage(
-                            'https://www.jiomart.com/images/cms/aw_rbslider/slides/1599489896_breakfast-mela-web-banner_600-X-350.jpg'),
-                        NetworkImage(
-                            "https://www.jiomart.com/images/cms/aw_rbslider/slides/1599488248_immunity-booste_Creative_r600x350.jpg"),
-                      ],
-                    ),
-                  ),
+                Text("Your Location",
+                    style: TextStyle(fontSize: 13, color: Colors.white)),
+                Row(
+                  children: [
+                    Text("Surat",
+                        style: TextStyle(fontSize: 17, color: Colors.white)),
+                    Icon(Icons.location_on, size: 15)
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0, right: 4.0, top: 4.0),
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration:
-                              BoxDecoration(border: Border.all(width: 0.5,color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "Category",
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black87),
-                                    ),
-                                  ),
-                                  Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
-                                ],
-                              )),
-                        ),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          itemCount: _Category.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                          ),
-                          itemBuilder: (context, index) {
-                            return CategoryComponent(_Category[index]);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration:
-                            BoxDecoration(border: Border.all(width: 0.5,color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Suggested Products..",
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.black87),
-                                  ),
-                                ),
-                                Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
-                              ],
-                            )),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  child: ListView.builder(
-                     physics: NeverScrollableScrollPhysics(),
-                     itemCount: _Product.length,
-                     shrinkWrap: true,
-                      itemBuilder: (context , index){
-                    return ProductComponent(product: _Product[index]);
-                  }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                            decoration:
-                                BoxDecoration(border: Border.all(width: 0.5,color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Offers",
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.black87),
-                                  ),
-                                ),
-                                Image.asset('assets/Pattern.png',width: 40,color: Colors.brown),
-                              ],
-                            )),
-                      ),
-                    ),
-                  ),
-                ),
-                // ignore: missing_return
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding:
-                          const EdgeInsets.only(top: 2.0, left: 6.0, right: 6.0),
-                      child: Card(child: Image.network(_offerbannerlist[index])),
-                    );
-                  },
-                  itemCount: _offerbannerlist.length,
-                )
-
               ],
             ),
           ),
+        ),
+        drawer: Drawer(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: SizedBox(
+                  height: 170.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: Carousel(
+                    boxFit: BoxFit.cover,
+                    autoplay: true,
+                    animationCurve: Curves.fastOutSlowIn,
+                    animationDuration: Duration(milliseconds: 1000),
+                    dotSize: 4.0,
+                    dotIncreasedColor: Colors.black54,
+                    dotBgColor: Colors.transparent,
+                    dotPosition: DotPosition.bottomCenter,
+                    dotVerticalPadding: 10.0,
+                    showIndicator: true,
+                    indicatorBgPadding: 7.0,
+                    images: [
+                      NetworkImage(
+                          'https://www.jiomart.com/images/cms/aw_rbslider/slides/1596181546_Kitchen_superstar_web.jpg'),
+                      NetworkImage(
+                          'https://www.jiomart.com/images/cms/aw_rbslider/slides/1599489896_breakfast-mela-web-banner_600-X-350.jpg'),
+                      NetworkImage(
+                          "https://www.jiomart.com/images/cms/aw_rbslider/slides/1599488248_immunity-booste_Creative_r600x350.jpg"),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0, right: 4.0, top: 4.0),
+                child: Card(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.5, color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4.0))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Image.asset('assets/Pattern.png',
+                                    width: 40, color: Colors.brown),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Category",
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.black87),
+                                  ),
+                                ),
+                                Image.asset('assets/Pattern.png',
+                                    width: 40, color: Colors.brown),
+                              ],
+                            )),
+                      ),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: _Category.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) {
+                          return CategoryComponent(_Category[index]);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 0.5, color: Colors.grey),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset('assets/Pattern.png',
+                                  width: 40, color: Colors.brown),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Suggested Products..",
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.black87),
+                                ),
+                              ),
+                              Image.asset('assets/Pattern.png',
+                                  width: 40, color: Colors.brown),
+                            ],
+                          )),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _Product.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ProductComponent(product: _Product[index]);
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 0.5, color: Colors.grey),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset('assets/Pattern.png',
+                                  width: 40, color: Colors.brown),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Offers",
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.black87),
+                                ),
+                              ),
+                              Image.asset('assets/Pattern.png',
+                                  width: 40, color: Colors.brown),
+                            ],
+                          )),
+                    ),
+                  ),
+                ),
+              ),
+              // ignore: missing_return
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.only(top: 2.0, left: 6.0, right: 6.0),
+                    child: Card(child: Image.network(_offerbannerlist[index])),
+                  );
+                },
+                itemCount: _offerbannerlist.length,
+              )
+            ],
+          ),
+        ),
         bottomNavigationBar: Container(
           height: 54,
           decoration: BoxDecoration(
@@ -323,9 +355,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset('assets/home.png',width: 20,color: Colors.grey),
-                        Text("Home",
-                            style: TextStyle(fontSize: 11))
+                        Image.asset('assets/home.png',
+                            width: 20, color: Colors.grey),
+                        Text("Home", style: TextStyle(fontSize: 11))
                       ],
                     ),
                   ),
@@ -340,14 +372,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset('assets/category.png',width: 20,color: Colors.grey),
-                        Text("Category",
-                            style: TextStyle(fontSize: 11))
+                        Image.asset('assets/category.png',
+                            width: 20, color: Colors.grey),
+                        Text("Category", style: TextStyle(fontSize: 11))
                       ],
                     ),
                   ),
                   onTap: () {
-                   // Navigator.pushNamed(context, "/MyGuestList");
+                    // Navigator.pushNamed(context, "/MyGuestList");
                   },
                 ),
               ),
@@ -359,15 +391,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset('assets/loupe.png', width: 20,color: Colors.grey),
+                        Image.asset('assets/loupe.png',
+                            width: 20, color: Colors.grey),
                         Text("Search",
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 11,color: Colors.black))
+                            style: TextStyle(fontSize: 11, color: Colors.black))
                       ],
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(context, FadeRoute(page: SearchProductPage()));
+                    Navigator.push(
+                        context, FadeRoute(page: SearchProductPage()));
                   },
                 ),
               ),
@@ -379,7 +413,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset('assets/shoppingcart.png', width: 22,color: Colors.grey),
+                        Image.asset('assets/shoppingcart.png',
+                            width: 22, color: Colors.grey),
                         Text("My Cart",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 11))
@@ -387,13 +422,85 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
+                    Navigator.push(
+                        context, SlideLeftRoute(page: MyCartScreen()));
                   },
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class PinCodePopup extends StatefulWidget {
+  @override
+  _PinCodePopupState createState() => _PinCodePopupState();
+}
+
+class _PinCodePopupState extends State<PinCodePopup> {
+  TextEditingController pincode=new TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              "Enter Pincode",
+              style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+            child: PinCodeTextField(
+              controller: pincode,
+              wrapAlignment: WrapAlignment.center,
+              autofocus: false,
+              pinBoxRadius: 6,
+              highlight: true,
+              pinBoxHeight: 35,
+              pinBoxWidth: 35,
+              highlightColor: appPrimaryMaterialColor,
+              defaultBorderColor: Colors.grey,
+              hasTextBorderColor: appPrimaryMaterialColor,
+              maxLength: 6,
+              pinBoxDecoration:
+                  ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+              pinTextStyle: TextStyle(fontSize: 14.0),
+              pinTextAnimatedSwitcherTransition:
+                  ProvidedPinBoxTextAnimation.scalingTransition,
+              pinTextAnimatedSwitcherDuration: Duration(milliseconds: 200),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Althan Canal Road,Surat",
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FlatButton(
+                color: appPrimaryMaterialColor,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK", style: TextStyle(color: Colors.white))),
+          )
+        ],
       ),
     );
   }

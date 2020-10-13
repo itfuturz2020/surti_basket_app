@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
           appBarTheme: AppBarTheme(
             centerTitle: true,
             textTheme: TextTheme(
+              // ignore: deprecated_member_use
               title: TextStyle(color: Colors.white,fontSize: 16)
             ),
             iconTheme: IconThemeData(color: Colors.white)
