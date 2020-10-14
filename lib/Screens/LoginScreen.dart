@@ -10,6 +10,7 @@ import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/RegistrationScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 import 'VerificationScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,9 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString(Session.CustomerName, data["CustomerName"]);
     await prefs.setString(Session.CustomerEmailId, data["CustomerEmailId"]);
     await prefs.setString(Session.CustomerPhoneNo, data["CustomerPhoneNo"]);
-    Navigator.pushNamedAndRemoveUntil(context, '/HomeScreen', (route) => false);
-    var screen=FadeRoute(page: HomeScreen());
-    Navigator.pushNamedAndRemoveUntil(context, screen.toString(),(route)=>false);
+    Navigator.pushAndRemoveUntil(context,SlideLeftRoute(page: HomeScreen()) ,(route)=>false);
 
   }
 
@@ -77,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontWeight: FontWeight.w400)),
                         Padding(
                           padding: const EdgeInsets.only(left: 5.0),
-                          child: Text("Prem Saree's",
+                          child: Text("Surti Basket",
                               style: TextStyle(
                                   fontSize: 16,
                                   color: appPrimaryMaterialColor,

@@ -7,7 +7,6 @@ Dio dio = new Dio();
 class Services {
   static Future<List> postforlist({apiname, body}) async {
     String url = API_URL + '$apiname';
-    print(body.toString());
     print("$apiname url : " + url);
     var response;
     try {
@@ -24,7 +23,6 @@ class Services {
             responseData["Data"].length > 0) {
           list = responseData["Data"];
         }
-        print(list);
         return list;
       } else {
         print("error ->" + response.data.toString());

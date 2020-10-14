@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
@@ -22,87 +26,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
-  List _offerbannerlist = [
-    "https://www.bigbasket.com/media/uploads/banner_images/2009005_cooking-essential_460_25th.jpg",
-    "https://www.bigbasket.com/media/uploads/banner_images/2009063_fnv-below-rs-20_460_5th.jpg",
-    "https://www.bigbasket.com/media/uploads/banner_images/2009312_bbpl-staples_8_460_Bangalore.jpg"
-  ];
+  List _bannerList = [];
+  List _categoryList = [];
+  List _suggestedProductList = [];
+  List _Offerlist = [];
+  bool isLoading = false;
 
-  List _Category = [
-    {
-      "id": 0,
-      "CatName": "Foodgrains , Oil & Grains",
-      "CateImage":
-          "https://www.shopnow.org.in/wp-content/uploads/2020/07/Ashirvaad-aata-tata-salt-dhara-oil-1-300x300.jpg"
-    },
-    {
-      "id": 1,
-      "CatName": "Bakery,Cakes & Dairy",
-      "CateImage":
-          "https://assetscdn1.paytm.com/images/catalog/product/F/FA/FASFRESHO-BREADINNO985832D47622C4/1575134540377_2.jpg"
-    },
-    {
-      "id": 2,
-      "CatName": "Beverages",
-      "CateImage":
-          "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=50,w=145,h=140/app/images/category/cms_images/icon/icon_cat_12_v_3_500_1597977286.jpg"
-    },
-    {
-      "id": 3,
-      "CatName": "Pet Care",
-      "CateImage":
-          "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=50,w=145,h=140/app/images/category/cms_images/icon/icon_cat_5_v_3_500_1598001588.jpg"
-    },
-    {
-      "id": 4,
-      "CatName": "Personal Care",
-      "CateImage":
-          "https://www.shopickr.com/wp-content/uploads/2019/07/icon_cat_163_v_3_500_1553422430.jpg"
-    },
-    {
-      "id": 5,
-      "CatName": "Kitchen & Gardens",
-      "CateImage":
-          "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=50,w=145,h=140/app/images/category/cms_images/icon/icon_cat_1047_v_3_500_1597977471.jpg"
-    },
-    {
-      "id": 6,
-      "CatName": "Vegetables & Fruits",
-      "CateImage":
-          "https://cdn.grofers.com/app/images/category/cms_images/icon/icon_cat_1487_v_3_500_1597977519.jpg"
-    },
-  ];
-
-  List _Product = [
-    {
-      "id": 0,
-      "ProductName": "Onion",
-      "Price": "100",
-      "Image":
-          "https://www.shopnow.org.in/wp-content/uploads/2020/07/Ashirvaad-aata-tata-salt-dhara-oil-1-300x300.jpg"
-    },
-    {
-      "id": 1,
-      "ProductName": "Tomato",
-      "Price": "120",
-      "Image":
-          "https://media.istockphoto.com/photos/tomato-with-slice-isolated-with-clipping-path-picture-id941825878?k=6&m=941825878&s=612x612&w=0&h=GAQ-ypOITkWGGBYUwNDDh4_xjcjOM6Gf79FJMA-Kcfw="
-    },
-    {
-      "id": 2,
-      "ProductName": "Tide Washing Power",
-      "Price": "550",
-      "Image":
-          "https://5.imimg.com/data5/RQ/QL/TC/SELLER-32690784/green-bath-soaps-500x500.jpg"
-    },
-    {
-      "id": 3,
-      "ProductName": "Ashirvad Aata",
-      "Price": "170",
-      "Image":
-          "https://images-na.ssl-images-amazon.com/images/I/71-u8LysFmL._SL1000_.jpg"
-    },
-  ];
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -115,19 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.value(true);
   }
 
-  _showDialog() async {
-    await Future.delayed(Duration(milliseconds: 50));
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return PinCodePopup();
-        });
-  }
 
   @override
   void initState() {
     super.initState();
-    _showDialog();
+    _dashboardData();
   }
 
   @override
@@ -232,13 +153,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       GridView.builder(
                         shrinkWrap: true,
-                        itemCount: _Category.length,
+                        itemCount: _categoryList.length,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                         ),
                         itemBuilder: (context, index) {
-                          return CategoryComponent(_Category[index]);
+                          return CategoryComponent(_categoryList[index]);
                         },
                       ),
                     ],
@@ -280,15 +201,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+/*
               SizedBox(
                 child: ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: _Product.length,
+                    itemCount: _suggestedProductList.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return ProductComponent(product: _Product[index]);
+                      return ProductComponent(product: _suggestedProductList[index]);
                     }),
               ),
+*/
               Padding(
                 padding: const EdgeInsets.only(left: 4.0, right: 4.0),
                 child: Container(
@@ -325,18 +248,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               // ignore: missing_return
-              ListView.builder(
+              /*ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return Padding(
                     padding:
                         const EdgeInsets.only(top: 2.0, left: 6.0, right: 6.0),
-                    child: Card(child: Image.network(_offerbannerlist[index])),
+                    child: Card(child: Image.network(_Offerlist[index])),
                   );
                 },
-                itemCount: _offerbannerlist.length,
-              )
+                itemCount: _Offerlist.length,
+              )*/
             ],
           ),
         ),
@@ -433,75 +356,40 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-class PinCodePopup extends StatefulWidget {
-  @override
-  _PinCodePopupState createState() => _PinCodePopupState();
-}
-
-class _PinCodePopupState extends State<PinCodePopup> {
-  TextEditingController pincode=new TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "Enter Pincode",
-              style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black54),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
-            child: PinCodeTextField(
-              controller: pincode,
-              wrapAlignment: WrapAlignment.center,
-              autofocus: false,
-              pinBoxRadius: 6,
-              highlight: true,
-              pinBoxHeight: 35,
-              pinBoxWidth: 35,
-              highlightColor: appPrimaryMaterialColor,
-              defaultBorderColor: Colors.grey,
-              hasTextBorderColor: appPrimaryMaterialColor,
-              maxLength: 6,
-              pinBoxDecoration:
-                  ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-              pinTextStyle: TextStyle(fontSize: 14.0),
-              pinTextAnimatedSwitcherTransition:
-                  ProvidedPinBoxTextAnimation.scalingTransition,
-              pinTextAnimatedSwitcherDuration: Duration(milliseconds: 200),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Althan Canal Road,Surat",
-                    style: TextStyle(
-                        color: Colors.green, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                color: appPrimaryMaterialColor,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK", style: TextStyle(color: Colors.white))),
-          )
-        ],
-      ),
-    );
+  _dashboardData() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        Services.postforlist(apiname: 'getDashboardData').then(
+                (responselist) async {
+              if(responselist.length > 0){
+                setState(() {
+                  isLoading = false;
+                  _bannerList=responselist[0]["Banner"];
+                  _categoryList=responselist[1]["Category"];
+                //  _Offerlist=responselist[2]["Offer"];
+                  //_suggestedProductList=responselist[3]["SuggestedProduct"];
+                });
+                print(_Offerlist);
+              }
+              else{
+                setState(() {
+                  isLoading=false;
+                });
+              }
+            }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
   }
 }

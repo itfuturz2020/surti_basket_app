@@ -7,9 +7,12 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/RegistrationScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class VerificationScreen extends StatefulWidget {
   var mobile, logindata;
@@ -34,17 +37,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(
         Session.customerId, widget.logindata["CustomerId"].toString());
-//            prefs.setString(Session.addressId,responselist[0]["addressId"]);
     await prefs.setString(
         Session.CustomerName, widget.logindata["CustomerName"]);
-    await prefs.setString(
-        Session.CustomerCompanyName, widget.logindata["CustomerCompanyName"]);
     await prefs.setString(
         Session.CustomerEmailId, widget.logindata["CustomerEmailId"]);
     await prefs.setString(
         Session.CustomerPhoneNo, widget.logindata["CustomerPhoneNo"]);
 
-    Navigator.pushNamedAndRemoveUntil(context, '/HomeScreen', (route) => false);
+    Navigator.pushAndRemoveUntil(context, SlideLeftRoute(page: HomeScreen()), (route) => false);
   }
 
   _sendOTP() async {
