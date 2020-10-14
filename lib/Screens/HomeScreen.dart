@@ -10,6 +10,7 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/OfferComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
@@ -58,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.grey[400],
+        backgroundColor: isLoading == true ? Colors.white:Colors.grey[400],
         appBar: AppBar(
           actions: [
             IconButton(
@@ -90,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         drawer: Drawer(),
-        body: SingleChildScrollView(
+        body: isLoading == true ? LoadingComponent():SingleChildScrollView(
           child: Column(
             children: [
               _bannerList.length > 0 ?
@@ -112,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showIndicator: true,
                     indicatorBgPadding: 7.0,
                     images: _bannerList.map((item) => Container(
-                      child:Image.network(IMG_URL+item["BannerImage"],fit: BoxFit.fill)
+                        child:Image.network(IMG_URL+item["BannerImage"],fit: BoxFit.fill)
 
                     )).toList(),
                   ),
@@ -144,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Card(
-                    child: TitlePattern(title:"Suggested Products")
+                      child: TitlePattern(title:"Suggested Products")
                   ),
                 ),
               ),

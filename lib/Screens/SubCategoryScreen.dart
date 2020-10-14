@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/SubCategoryComponent.dart';
@@ -10,30 +13,41 @@ import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
 
 
 class SubCategoryScreen extends StatefulWidget {
+  var categoryId;
+  SubCategoryScreen({this.categoryId});
   @override
   _SubCategoryScreenState createState() => _SubCategoryScreenState();
 }
 
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
   bool isLoading = false;
-  List _subCategory;
+  List _subCategory=[];
+  List _bannerList=[];
+  List dataList=[];
 
+  @override
+  void initState() {
+    _getSubCategory();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[400],
+      backgroundColor: isLoading == true ? Colors.white : Colors.grey[400],
       appBar: AppBar(
         centerTitle: true,
         title: Text("SubCategory",style: TextStyle(color: Colors.white,fontSize: 18)),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: isLoading == true ? LoadingComponent():
+      dataList.length > 0 ? SingleChildScrollView(
+        child:
+        Column(
           children: [
             SizedBox(
               height: 170.0,
               width: MediaQuery.of(context).size.width,
-              child: Carousel(
+              child: _bannerList.length > 0 ? Carousel(
                 boxFit: BoxFit.cover,
                 autoplay: true,
                 animationCurve: Curves.fastOutSlowIn,
@@ -45,15 +59,11 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 dotVerticalPadding: 10.0,
                 showIndicator: true,
                 indicatorBgPadding: 7.0,
-                images: [
-                  NetworkImage(
-                      'https://www.jiomart.com/images/cms/aw_rbslider/slides/1596181546_Kitchen_superstar_web.jpg'),
-                  NetworkImage(
-                      'https://www.jiomart.com/images/cms/aw_rbslider/slides/1599489896_breakfast-mela-web-banner_600-X-350.jpg'),
-                  NetworkImage(
-                      "https://www.jiomart.com/images/cms/aw_rbslider/slides/1599488248_immunity-booste_Creative_r600x350.jpg"),
-                ],
-              ),
+                images: _bannerList.map((item) => Container(
+                    child:Image.network(IMG_URL+item["BannerImage"],fit: BoxFit.fill)
+
+                )).toList(),
+              ):Container(),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 4.0, right: 4.0,top:4.0),
@@ -81,7 +91,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               ),
             ),
           ],
-        ),
+        )
+      ):Container(
+        child: Image.asset('assets/noProduct.png'),
       ),
     );
   }
@@ -89,14 +101,19 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        var data = FormData.fromMap({
+          "CategoryId":"${widget.categoryId.toString()}"
+        });
         setState(() {
           isLoading = true;
         });
-        Services.postforlist(apiname: 'getCategoryData').then(
+        Services.postforlist(apiname: 'getCategoryData',body: data).then(
                 (responselist) async {
               if(responselist.length > 0){
                 setState(() {
-
+                  dataList=responselist;
+                  _bannerList=responselist[0]["Banner"];
+                  _subCategory=responselist[1]["SubCategory"];
                   isLoading = false;
                 });
               }

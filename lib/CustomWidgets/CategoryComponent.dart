@@ -17,7 +17,7 @@ class _CategoryComponentState extends State<CategoryComponent> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.push(context, SlideLeftRoute(page: SubCategoryScreen()));
+        Navigator.push(context, SlideLeftRoute(page: SubCategoryScreen(categoryId: "${widget.category["CategoryId"]}")));
       },
       child: Container(
         decoration: BoxDecoration(

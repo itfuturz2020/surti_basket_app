@@ -205,13 +205,18 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 35.0),
-                    child: Text("Resend OTP",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400)),
+                  InkWell(
+                    onTap: (){
+                      _sendOTP();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 35.0),
+                      child: Text("Resend OTP",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ),
                   ),
                 ],
               ),

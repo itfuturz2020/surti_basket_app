@@ -1,53 +1,41 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 
 class ProductListing extends StatefulWidget {
+  var SubCategoryId;
+  ProductListing({this.SubCategoryId});
   @override
   _ProductListingState createState() => _ProductListingState();
 }
 
 class _ProductListingState extends State<ProductListing> {
-  List _Product = [
-    {
-      "id": 0,
-      "ProductName": "Onion",
-      "Price": "100",
-      "Image":
-          "https://www.shopnow.org.in/wp-content/uploads/2020/07/Ashirvaad-aata-tata-salt-dhara-oil-1-300x300.jpg"
-    },
-    {
-      "id": 1,
-      "ProductName": "Tomato",
-      "Price": "120",
-      "Image":
-          "https://media.istockphoto.com/photos/tomato-with-slice-isolated-with-clipping-path-picture-id941825878?k=6&m=941825878&s=612x612&w=0&h=GAQ-ypOITkWGGBYUwNDDh4_xjcjOM6Gf79FJMA-Kcfw="
-    },
-    {
-      "id": 2,
-      "ProductName": "Tide Washing Power",
-      "Price": "550",
-      "Image":
-          "https://5.imimg.com/data5/RQ/QL/TC/SELLER-32690784/green-bath-soaps-500x500.jpg"
-    },
-    {
-      "id": 3,
-      "ProductName": "Ashirvad Aata",
-      "Price": "170",
-      "Image":
-          "https://images-na.ssl-images-amazon.com/images/I/71-u8LysFmL._SL1000_.jpg"
-    },
-  ];
+  List _Product=[];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    _getProducts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: isLoading == true ? Colors.white :Colors.grey[200],
       appBar: AppBar(
         centerTitle: true,
         title: Text("Surti Basket",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
-      body: ListView(
+      body: isLoading == true ? LoadingComponent() :
+      _Product.length > 0 ? ListView(
         children: [
           Container(
             color: Colors.white,
@@ -90,7 +78,43 @@ class _ProductListingState extends State<ProductListing> {
                 return ProductComponent(product: _Product[index]);
               }),
         ],
-      ),
+      ):NoFoundComponent(ImagePath: 'assets/noProduct.png',Title: 'No Product Found',)
     );
   }
+  _getProducts() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        var data=FormData.fromMap({
+          "SubcategoryId": '${widget.SubCategoryId}'
+        });
+        Services.postforlist(apiname: 'getSubCategoryData',body: data).then(
+                (responselist) async {
+              if(responselist.length > 0){
+                setState(() {
+                  _Product=responselist;
+                  isLoading = false;
+                });
+              }
+              else{
+                setState(() {
+                  isLoading=false;
+                });
+              }
+            }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
 }

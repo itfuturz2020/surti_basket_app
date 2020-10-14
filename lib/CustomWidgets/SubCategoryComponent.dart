@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/ProductListing.dart';
 import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
@@ -17,7 +18,7 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.push(context, SlideLeftRoute(page: ProductListing()));
+        Navigator.push(context, SlideLeftRoute(page: ProductListing(SubCategoryId:'1')));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -33,7 +34,7 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
           children: <Widget>[
             Flexible(
               child: Image.network(
-                "${widget.category["CateImage"]}",
+                "${IMG_URL+widget.category["SubcategoryImage"]}",
                 width: 70,
                 height: 70,
               ),
@@ -41,7 +42,7 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "${widget.category["CatName"]}",
+                "${widget.category["SubcategoryName"]}",
                 maxLines: 1,
                 softWrap: true,
                 textAlign: TextAlign.center,

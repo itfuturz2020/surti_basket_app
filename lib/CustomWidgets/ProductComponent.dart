@@ -64,9 +64,11 @@ class _ProductComponentState extends State<ProductComponent> {
                             style: TextStyle(fontSize: 15),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text("1 KG",
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.grey)),
+                          Text(
+                            "${widget.product["SubcategoryName"]}",
+                            style: TextStyle(fontSize: 14,color: Colors.grey),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           RichText(
                             text: TextSpan(
                                 text: 'MRP: ',
@@ -74,7 +76,7 @@ class _ProductComponentState extends State<ProductComponent> {
                                     color: Colors.grey, fontSize: 14),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "${Inr_Rupee} 100",
+                                    text: "${Inr_Rupee+ widget.product["ProductMrp"]} ",
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: 14,
@@ -83,109 +85,112 @@ class _ProductComponentState extends State<ProductComponent> {
                                   )
                                 ]),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(" $Inr_Rupee 90",
-                                  style: TextStyle(
-                                      fontSize: 17, color: Colors.black)),
-                              Qty == 0
-                                  ? Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: SizedBox(
-                                        height: 35,
-                                        width: 70,
-                                        child: FlatButton(
-                                          color: Colors.redAccent,
-                                          child: Text('Add',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15)),
-                                          //`Text` to display
-                                          onPressed: () {
-                                            setState(() {
-                                              Qty=1;
-                                            });
-                                          },
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(" ${Inr_Rupee + widget.product["ProductSrp"]}",
+                                    style: TextStyle(
+                                        fontSize: 17, color: Colors.black)),
+                                Qty == 0
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: SizedBox(
+                                          height: 35,
+                                          width: 70,
+                                          child: FlatButton(
+                                            color: Colors.redAccent,
+                                            child: Text('Add',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15)),
+                                            //`Text` to display
+                                            onPressed: () {
+                                              setState(() {
+                                                Qty=1;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10.0),
+                                        child: Row(
+                                          children: [
+                                            InkWell(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey[300],
+                                                        blurRadius: 2.0,
+                                                      ),
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.0),
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color:
+                                                            Colors.red[400])),
+                                                width: 30,
+                                                height: 30,
+                                                child: Center(
+                                                  child: Icon(Icons.remove,
+                                                      color: Colors.red[400],
+                                                      size: 20),
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                remove();
+                                              },
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0, right: 10.0),
+                                              child: Text(
+                                                "${Qty}",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                add();
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey[300],
+                                                        blurRadius: 2.0,
+                                                      ),
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.0),
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color:
+                                                            Colors.red[400])),
+                                                width: 30,
+                                                height: 30,
+                                                child: Center(
+                                                  child: Icon(Icons.add,
+                                                      color: Colors.red[400],
+                                                      size: 20),
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
-                                    )
-                                  : Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 10.0),
-                                      child: Row(
-                                        children: [
-                                          InkWell(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey[300],
-                                                      blurRadius: 2.0,
-                                                    ),
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.0),
-                                                  border: Border.all(
-                                                      width: 1,
-                                                      color:
-                                                          Colors.red[400])),
-                                              width: 30,
-                                              height: 30,
-                                              child: Center(
-                                                child: Icon(Icons.remove,
-                                                    color: Colors.red[400],
-                                                    size: 20),
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              remove();
-                                            },
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0, right: 10.0),
-                                            child: Text(
-                                              "${Qty}",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              add();
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey[300],
-                                                      blurRadius: 2.0,
-                                                    ),
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.0),
-                                                  border: Border.all(
-                                                      width: 1,
-                                                      color:
-                                                          Colors.red[400])),
-                                              width: 30,
-                                              height: 30,
-                                              child: Center(
-                                                child: Icon(Icons.add,
-                                                    color: Colors.red[400],
-                                                    size: 20),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
