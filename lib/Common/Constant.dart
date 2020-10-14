@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const String API_URL = "https://webnappmaker.in/Surti/Admin/Ajax/";
+const String IMG_URL = "https://webnappmaker.in/Surti/resources/images/";
 const Inr_Rupee = "₹";
 
 

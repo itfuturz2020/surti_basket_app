@@ -47,7 +47,7 @@ class _ProductComponentState extends State<ProductComponent> {
                       Navigator.push(context, SlideLeftRoute(page: ProductDetailScreen()));
                     },
                     child: Image.network(
-                      '${widget.product["Image"]}',
+                      '${IMG_URL+widget.product["ProductImages"]}',
                       width: 110,
                       height: 110,
                     ),
@@ -60,7 +60,7 @@ class _ProductComponentState extends State<ProductComponent> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            "Fresh Onion",
+                            "${widget.product["ProductName"]}",
                             style: TextStyle(fontSize: 15),
                             overflow: TextOverflow.ellipsis,
                           ),

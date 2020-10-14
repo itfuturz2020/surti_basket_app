@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
@@ -31,8 +32,8 @@ class _CategoryComponentState extends State<CategoryComponent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Flexible(
-              child: Image.network(
-                "${widget.category["CateImage"]}",
+              child: Image.network(IMG_URL+
+                "${widget.category["CategoryImage"]}",
                 width: 70,
                 height: 70,
               ),
@@ -40,7 +41,7 @@ class _CategoryComponentState extends State<CategoryComponent> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "${widget.category["CatName"]}",
+                "${widget.category["CategoryName"]}",
                 maxLines: 1,
                 softWrap: true,
                 textAlign: TextAlign.center,

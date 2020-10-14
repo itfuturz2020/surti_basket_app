@@ -10,7 +10,9 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/OfferComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/ProfileScreen.dart';
@@ -91,8 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              _bannerList.length > 0 ?
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 4.0),
                 child: SizedBox(
                   height: 170.0,
                   width: MediaQuery.of(context).size.width,
@@ -108,49 +111,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     dotVerticalPadding: 10.0,
                     showIndicator: true,
                     indicatorBgPadding: 7.0,
-                    images: [
-                      NetworkImage(
-                          'https://www.jiomart.com/images/cms/aw_rbslider/slides/1596181546_Kitchen_superstar_web.jpg'),
-                      NetworkImage(
-                          'https://www.jiomart.com/images/cms/aw_rbslider/slides/1599489896_breakfast-mela-web-banner_600-X-350.jpg'),
-                      NetworkImage(
-                          "https://www.jiomart.com/images/cms/aw_rbslider/slides/1599488248_immunity-booste_Creative_r600x350.jpg"),
-                    ],
+                    images: _bannerList.map((item) => Container(
+                      child:Image.network(IMG_URL+item["BannerImage"],fit: BoxFit.fill)
+
+                    )).toList(),
                   ),
                 ),
-              ),
+              ):Container(),
               Padding(
                 padding: const EdgeInsets.only(left: 4.0, right: 4.0, top: 4.0),
                 child: Card(
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 0.5, color: Colors.grey),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4.0))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Image.asset('assets/Pattern.png',
-                                    width: 40, color: Colors.brown),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Category",
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.black87),
-                                  ),
-                                ),
-                                Image.asset('assets/Pattern.png',
-                                    width: 40, color: Colors.brown),
-                              ],
-                            )),
-                      ),
+                      TitlePattern(title: "Category"),
                       GridView.builder(
                         shrinkWrap: true,
                         itemCount: _categoryList.length,
@@ -171,37 +144,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 0.5, color: Colors.grey),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4.0))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Image.asset('assets/Pattern.png',
-                                  width: 40, color: Colors.brown),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Suggested Products..",
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.black87),
-                                ),
-                              ),
-                              Image.asset('assets/Pattern.png',
-                                  width: 40, color: Colors.brown),
-                            ],
-                          )),
-                    ),
+                    child: TitlePattern(title:"Suggested Products")
                   ),
                 ),
               ),
-/*
               SizedBox(
                 child: ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
@@ -211,55 +157,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       return ProductComponent(product: _suggestedProductList[index]);
                     }),
               ),
-*/
               Padding(
                 padding: const EdgeInsets.only(left: 4.0, right: 4.0),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 0.5, color: Colors.grey),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4.0))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Image.asset('assets/Pattern.png',
-                                  width: 40, color: Colors.brown),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Offers",
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.black87),
-                                ),
-                              ),
-                              Image.asset('assets/Pattern.png',
-                                  width: 40, color: Colors.brown),
-                            ],
-                          )),
-                    ),
+                    child: TitlePattern(title: "Offers"),
                   ),
                 ),
               ),
               // ignore: missing_return
-              /*ListView.builder(
+              ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(top: 2.0, left: 6.0, right: 6.0),
-                    child: Card(child: Image.network(_Offerlist[index])),
-                  );
+                  return OfferComponent(_Offerlist[index]);
                 },
                 itemCount: _Offerlist.length,
-              )*/
+              )
             ],
           ),
         ),
@@ -370,10 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   isLoading = false;
                   _bannerList=responselist[0]["Banner"];
                   _categoryList=responselist[1]["Category"];
-                //  _Offerlist=responselist[2]["Offer"];
-                  //_suggestedProductList=responselist[3]["SuggestedProduct"];
+                 _Offerlist=responselist[2]["Offer"];
+                 _suggestedProductList=responselist[3]["SuggestedProduct"];
                 });
-                print(_Offerlist);
+                print(_bannerList);
               }
               else{
                 setState(() {
