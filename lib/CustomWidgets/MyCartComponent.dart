@@ -48,7 +48,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Image.network(
-                   IMG_URL +"${widget.cartData["ProductImages"]}",
+                    IMG_URL + "${widget.cartData["ProductImages"]}",
                     width: 120,
                     height: 120),
               ),
