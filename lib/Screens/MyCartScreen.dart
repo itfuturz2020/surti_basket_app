@@ -160,23 +160,26 @@ class _MyCartScreenState extends State<MyCartScreen> {
       body: isLoading == true
           ? LoadingComponent()
           : cartList.length > 0
-              ? Column(
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return MyCartComponent(
-                          cartData: cartList[index],
-                          onRemove: () {
-                            setState(() {
-                              cartList.removeAt(index);
-                            });
-                          },
-                        );
-                      },
-                      itemCount: cartList.length,
-                    ),
-                  ],
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return MyCartComponent(
+                            cartData: cartList[index],
+                            onRemove: () {
+                              setState(() {
+                                cartList.removeAt(index);
+                              });
+                            },
+                          );
+                        },
+                        itemCount: cartList.length,
+                      ),
+                    ],
+                  ),
                 )
               : NoFoundComponent(
                   ImagePath: 'assets/noProduct.png',

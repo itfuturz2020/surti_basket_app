@@ -7,11 +7,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/NormalLoadingComponent.dart';
 
 class MyCartComponent extends StatefulWidget {
   var cartData;
 
   Function onRemove;
+
   MyCartComponent({this.cartData, this.onRemove});
 
   @override
@@ -20,12 +22,15 @@ class MyCartComponent extends StatefulWidget {
 
 class _MyCartComponentState extends State<MyCartComponent> {
   bool iscartremoveLoading = false;
+  bool isupdateLoading = false;
 
   int Qty = 1;
+
   void add() {
     setState(() {
       Qty++;
     });
+    _updateCart();
   }
 
   void remove() {
@@ -33,6 +38,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
       setState(() {
         Qty--;
       });
+      _updateCart();
     }
   }
 
@@ -109,7 +115,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
                             padding: const EdgeInsets.only(right: 10.0),
                             child: Row(
                               children: [
-                                Qty == 0
+                                Qty == 1
                                     ? GestureDetector(
                                         onTap: () {
                                           _removefromcart();
@@ -201,9 +207,24 @@ class _MyCartComponentState extends State<MyCartComponent> {
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10.0, right: 10.0),
-                                  child: Text(
-                                    "${Qty}",
-                                    style: TextStyle(fontSize: 20),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Text(
+                                        "${Qty}",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      isupdateLoading == true
+                                          ? Center(
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 3.5,
+                                                valueColor:
+                                                    new AlwaysStoppedAnimation<
+                                                        Color>(Colors.red[400]),
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
                                   ),
                                 ),
                                 InkWell(
@@ -278,6 +299,42 @@ class _MyCartComponentState extends State<MyCartComponent> {
     } on SocketException catch (_) {
       Fluttertoast.showToast(msg: "No Internet Connection");
 //      showMsg("No Internet Connection.");
+    }
+  }
+
+  _updateCart() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isupdateLoading = true;
+        });
+        FormData body = FormData.fromMap(
+            {"CartId": "${widget.cartData["CartId"]}", "CartQuantity": Qty});
+        Services.postForSave(apiname: 'updateCartQty', body: body).then(
+            (responseList) async {
+          if (responseList.IsSuccess == true && responseList.Data == "1") {
+            setState(() {
+              print("update");
+              isupdateLoading = false;
+            });
+          } else {
+            setState(() {
+              isupdateLoading = false;
+            });
+            Fluttertoast.showToast(msg: "Something went wrong");
+            //show "data not found" in dialog
+          }
+        }, onError: (e) {
+          setState(() {
+            isupdateLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "Something Went Wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection.");
     }
   }
 }

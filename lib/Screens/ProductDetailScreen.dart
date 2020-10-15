@@ -9,6 +9,8 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/Screens/MyCartScreen.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   var productId;
@@ -26,12 +28,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int currentIndex = 0;
   int currentImageIndex = 0;
   int groupvalue = 0;
+  String productDetailId;
   List productdetail = [];
   List packageInfo = [];
+  String CustomerId;
+
+  getlocaldata() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    CustomerId = await preferences.getString(Session.customerId);
+  }
 
   @override
   void initState() {
     _productDetail();
+    getlocaldata();
     super.initState();
   }
 
@@ -71,7 +81,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: Text("${packageInfo.length>0 ? Inr_Rupee+ packageInfo[currentIndex]["ProductdetailSRP"]:productdetail[0][""]}",
+                                child: Text(
+                                    "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"] : productdetail[0][""]}",
                                     style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.black,
@@ -86,15 +97,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           color: Colors.grey, fontSize: 13),
                                       children: <TextSpan>[
                                         TextSpan(
-                                          text: "${packageInfo.length > 0 ? Inr_Rupee+packageInfo[currentIndex]["ProductdetailMRP"]:productdetail[0][""]}",
+                                          text:
+                                              "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"] : productdetail[0][""]}",
                                           style: TextStyle(
                                               color: Colors.grey,
                                               fontSize: 15,
                                               decoration:
                                                   TextDecoration.lineThrough),
                                         )
-                                      ]
-                                  ),
+                                      ]),
                                 ),
                               ),
 /*
@@ -246,7 +257,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                       Icons
                                                           .radio_button_checked,
                                                       size: 20)
-                                                  : Icon(Icons.radio_button_off,
+                                                  : Icon(
+                                                      Icons
+                                                          .radio_button_unchecked,
                                                       size: 20)
                                             ],
                                           ))),
@@ -269,7 +282,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 8.0, right: 8.0, bottom: 8.0),
-                            child: Text("${productdetail[0]["ProductDescription"]}",
+                            child: Text(
+                              "${productdetail[0]["ProductDescription"]}",
                               style: TextStyle(color: Colors.black54),
                             ),
                           )
@@ -289,7 +303,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           child: iscartLoading
               ? Center(
                   child: SpinKitRipple(
-                  color: appPrimaryMaterialColor,
+                  color: Colors.white,
                 ))
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -354,18 +368,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         });
         SharedPreferences prefs = await SharedPreferences.getInstance();
         FormData body = FormData.fromMap({
-/*          "CustomerId": prefs.getString(Session.customerId),
-          "ProductId": "${widget.productData["ProductId"]}",
-          "ProductQty": "${widget.productData["ProductQty"]}",
-          "ProductDetailId": "${widget.productData["ProductDetailId"]}"*/
+          "CustomerId": CustomerId,
+          "ProductId": "${productdetail[0]["ProductId"]}",
+          "CartQuantity": "${productdetail[0]["ProductQty"]}",
+          "ProductDetailId": "${packageInfo[currentIndex]["ProductdetailId"]}"
         });
         print(body.fields);
         Services.postForSave(apiname: 'addToCart', body: body).then(
             (responseadd) async {
           if (responseadd.IsSuccess == true && responseadd.Data == "1") {
+            Navigator.pushReplacement(context, FadeRoute(page: MyCartScreen()));
             setState(() {
               iscartLoading = false;
-              iscartlist = !iscartlist;
+
+              // iscartlist = !iscartlist;
             });
             //Provider.of<CartProvider>(context, listen: false).increaseCart();
             Fluttertoast.showToast(
