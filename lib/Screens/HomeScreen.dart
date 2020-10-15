@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/DrawerComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/OfferComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
@@ -28,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   DateTime currentBackPressTime;
   List _bannerList = [];
   List _categoryList = [];
@@ -90,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        drawer: Drawer(),
+        drawer: DrawerComponent(),
         body: isLoading == true ? LoadingComponent():SingleChildScrollView(
           child: Column(
             children: [

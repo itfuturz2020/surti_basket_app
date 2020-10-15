@@ -47,9 +47,7 @@ class _ProductComponentState extends State<ProductComponent> {
                       Navigator.push(
                           context,
                           SlideLeftRoute(
-                              page: ProductDetailScreen(
-                            productData: widget.product,
-                          )));
+                              page: ProductDetailScreen(productId: "${widget.product["ProductId"]}")));
                     },
                     child: Image.network(
                       '${IMG_URL + widget.product["ProductImages"]}',
