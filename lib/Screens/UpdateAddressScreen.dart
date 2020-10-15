@@ -222,7 +222,6 @@ class _UpdateAddressState extends State<UpdateAddress> {
           "AddressPincode": pincodetxt.text,
           "AddressType": _addressTypeList[selected_Index].toString(),
         });
-
         Services.postForSave(apiname: 'updateAddress', body: body).then(
             (response) async {
           setState(() {
