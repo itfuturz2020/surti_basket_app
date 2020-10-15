@@ -8,10 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  var productData;
-  ProductDetailScreen({this.productData});
+  var productId;
+
+  ProductDetailScreen({this.productId});
 
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
@@ -20,25 +22,18 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool iscartlist = false;
   bool iscartLoading = false;
+  bool isLoading = false;
   int currentIndex = 0;
+  int currentImageIndex = 0;
   int groupvalue = 0;
-  List ProductImages = [
-    {
-      "id": 1,
-      "Image":
-          "https://images-na.ssl-images-amazon.com/images/I/71gcOblCdcL._SL1000_.jpg"
-    },
-    {
-      "id": 2,
-      "Image":
-          "https://images-na.ssl-images-amazon.com/images/I/817suZ5%2BdZL._SL1500_.jpg"
-    },
-    {
-      "id": 3,
-      "Image":
-          "https://images-na.ssl-images-amazon.com/images/I/71I9b%2BbIbiL._SL1500_.jpg"
-    },
-  ];
+  List productdetail = [];
+  List packageInfo = [];
+
+  @override
+  void initState() {
+    _productDetail();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,196 +50,234 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               onPressed: null)
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 12.0, left: 12.0, right: 10.0),
-              child: Text("Wheat Flour - Chakki Atta , 10 Kg (Fortified)",
-                  style: TextStyle(fontSize: 18)),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 4.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(" Rs 328",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: RichText(
-                      text: TextSpan(
-                          text: 'MRP: ',
-                          style: TextStyle(color: Colors.grey, fontSize: 13),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: "${Inr_Rupee} 295",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15,
-                                  decoration: TextDecoration.lineThrough),
-                            )
-                          ]),
-                    ),
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                          color: Colors.redAccent,
-                          borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 4.0, right: 4.0, top: 2.0, bottom: 2.0),
-                        child: Text("20 %",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                      )),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Image.network(
-                      '${ProductImages[currentIndex]["Image"]}',
-                      width: 300),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: Row(
-                children: List.generate(ProductImages.length, (index) {
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
-                        currentIndex = index;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: index == currentIndex ? 1.0 : 0.5,
-                                  color: index == currentIndex
-                                      ? Colors.lightGreen
-                                      : Colors.grey[400]),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4.0))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Image.network(
-                                '${ProductImages[index]["Image"]}',
-                                fit: BoxFit.cover,
-                                width: 50),
-                          )),
-                    ),
-                  );
-                }),
-              ),
-            ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Text('Pack Sizes', style: TextStyle(fontSize: 16)),
-            ),
-            Column(
-              children: List.generate(ProductImages.length, (index) {
-                return Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45,
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 0.5, color: Colors.grey[400]),
-                          borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                      child: Padding(
-                          padding: const EdgeInsets.all(2.0),
+      body: isLoading == true
+          ? LoadingComponent()
+          : productdetail.length > 0
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 12.0, left: 18.0, right: 10.0),
+                          child: Text("${productdetail[0]["ProductName"]}",
+                              style: TextStyle(fontSize: 18)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0, top: 4.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text("10 Kg"),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(" $Inr_Rupee 90",
-                                      style: TextStyle(
-                                          fontSize: 13, color: Colors.black)),
-                                  RichText(
-                                    text: TextSpan(
-                                        text: 'MRP: ',
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 13),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: "${Inr_Rupee} 100",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 13,
-                                                decoration:
-                                                    TextDecoration.lineThrough),
-                                          )
-                                        ]),
-                                  ),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text("${packageInfo.length>0 ? Inr_Rupee+ packageInfo[currentIndex]["ProductdetailSRP"]:productdetail[0][""]}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold)),
                               ),
-                              Radio(
-                                activeColor: Colors.black54,
-                                groupValue: groupvalue,
-                                value: groupvalue,
-                                onChanged: (int value) {
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                      text: 'MRP: ',
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 13),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: "${packageInfo.length > 0 ? Inr_Rupee+packageInfo[currentIndex]["ProductdetailMRP"]:productdetail[0][""]}",
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 15,
+                                              decoration:
+                                                  TextDecoration.lineThrough),
+                                        )
+                                      ]),
+                                ),
+                              ),
+/*
+                              Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.redAccent,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(4.0))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 4.0,
+                                        right: 4.0,
+                                        top: 2.0,
+                                        bottom: 2.0),
+                                    child: Text("20 %",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                                  )),
+*/
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: ListView(
+                        physics: BouncingScrollPhysics(),
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Image.network(
+                                    '${IMG_URL + packageInfo[currentImageIndex]["ProductdetailImage"]}',
+                                    height: 300),
+                              ),
+                            ],
+                          ),
+/*
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Row(
+                              children:
+                                  List.generate(packageInfo.length, (index) {
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      currentIndex = index;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Container(
+                                        height: 55,
+                                        width: 55,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: index == currentIndex
+                                                    ? 1.0
+                                                    : 0.5,
+                                                color: index == currentIndex
+                                                    ? Colors.lightGreen
+                                                    : Colors.grey[400]),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(4.0))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Image.network(
+                                              '${IMG_URL + packageInfo[index]["ProductdetailImage"]}',
+                                              fit: BoxFit.cover,
+                                              width: 50),
+                                        )),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+*/
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text('Pack Sizes',
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                          Column(
+                            children:
+                                List.generate(packageInfo.length, (index) {
+                              return InkWell(
+                                onTap: () {
                                   setState(() {
-                                    groupvalue = value;
+                                    currentIndex = index;
                                   });
                                 },
-                              )
-                            ],
-                          ))),
-                );
-              }),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Container(
-              height: 15,
-              color: Colors.grey[100],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child:
-                  Text('Product Description', style: TextStyle(fontSize: 16)),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-              child: Text(
-                "Aashirvaad Atta is made from selectively handpicked grains which are "
-                "known for their supreme quality by being heavy on the palm, golden amber"
-                "in colour and hard to bite. It is carefully ground using modern chakki grinding"
-                "process for the perfect balance of colour"
-                "\n \nTaste and nutrition"
-                "Aashirvaad Atta contains 0% Maida and contains 100% pure"
-                "wheat. The dough made from Aashirvaad Atta absorbs more water, hence"
-                "rotis remain softer for longer.",
-                style: TextStyle(color: Colors.black54),
-              ),
-            )
-          ],
-        ),
-      ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 0.5,
+                                              color: Colors.grey[400]),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(4.0))),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(
+                                                  "${packageInfo[index]["ProductdetailName"]}"),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      " $Inr_Rupee ${packageInfo[index]["ProductdetailSRP"]}",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          color: Colors.black)),
+                                                  RichText(
+                                                    text: TextSpan(
+                                                        text: 'MRP: ',
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                            text:
+                                                                "${Inr_Rupee} ${packageInfo[index]["ProductdetailMRP"]}",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 13,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough),
+                                                          )
+                                                        ]),
+                                                  ),
+                                                ],
+                                              ),
+                                              currentIndex == index
+                                                  ? Icon(
+                                                      Icons
+                                                          .radio_button_checked,
+                                                      size: 20)
+                                                  : Icon(Icons.radio_button_off,
+                                                      size: 20)
+                                            ],
+                                          ))),
+                                ),
+                              );
+                            }),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            height: 15,
+                            color: Colors.grey[100],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text('Product Description',
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 8.0, bottom: 8.0),
+                            child: Text("${productdetail[0]["ProductDescription"]}",
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              : Container(child: Text("No Found")),
       bottomNavigationBar: Container(
         height: 50,
         color: Colors.red[400],
@@ -276,6 +309,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  _productDetail() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        var data = FormData.fromMap({"ProductId": "${widget.productId}"});
+        print(data.fields);
+        setState(() {
+          isLoading = true;
+        });
+        Services.postforlist(apiname: 'getProductDetailData', body: data).then(
+            (responselist) async {
+          if (responselist.length > 0) {
+            setState(() {
+              isLoading = false;
+              productdetail = responselist;
+              packageInfo = responselist[1]["Packinfo"];
+            });
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
   _addTocart() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -285,10 +353,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         });
         SharedPreferences prefs = await SharedPreferences.getInstance();
         FormData body = FormData.fromMap({
-          "CustomerId": prefs.getString(Session.customerId),
+/*          "CustomerId": prefs.getString(Session.customerId),
           "ProductId": "${widget.productData["ProductId"]}",
           "ProductQty": "${widget.productData["ProductQty"]}",
-          "ProductDetailId": "${widget.productData["ProductDetailId"]}"
+          "ProductDetailId": "${widget.productData["ProductDetailId"]}"*/
         });
         print(body.fields);
         Services.postForSave(apiname: 'addToCart', body: body).then(
@@ -312,7 +380,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       }
     } on SocketException catch (_) {
       Fluttertoast.showToast(msg: "No Internet Connection");
-//      showMsg("No Internet Connection.");
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
@@ -15,9 +16,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-       statusBarIconBrightness: Brightness.light
-    ));
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     return MaterialApp(
       title: 'Surti Basket',
       home: SplashScreen(),
