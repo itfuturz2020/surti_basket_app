@@ -1,12 +1,25 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
 
 class ProductDetailScreen extends StatefulWidget {
+  var productData;
+  ProductDetailScreen({this.productData});
+
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  bool iscartlist = false;
+  bool iscartLoading = false;
   int currentIndex = 0;
   int groupvalue = 0;
   List ProductImages = [
@@ -215,16 +228,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   Text('Product Description', style: TextStyle(fontSize: 16)),
             ),
             Padding(
-              padding: const EdgeInsets.only(left:8.0,right: 8.0,bottom: 8.0),
+              padding:
+                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
               child: Text(
-                  "Aashirvaad Atta is made from selectively handpicked grains which are "
-                  "known for their supreme quality by being heavy on the palm, golden amber"
-                  "in colour and hard to bite. It is carefully ground using modern chakki grinding"
-                  "process for the perfect balance of colour"
-                      "\n \nTaste and nutrition"
-                  "Aashirvaad Atta contains 0% Maida and contains 100% pure"
-                  "wheat. The dough made from Aashirvaad Atta absorbs more water, hence"
-                  "rotis remain softer for longer.",style: TextStyle(color: Colors.black54),),
+                "Aashirvaad Atta is made from selectively handpicked grains which are "
+                "known for their supreme quality by being heavy on the palm, golden amber"
+                "in colour and hard to bite. It is carefully ground using modern chakki grinding"
+                "process for the perfect balance of colour"
+                "\n \nTaste and nutrition"
+                "Aashirvaad Atta contains 0% Maida and contains 100% pure"
+                "wheat. The dough made from Aashirvaad Atta absorbs more water, hence"
+                "rotis remain softer for longer.",
+                style: TextStyle(color: Colors.black54),
+              ),
             )
           ],
         ),
@@ -232,20 +248,71 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       bottomNavigationBar: Container(
         height: 50,
         color: Colors.red[400],
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/shoppingcart.png',
-                width: 26, color: Colors.white),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text("ADD TO CART",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            )
-          ],
+        child: GestureDetector(
+          onTap: () {
+            _addTocart();
+          },
+          child: iscartLoading
+              ? Center(
+                  child: SpinKitRipple(
+                  color: appPrimaryMaterialColor,
+                ))
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/shoppingcart.png',
+                        width: 26, color: Colors.white),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("ADD TO CART",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                    )
+                  ],
+                ),
         ),
       ),
     );
+  }
+
+  _addTocart() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          iscartLoading = true;
+        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        FormData body = FormData.fromMap({
+          "CustomerId": prefs.getString(Session.customerId),
+          "ProductId": "${widget.productData["ProductId"]}",
+          "ProductQty": "${widget.productData["ProductQty"]}",
+          "ProductDetailId": "${widget.productData["ProductDetailId"]}"
+        });
+        print(body.fields);
+        Services.postForSave(apiname: 'addToCart', body: body).then(
+            (responseadd) async {
+          if (responseadd.IsSuccess == true && responseadd.Data == "1") {
+            setState(() {
+              iscartLoading = false;
+              iscartlist = !iscartlist;
+            });
+            //Provider.of<CartProvider>(context, listen: false).increaseCart();
+            Fluttertoast.showToast(
+                msg: "Added Successfully", gravity: ToastGravity.BOTTOM);
+          }
+        }, onError: (e) {
+          setState(() {
+            iscartLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+//      showMsg("No Internet Connection.");
+    }
   }
 }

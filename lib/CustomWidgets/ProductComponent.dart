@@ -43,11 +43,16 @@ class _ProductComponentState extends State<ProductComponent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InkWell(
-                    onTap: (){
-                      Navigator.push(context, SlideLeftRoute(page: ProductDetailScreen()));
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          SlideLeftRoute(
+                              page: ProductDetailScreen(
+                            productData: widget.product,
+                          )));
                     },
                     child: Image.network(
-                      '${IMG_URL+widget.product["ProductImages"]}',
+                      '${IMG_URL + widget.product["ProductImages"]}',
                       width: 110,
                       height: 110,
                     ),
@@ -66,31 +71,32 @@ class _ProductComponentState extends State<ProductComponent> {
                           ),
                           Text(
                             "${widget.product["SubcategoryName"]}",
-                            style: TextStyle(fontSize: 14,color: Colors.grey),
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
                             overflow: TextOverflow.ellipsis,
                           ),
                           RichText(
                             text: TextSpan(
                                 text: 'MRP: ',
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 14),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 14),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "${Inr_Rupee+ widget.product["ProductMrp"]} ",
+                                    text:
+                                        "${Inr_Rupee + widget.product["ProductMrp"]} ",
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: 14,
-                                        decoration:
-                                            TextDecoration.lineThrough),
+                                        decoration: TextDecoration.lineThrough),
                                   )
                                 ]),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top:10.0),
+                            padding: const EdgeInsets.only(top: 10.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(" ${Inr_Rupee + widget.product["ProductSrp"]}",
+                                Text(
+                                    " ${Inr_Rupee + widget.product["ProductSrp"]}",
                                     style: TextStyle(
                                         fontSize: 17, color: Colors.black)),
                                 Qty == 0
@@ -109,7 +115,7 @@ class _ProductComponentState extends State<ProductComponent> {
                                             //`Text` to display
                                             onPressed: () {
                                               setState(() {
-                                                Qty=1;
+                                                Qty = 1;
                                               });
                                             },
                                           ),

@@ -3,19 +3,26 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
-import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
-import 'package:surti_basket_app/transitions/ShowUp.dart';
 
-class UpdateProfileScreen extends StatefulWidget {
+class UpdateAddress extends StatefulWidget {
+  var updateaddress;
+
+  UpdateAddress({this.updateaddress});
+
   @override
-  _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
+  _UpdateAddressState createState() => _UpdateAddressState();
 }
 
-class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+class _UpdateAddressState extends State<UpdateAddress> {
+  final List<String> _addressTypeList = ["Home", "Office", "Other"];
+  int selected_Index;
+
+  bool isupdateLoading = false;
+  String Addresstype;
+
   final _formKey = GlobalKey<FormState>();
   TextEditingController houseNotxt = new TextEditingController();
   TextEditingController apratmenttxt = new TextEditingController();
@@ -24,9 +31,30 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController areadetailtxt = new TextEditingController();
   TextEditingController pincodetxt = new TextEditingController();
 
-  final List<String> _addressTypeList = ["Home", "Office", "Other"];
-  int selected_Index;
-  bool isAddressLoading = false;
+  @override
+  void initState() {
+    setState(() {
+      houseNotxt.text = widget.updateaddress["AddressHouseNo"];
+      apratmenttxt.text = widget.updateaddress["AddressAppartmentName"];
+      streettxt.text = widget.updateaddress["AddressStreet"];
+      landmarkttxt.text = widget.updateaddress["AddressLandmark"];
+      areadetailtxt.text = widget.updateaddress["AddressArea"];
+      pincodetxt.text = widget.updateaddress["AddressPincode"];
+      if (widget.updateaddress["AddressType"] == "Home") {
+        setState(() {
+          selected_Index = 0;
+        });
+      } else if (widget.updateaddress["AddressType"] == "Office") {
+        setState(() {
+          selected_Index = 1;
+        });
+      } else {
+        setState(() {
+          selected_Index = 2;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,37 +169,33 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         borderRadius: BorderRadius.circular(5),
                         side: BorderSide(color: Colors.grey[200])),
                     onPressed: () {
-                      _addAddress();
+                      _updateAddress();
                     },
-                    child: isAddressLoading == true
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              valueColor: new AlwaysStoppedAnimation<Color>(
-                                  Colors.white),
-                            ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 3.0),
-                                child: Text(
-                                  "Add Address",
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3.0),
+                          child: isupdateLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor:
+                                        new AlwaysStoppedAnimation<Color>(
+                                            Colors.white),
+                                  ),
+                                )
+                              : Text(
+                                  "Update Address",
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
                                       // color: Colors.grey[700],
                                       fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                            ],
-                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -180,41 +204,39 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     );
   }
 
-  _addAddress() async {
+  _updateAddress() async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+        setState(() {
+          isupdateLoading = true;
+        });
+
         FormData body = FormData.fromMap({
-          "CustomerId": prefs.getString(Session.customerId),
+          "AddressId": "${widget.updateaddress["AddressId"]}",
           "AddressHouseNo": houseNotxt.text,
           "AddressAppartmentName": apratmenttxt.text,
           "AddressStreet": streettxt.text,
           "AddressLandmark": landmarkttxt.text,
           "AddressArea": areadetailtxt.text,
-          "AddressType": _addressTypeList[selected_Index].toString(),
           "AddressPincode": pincodetxt.text,
+          "AddressType": _addressTypeList[selected_Index].toString(),
         });
-        setState(() {
-          isAddressLoading = true;
-        });
-        Services.postForSave(apiname: 'addAddress', body: body).then(
-            (responseList) async {
-          setState(() {
-            isAddressLoading = false;
-          });
 
-          if (responseList.IsSuccess == true && responseList.Data == "1") {
-            Fluttertoast.showToast(msg: "Address added successfully");
-          } else {
-            Fluttertoast.showToast(msg: "Data Not Found");
+        Services.postForSave(apiname: 'updateAddress', body: body).then(
+            (response) async {
+          setState(() {
+            isupdateLoading = false;
+          });
+          if (response.IsSuccess == true && response.Data == "1") {
+            Fluttertoast.showToast(
+                msg: "Address Updated Successfully",
+                gravity: ToastGravity.BOTTOM);
           }
         }, onError: (e) {
-          setState(() {
-            isAddressLoading = false;
-          });
           print("error on call -> ${e.message}");
           Fluttertoast.showToast(msg: "Something Went Wrong");
+          //showMsg("something went wrong");
         });
       }
     } on SocketException catch (_) {

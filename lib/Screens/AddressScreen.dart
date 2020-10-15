@@ -1,14 +1,32 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/AddressComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Screens/UpdateProfileScreen.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class AddressScreen extends StatefulWidget {
+  var Address;
+  AddressScreen({this.Address});
   @override
   _AddressScreenState createState() => _AddressScreenState();
 }
 
 class _AddressScreenState extends State<AddressScreen> {
+  bool isgetaddressLoading = false;
+  List getaddressList = [];
+
+  @override
+  void initState() {
+    _getAddress();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,42 +36,98 @@ class _AddressScreenState extends State<AddressScreen> {
         title: Text("My Address",
             style: TextStyle(fontSize: 18, color: Colors.white)),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("SAVED ADDRESS",
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("SAVED ADDRESS",
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(context,
+                              SlideLeftRoute(page: UpdateProfileScreen()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("+ ADD NEW ADDRESS",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.blueAccent,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                    ],
                   ),
-                  InkWell(
-                    onTap: (){
-                      Navigator.pushReplacement(context, SlideLeftRoute(page: UpdateProfileScreen()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("+ ADD NEW ADDRESS",
-                          style: TextStyle(fontSize: 15, color: Colors.blueAccent,fontWeight: FontWeight.w600)),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                // isgetaddressLoading == true
+                //     ? LoadingComponent()
+                //     :
+                ListView.builder(
+                  itemBuilder: (context, index) {
+                    return AddressComponent(
+                      addressData: getaddressList[index],
+                      onremove: () {
+                        setState(() {
+                          getaddressList.removeAt(index);
+                        });
+                      },
+                    );
+                  },
+                  itemCount: getaddressList.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                )
+              ],
             ),
-            ListView.builder(
-              itemBuilder: (context, index) {
-                return AddressComponent();
-              },
-              itemCount: 2,
-              shrinkWrap: true,
-            )
-          ],
-        ),
+          ),
+          isgetaddressLoading == true ? LoadingComponent() : Container()
+        ],
       ),
     );
+  }
+
+  _getAddress() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isgetaddressLoading = true;
+        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        FormData body = FormData.fromMap({
+          "CustomerId": prefs.getString(Session.customerId),
+        });
+        Services.postforlist(apiname: 'getAddress', body: body).then(
+            (ResponseList) async {
+          if (ResponseList.length > 0) {
+            setState(() {
+              getaddressList = ResponseList;
+              isgetaddressLoading = false;
+            });
+          } else {
+            Fluttertoast.showToast(msg: "Address Not Found");
+          }
+        }, onError: (e) {
+          setState(() {
+            isgetaddressLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "Something Went Wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection.");
+    }
   }
 }

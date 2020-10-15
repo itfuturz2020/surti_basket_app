@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/MyCartComponent.dart';
 import 'package:surti_basket_app/Screens/CheckOutPage.dart';
 import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
@@ -13,6 +18,47 @@ class MyCartScreen extends StatefulWidget {
 }
 
 class _MyCartScreenState extends State<MyCartScreen> {
+  bool isLoading = true;
+  List cartList = [];
+
+  @override
+  void initState() {
+    _getCartdata();
+  }
+
+  _getCartdata() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        FormData body = FormData.fromMap({"customerId": Session.customerId});
+        print(body.fields);
+        Services.postforlist(apiname: 'getCart', body: body).then(
+            (responselist) async {
+          setState(() {
+            isLoading = false;
+          });
+          if (responselist.length > 0) {
+            setState(() {
+              cartList = responselist;
+              print(body.fields);
+            });
+            for (int i = 0; i < responselist.length; i++) {}
+          } else {
+            Fluttertoast.showToast(msg: "No Product Found!");
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
   _showRedeemPoints() {
     showDialog(
         context: context,
@@ -22,7 +68,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top:8.0),
+                  padding: const EdgeInsets.only(top: 8.0),
                   child: Text("Your Points",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -65,7 +111,8 @@ class _MyCartScreenState extends State<MyCartScreen> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top:20.0,right:8.0,left: 8.0),
+                  padding:
+                      const EdgeInsets.only(top: 20.0, right: 8.0, left: 8.0),
                   child: FlatButton(
                     color: Colors.grey[100],
                     textColor: Colors.black54,
