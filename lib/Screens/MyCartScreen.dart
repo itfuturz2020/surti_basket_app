@@ -4,10 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/MyCartComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
 import 'package:surti_basket_app/Screens/CheckOutPage.dart';
 import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
@@ -20,17 +23,24 @@ class MyCartScreen extends StatefulWidget {
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
   List cartList = [];
+  String CustomerId;
+
+  getlocaldata() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    CustomerId = await preferences.getString(Session.customerId);
+  }
 
   @override
   void initState() {
     _getCartdata();
+    getlocaldata();
   }
 
   _getCartdata() async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        FormData body = FormData.fromMap({"customerId": Session.customerId});
+        FormData body = FormData.fromMap({"CustomerId": CustomerId});
         print(body.fields);
         Services.postforlist(apiname: 'getCart', body: body).then(
             (responselist) async {
@@ -147,19 +157,25 @@ class _MyCartScreenState extends State<MyCartScreen> {
         title: Text("My Cart",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
-      body: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              return MyCartComponent(
-                cartData: cartList[index],
-              );
-            },
-            itemCount: 2,
-          ),
-        ],
-      ),
+      body: isLoading == true
+          ? LoadingComponent()
+          : cartList.length > 0
+              ? Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return MyCartComponent(
+                          cartData: cartList[index],
+                        );
+                      },
+                      itemCount: cartList.length,
+                    ),
+                  ],
+                )
+              : NoFoundComponent(
+                  ImagePath: 'assets/noProduct.png',
+                  Title: 'Your cart is empty'),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(

@@ -26,6 +26,13 @@ class _MyCartComponentState extends State<MyCartComponent> {
   }
 
   @override
+  void initState() {
+    setState(() {
+      Qty = int.parse("${widget.cartData["CartQuantity"]}");
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -59,16 +66,16 @@ class _MyCartComponentState extends State<MyCartComponent> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Mcvities - Digestive",
+                      Text("${widget.cartData["ProductName"]}",
                           style: TextStyle(fontSize: 15)),
-                      Text("250 gm", style: TextStyle(color: Colors.black54)),
                       RichText(
                         text: TextSpan(
                             text: 'MRP: ',
                             style: TextStyle(color: Colors.grey, fontSize: 14),
                             children: <TextSpan>[
                               TextSpan(
-                                text: "${Inr_Rupee} 100",
+                                text: "${Inr_Rupee}" +
+                                    "${widget.cartData["ProductMrp"]}",
                                 style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 14,
@@ -79,7 +86,9 @@ class _MyCartComponentState extends State<MyCartComponent> {
                       Row(
                         children: [
                           Expanded(
-                            child: Text(" $Inr_Rupee 90",
+                            child: Text(
+                                " $Inr_Rupee " +
+                                    "${widget.cartData["ProductSrp"]}",
                                 style: TextStyle(
                                     fontSize: 17,
                                     color: Colors.black,
