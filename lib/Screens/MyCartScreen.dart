@@ -152,7 +152,9 @@ class _MyCartScreenState extends State<MyCartScreen> {
           ListView.builder(
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
-              return MyCartComponent();
+              return MyCartComponent(
+                cartData: cartList[index],
+              );
             },
             itemCount: 2,
           ),

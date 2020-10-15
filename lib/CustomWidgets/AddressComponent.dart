@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/Screens/UpdateAddressScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
@@ -20,6 +22,24 @@ class AddressComponent extends StatefulWidget {
 
 class _AddressComponentState extends State<AddressComponent> {
   bool isremoveaddLoading = false;
+
+  String CustomerId;
+  String CustomerName;
+  String Customerphone;
+
+  getlocaldata() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      CustomerId = preferences.getString(Session.customerId);
+      CustomerName = preferences.getString(Session.CustomerName);
+      Customerphone = preferences.getString(Session.CustomerPhoneNo);
+    });
+  }
+
+  @override
+  void initState() {
+    getlocaldata();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +114,7 @@ class _AddressComponentState extends State<AddressComponent> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Mangroliya Keval",
+                        Text("${CustomerName}",
                             style: TextStyle(fontSize: 14, color: Colors.grey)),
                         Text(
                             "${widget.addressData["AddressHouseNo"]}" +
@@ -106,7 +126,7 @@ class _AddressComponentState extends State<AddressComponent> {
                             style: TextStyle(fontSize: 14, color: Colors.grey)),
                         Text("${widget.addressData["AddressLandmark"]}",
                             style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        Text("Mobile No: 9429828152",
+                        Text("${Customerphone}",
                             style: TextStyle(fontSize: 14, color: Colors.grey)),
                       ],
                     ),
