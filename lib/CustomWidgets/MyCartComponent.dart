@@ -4,10 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/NormalLoadingComponent.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 
 class MyCartComponent extends StatefulWidget {
   var cartData;
@@ -281,6 +283,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
             (responseremove) async {
           if (responseremove.IsSuccess == true && responseremove.Data == "1") {
             widget.onRemove();
+            Provider.of<CartProvider>(context, listen: false).decreaseCart();
             setState(() {
               iscartremoveLoading = false;
             });

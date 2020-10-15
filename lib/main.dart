@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/SplashScreen.dart';
 
-void main() => runApp(MyApp());
+import 'Providers/CartProvider.dart';
+
+void main() => runApp(MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => CartProvider()),
+    ], child: MyApp()));
 
 class MyApp extends StatefulWidget {
   @override
@@ -26,13 +31,11 @@ class _MyAppState extends State<MyApp> {
           cursorColor: Colors.black54,
           primaryColor: appPrimaryMaterialColor,
           appBarTheme: AppBarTheme(
-            centerTitle: true,
-            textTheme: TextTheme(
-              // ignore: deprecated_member_use
-              title: TextStyle(color: Colors.white,fontSize: 16)
-            ),
-            iconTheme: IconThemeData(color: Colors.white)
-          ),
+              centerTitle: true,
+              textTheme: TextTheme(
+                  // ignore: deprecated_member_use
+                  title: TextStyle(color: Colors.white, fontSize: 16)),
+              iconTheme: IconThemeData(color: Colors.white)),
           accentColor: appPrimaryMaterialColor),
     );
   }

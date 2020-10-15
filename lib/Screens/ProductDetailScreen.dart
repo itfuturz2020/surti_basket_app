@@ -4,11 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 
@@ -47,6 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider provider = Provider.of<CartProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -54,10 +56,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         title: Text("Product Detail",
             style: TextStyle(fontSize: 17, color: Colors.white)),
         actions: [
-          IconButton(
-              icon: Image.asset('assets/shoppingcart.png',
-                  width: 26, color: Colors.white),
-              onPressed: null)
+          Stack(
+            children: [
+              IconButton(
+                  icon: Image.asset('assets/shoppingcart.png',
+                      width: 26, color: Colors.white),
+                  onPressed: () {
+                    Navigator.push(context, FadeRoute(page: MyCartScreen()));
+                  }),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Container(
+                  child: provider.cartCount > 0
+                      ? CircleAvatar(
+                          radius: 8.0,
+                          backgroundColor: Colors.red[400],
+                          foregroundColor: Colors.white,
+                          child: Text(
+                            provider.cartCount.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11.0,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ),
+              )
+            ],
+          )
         ],
       ),
       body: isLoading == true
@@ -377,13 +404,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         Services.postForSave(apiname: 'addToCart', body: body).then(
             (responseadd) async {
           if (responseadd.IsSuccess == true && responseadd.Data == "1") {
-            Navigator.pushReplacement(context, FadeRoute(page: MyCartScreen()));
+            Navigator.push(context, FadeRoute(page: MyCartScreen()));
             setState(() {
               iscartLoading = false;
 
               // iscartlist = !iscartlist;
             });
-            //Provider.of<CartProvider>(context, listen: false).increaseCart();
+            Provider.of<CartProvider>(context, listen: false).increaseCart();
             Fluttertoast.showToast(
                 msg: "Added Successfully", gravity: ToastGravity.BOTTOM);
           }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
+import 'package:surti_basket_app/Screens/OrderHistoryScreen.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -115,11 +118,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Image.asset('assets/shoppingcart.png',
                         width: 25, color: Colors.black54),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: Text("My Orders",
-                        style: TextStyle(color: Colors.black54, fontSize: 16)),
-                  )
+                  // Padding(
+                  //   padding: const EdgeInsets.only(left: 12.0),
+                  //   child: GestureDetector(
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //           context, FadeRoute(page: OrderHistoryScreen()));
+                  //     },
+                  //     child: Text("My Orders",
+                  //         style:
+                  //             TextStyle(color: Colors.black54, fontSize: 16)),
+                  //   ),
+                  // )
                 ],
               ),
             ),
