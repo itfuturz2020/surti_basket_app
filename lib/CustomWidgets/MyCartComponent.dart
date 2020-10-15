@@ -1,15 +1,26 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 
 class MyCartComponent extends StatefulWidget {
   var cartData;
-  MyCartComponent({this.cartData});
+
+  Function onRemove;
+  MyCartComponent({this.cartData, this.onRemove});
 
   @override
   _MyCartComponentState createState() => _MyCartComponentState();
 }
 
 class _MyCartComponentState extends State<MyCartComponent> {
+  bool iscartremoveLoading = false;
+
   int Qty = 1;
   void add() {
     setState(() {
@@ -99,26 +110,66 @@ class _MyCartComponentState extends State<MyCartComponent> {
                             child: Row(
                               children: [
                                 Qty == 0
-                                    ? Container(
-                                        width: 30,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey[300],
-                                                blurRadius: 2.0,
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          _removefromcart();
+                                        },
+                                        child: iscartremoveLoading == true
+                                            ? Container(
+                                                width: 30,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey[300],
+                                                        blurRadius: 2.0,
+                                                      ),
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.0),
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color:
+                                                            Colors.red[400])),
+                                                child: Center(
+                                                  child: Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height,
+                                                    child: Center(
+                                                        child: SpinKitRipple(
+                                                      color: Colors.red[400],
+                                                    )),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                width: 30,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey[300],
+                                                        blurRadius: 2.0,
+                                                      ),
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.0),
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color:
+                                                            Colors.red[400])),
+                                                child: Center(
+                                                  child: Icon(Icons.delete,
+                                                      color: Colors.red[400],
+                                                      size: 20),
+                                                ),
                                               ),
-                                            ],
-                                            borderRadius:
-                                                BorderRadius.circular(4.0),
-                                            border: Border.all(
-                                                width: 1,
-                                                color: Colors.red[400])),
-                                        child: Center(
-                                          child: Icon(Icons.delete,
-                                              color: Colors.red[400], size: 20),
-                                        ),
                                       )
                                     : InkWell(
                                         child: Container(
@@ -194,5 +245,39 @@ class _MyCartComponentState extends State<MyCartComponent> {
         ),
       ],
     );
+  }
+
+  _removefromcart() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          iscartremoveLoading = true;
+        });
+        FormData body =
+            FormData.fromMap({"CartId": "${widget.cartData["CartId"]}"});
+        Services.postForSave(apiname: '/removeCart', body: body).then(
+            (responseremove) async {
+          if (responseremove.IsSuccess == true && responseremove.Data == "1") {
+            widget.onRemove();
+            setState(() {
+              iscartremoveLoading = false;
+            });
+            Fluttertoast.showToast(
+                msg: "Product Removed Successfully",
+                gravity: ToastGravity.BOTTOM);
+          }
+        }, onError: (e) {
+          setState(() {
+            iscartremoveLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+//      showMsg("No Internet Connection.");
+    }
   }
 }

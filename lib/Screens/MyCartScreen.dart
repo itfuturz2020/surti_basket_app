@@ -167,6 +167,11 @@ class _MyCartScreenState extends State<MyCartScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return MyCartComponent(
                           cartData: cartList[index],
+                          onRemove: () {
+                            setState(() {
+                              cartList.removeAt(index);
+                            });
+                          },
                         );
                       },
                       itemCount: cartList.length,

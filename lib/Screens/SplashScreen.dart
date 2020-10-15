@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         Navigator.pushReplacement(context, FadeRoute(page: HomeScreen()));
       }
+      print(phoneNumber);
     });
   }
 
