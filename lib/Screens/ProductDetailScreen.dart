@@ -93,7 +93,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                               decoration:
                                                   TextDecoration.lineThrough),
                                         )
-                                      ]),
+                                      ]
+                                  ),
                                 ),
                               ),
 /*
