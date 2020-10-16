@@ -91,6 +91,7 @@ class _ProductListingState extends State<ProductListing> {
         var data=FormData.fromMap({
           "SubcategoryId": '${widget.SubCategoryId}'
         });
+        print(data.fields);
         Services.postforlist(apiname: 'getSubCategoryData',body: data).then(
                 (responselist) async {
               if(responselist.length > 0){

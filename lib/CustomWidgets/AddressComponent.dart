@@ -7,14 +7,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/Screens/CheckOutPage.dart';
 import 'package:surti_basket_app/Screens/UpdateAddressScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 
 class AddressComponent extends StatefulWidget {
-  var addressData;
+  var addressData,fromwhere;
   Function onremove;
 
-  AddressComponent({this.addressData, this.onremove});
+  AddressComponent({this.addressData, this.onremove,this.fromwhere});
 
   @override
   _AddressComponentState createState() => _AddressComponentState();
@@ -46,92 +47,99 @@ class _AddressComponentState extends State<AddressComponent> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 4.0),
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Text("Defualt Address:",
-                                style: TextStyle(
-                                    color: Colors.deepOrangeAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15)),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: Text(
-                                  "${widget.addressData["AddressType"]}",
+        InkWell(
+          onTap: (){
+            if(widget.fromwhere == "Checkout"){
+              Navigator.pushReplacement(context, FadeRoute(page: CheckoutPage(addressdata: widget.addressData)));
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Text("Defualt Address:",
                                   style: TextStyle(
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.bold)),
+                                      color: Colors.deepOrangeAccent,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15)),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Text(
+                                    "${widget.addressData["AddressType"]}",
+                                    style: TextStyle(
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset('assets/edit.png',
+                                    width: 18, height: 18),
+                              ),
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    FadeRoute(
+                                        page: UpdateAddress(
+                                      updateaddress: widget.addressData,
+                                    )));
+                              },
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                _removeAddress();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset('assets/delete.png',
+                                    width: 18, height: 18),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset('assets/edit.png',
-                                  width: 18, height: 18),
-                            ),
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  FadeRoute(
-                                      page: UpdateAddress(
-                                    updateaddress: widget.addressData,
-                                  )));
-                            },
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              _removeAddress();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset('assets/delete.png',
-                                  width: 18, height: 18),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0, bottom: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${CustomerName}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        Text(
-                            "${widget.addressData["AddressHouseNo"]}" +
-                                " - " +
-                                "${widget.addressData["AddressAppartmentName"]}",
-                            //"44 , Rambaug Society",
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        Text("${widget.addressData["AddressStreet"]}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        Text("${widget.addressData["AddressLandmark"]}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        Text("${Customerphone}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
                       ],
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${CustomerName}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                          Text(
+                              "${widget.addressData["AddressHouseNo"]}" +
+                                  " - " +
+                                  "${widget.addressData["AddressAppartmentName"]}",
+                              //"44 , Rambaug Society",
+                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                          Text("${widget.addressData["AddressStreet"]}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                          Text("${widget.addressData["AddressLandmark"]}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                          Text("${Customerphone}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

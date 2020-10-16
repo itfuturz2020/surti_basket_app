@@ -12,8 +12,8 @@ import 'package:surti_basket_app/Screens/UpdateProfileScreen.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class AddressScreen extends StatefulWidget {
-  var Address;
-  AddressScreen({this.Address});
+  var Address,fromwehere;
+  AddressScreen({this.Address,this.fromwehere});
   @override
   _AddressScreenState createState() => _AddressScreenState();
 }
@@ -81,6 +81,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           getaddressList.removeAt(index);
                         });
                       },
+                      fromwhere: "${widget.fromwehere}",
                     );
                   },
                   itemCount: getaddressList.length,

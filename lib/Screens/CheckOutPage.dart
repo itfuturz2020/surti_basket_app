@@ -1,13 +1,42 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Colors.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class CheckoutPage extends StatefulWidget {
+  var addressdata;
+  CheckoutPage({this.addressdata});
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
 
+  String CustomerId,CustomerName,Customerphone;
 
+  getlocaldata() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      CustomerId = preferences.getString(Session.customerId);
+      CustomerName = preferences.getString(Session.CustomerName);
+      Customerphone = preferences.getString(Session.CustomerPhoneNo);
+    });
+  }
+
+/*  @override
+  void initState() {
+    print(""+ widget.addressdata);
+    super.initState();
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -15,79 +44,237 @@ class _CheckoutPageState extends State<CheckoutPage> {
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
         centerTitle: true,
-        title: Text("My Cart",
+        title: Text("Check out",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            widget.addressdata == ""?
             Container(
               color: Colors.white,
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset('assets/location.png',
-                                width: 18, color: Colors.black54),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text("Defualt Address:",
+                                          style: TextStyle(
+                                              color: Colors.deepOrangeAccent,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 5.0),
+                                        child: Text(
+                                            "${widget.addressdata["AddressType"]}",
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 6.0),
-                              child: RichText(
-                                text: TextSpan(
-                                    text: 'Delivere to: Home',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[800],
-                                        fontSize: 14),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "  (Defualt)",
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 14),
-                                      )
-                                    ]),
+                              padding: const EdgeInsets.only(left: 8.0, bottom: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${CustomerName}",
+                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                  Text(
+                                      "${widget.addressdata["AddressHouseNo"]}" +
+                                          " - " +
+                                          "${widget.addressdata["AddressAppartmentName"]}",
+                                      //"44 , Rambaug Society",
+                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                  Text("${widget.addressdata["AddressStreet"]}",
+                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                  Text("${widget.addressdata["AddressLandmark"]}",
+                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                  Text("${Customerphone}",
+                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.0),
-                                border:
-                                    Border.all(width: 0.7, color: Colors.grey)),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 2.0, bottom: 2.0, right: 4.0, left: 4.0),
-                              child: Text(
-                                "Change",
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                    child: Text(
-                      "Belle Planet lives at 223 Center Street, Venus, New York 10001",
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
-                    ),
-                  ),
+                  )
                 ],
               ),
+            ):RaisedButton(
+              onPressed: (){
+                Navigator.push(context, FadeRoute(page: AddressScreen(fromwehere: "Checkout")) );
+              },
             ),
-            Text("Promocode\nonline payment Charges 2%")
           ],
         ),
       ),
     );
   }
+}
+
+
+class PinCodePopup extends StatefulWidget {
+  @override
+  _PinCodePopupState createState() => _PinCodePopupState();
+}
+
+class _PinCodePopupState extends State<PinCodePopup> {
+  TextEditingController pincode=new TextEditingController();
+  bool isLoading=false;
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              "Enter Pincode",
+              style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+            child: PinCodeTextField(
+              controller: pincode,
+              wrapAlignment: WrapAlignment.center,
+              autofocus: false,
+              pinBoxRadius: 6,
+              highlight: true,
+              pinBoxHeight: 35,
+              pinBoxWidth: 35,
+              highlightColor: appPrimaryMaterialColor,
+              defaultBorderColor: Colors.grey,
+              hasTextBorderColor: appPrimaryMaterialColor,
+              maxLength: 6,
+              pinBoxDecoration:
+              ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+              pinTextStyle: TextStyle(fontSize: 14.0),
+              pinTextAnimatedSwitcherTransition:
+              ProvidedPinBoxTextAnimation.scalingTransition,
+              pinTextAnimatedSwitcherDuration: Duration(milliseconds: 200),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FlatButton(
+                color: appPrimaryMaterialColor,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK", style: TextStyle(color: Colors.white))),
+          )
+        ],
+      ),
+    );
+  }
+
+  _checkPinCode() async {
+    if(pincode.text != null){
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            isLoading = true;
+          });
+          FormData body = FormData.fromMap({
+            "PincodeNo":pincode.text
+          });
+          Services.postForSave(apiname: 'checkPincode', body: body).then(
+                  (responseremove) async {
+                if (responseremove.IsSuccess == true && responseremove.Data == "1") {
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+                else{
+                  setState(() {
+                    isLoading=false;
+                  });
+                }
+              }, onError: (e) {
+            setState(() {
+              isLoading = false;
+            });
+            print("error on call -> ${e.message}");
+            Fluttertoast.showToast(msg: "something went wrong");
+          });
+        }
+      } on SocketException catch (_) {
+        Fluttertoast.showToast(msg: "No Internet Connection");
+      }
+    }
+    else{
+      Fluttertoast.showToast(msg: "Please Enter PinCode");
+    }
+  }
+
+  _placeOrder() async {
+    if(pincode.text != null){
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            isLoading = true;
+          });
+          FormData body = FormData.fromMap({
+          "CustomerId":"",
+          "AddressId":"",
+          "OrderPaymentMethod":"",
+          "OrderTransactionNo":"",
+          "OrderPromoCode":"",
+          "OrderTransactionNo":"",
+          "OrderBonusPoint":""
+          });
+          Services.postForSave(apiname: 'placeOrder', body: body).then(
+                  (responseremove) async {
+                if (responseremove.IsSuccess == true && responseremove.Data == "1") {
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+                else{
+                  setState(() {
+                    isLoading=false;
+                  });
+                }
+              }, onError: (e) {
+            setState(() {
+              isLoading = false;
+            });
+            print("error on call -> ${e.message}");
+            Fluttertoast.showToast(msg: "something went wrong");
+          });
+        }
+      } on SocketException catch (_) {
+        Fluttertoast.showToast(msg: "No Internet Connection");
+      }
+    }
+    else{
+      Fluttertoast.showToast(msg: "Please Enter PinCode");
+    }
+  }
+
 }

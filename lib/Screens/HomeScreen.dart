@@ -30,6 +30,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   DateTime currentBackPressTime;
+  List _dashboardList = [];
   List _bannerList = [];
   List _categoryList = [];
   List _suggestedProductList = [];
@@ -47,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return Future.value(true);
   }
-
 
   @override
   void initState() {
@@ -92,7 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         drawer: DrawerComponent(),
-        body: isLoading == true ? LoadingComponent():SingleChildScrollView(
+        body: isLoading == true ? LoadingComponent():
+        _dashboardList.length > 0 ?
+        SingleChildScrollView(
           child: Column(
             children: [
               _bannerList.length > 0 ?
@@ -179,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ],
           ),
-        ),
+        ):Container(color: Colors.white),
         bottomNavigationBar: Container(
           height: 54,
           decoration: BoxDecoration(
@@ -285,6 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if(responselist.length > 0){
                 setState(() {
                   isLoading = false;
+                  _dashboardList=responselist;
                   _bannerList=responselist[0]["Banner"];
                   _categoryList=responselist[1]["Category"];
                  _Offerlist=responselist[2]["Offer"];
@@ -310,3 +313,4 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
+

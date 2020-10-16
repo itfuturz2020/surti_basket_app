@@ -319,7 +319,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     )
                   ],
                 )
-              : Container(child: Text("No Found")),
+              : Container(child: Center(child: Text("No Product Found"))),
       bottomNavigationBar: Container(
         height: 50,
         color: Colors.red[400],
