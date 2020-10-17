@@ -11,6 +11,7 @@ import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/MyCartComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
+import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/CheckOutPage.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
@@ -25,17 +26,45 @@ class MyCartScreen extends StatefulWidget {
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
   List cartList = [];
-  String CustomerId;
+  String CustomerId,AddressId,AddressHouseNo,AddressName,AddressAppartmentName,AddressStreet,AddressLandmark,AddressArea,AddressType,AddressPincode;
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    CustomerId = await preferences.getString(Session.customerId);
+    setState(() {
+      CustomerId =  preferences.getString(Session.customerId);
+      AddressId =  preferences.getString(AddressSession.AddressId);
+      AddressHouseNo =  preferences.getString(AddressSession.AddressHouseNo);
+      AddressAppartmentName =  preferences.getString(AddressSession.AddressAppartmentName);
+      AddressStreet =  preferences.getString(AddressSession.AddressStreet);
+      AddressLandmark =  preferences.getString(AddressSession.AddressLandmark);
+      AddressArea =  preferences.getString(AddressSession.AddressArea);
+      AddressType =  preferences.getString(AddressSession.AddressType);
+      AddressPincode =  preferences.getString(AddressSession.AddressPincode);
+    });
   }
 
   @override
   void initState() {
     _getCartdata();
     getlocaldata();
+  }
+
+  _changeAddress(BuildContext context) async {
+      List _addressData = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddressScreen(fromwehere: "MyCart",)),
+      );
+      print(_addressData);
+      /*setState(() {
+        CustomerId = _addressData[0];
+        AddressId = _addressData[1];
+        AddressHouseNo = _addressData[2];
+        AddressAppartmentName = _addressData[3];
+        AddressStreet = _addressData[4];
+        AddressLandmark = _addressData[5];
+        AddressArea = _addressData[6];
+        AddressPincode =_addressData[7];
+      });*/
   }
 
   _getCartdata() async {
@@ -162,27 +191,24 @@ class _MyCartScreenState extends State<MyCartScreen> {
       body: isLoading == true
           ? LoadingComponent()
           : cartList.length > 0
-              ? SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, int index) {
-                          return MyCartComponent(
-                            cartData: cartList[index],
-                            onRemove: () {
-                              setState(() {
-                                cartList.removeAt(index);
-                              });
-                            },
-                          );
+              ? Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return MyCartComponent(
+                        cartData: cartList[index],
+                        onRemove: () {
+                          setState(() {
+                            cartList.removeAt(index);
+                          });
                         },
-                        itemCount: cartList.length,
-                      ),
-                    ],
+                      );
+                    },
+                    itemCount: cartList.length,
                   ),
-                )
+                ],
+              )
               : NoFoundComponent(
                   ImagePath: 'assets/noProduct.png',
                   Title: 'Your cart is empty'),
@@ -210,26 +236,23 @@ class _MyCartScreenState extends State<MyCartScreen> {
                       _showRedeemPoints();
                     },
                   ),
-                  /*Text(
+                  Text(
                     "Rs 450",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("Saved  Rs. 25"),*/
+                  Text("Saved  Rs. 25"),
                 ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: FlatButton(
-                onPressed: (){
-                  _placeOrder();
-                },
                 color: Colors.red[400],
                 textColor: Colors.white,
                 splashColor: Colors.white24,
-                /*onPressed: () {
+                onPressed: () {
                   Navigator.push(context, SlideLeftRoute(page: CheckoutPage()));
-                },*/
+                },
                 child: Row(
                   children: [
                     Text(

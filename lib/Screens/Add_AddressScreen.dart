@@ -8,6 +8,7 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/transitions/ShowUp.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -26,12 +27,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   final List<String> _addressTypeList = ["Home", "Office", "Other"];
   int selected_Index;
+  String SelectedCity;
   bool isAddressLoading = false;
+  bool isLoading=false;
+  List _City = [];
+
+  @override
+  void initState() {
+    getCityData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Add Address"),
+      ),
       body: SingleChildScrollView(
         child: Form(
             key: _formKey,
@@ -84,13 +96,43 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   label: "*Area Details",
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: InputFiled(
-                  controller: pincodetxt,
-                  hintText: "Pincode",
-                  label: "Pincode",
-                ),
+              Row(
+                children: [
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top:13.0,left:12),
+                      child: _City.length > 0 ? DropdownButton(
+                        hint: Text('Please Select City',style: TextStyle(fontSize: 14)),
+                        // Not necessary for Option 1
+                        value: SelectedCity,
+                        onChanged: (newValue) {
+                          setState(() {
+                            SelectedCity = newValue;
+                          });
+                        },
+                        items: _City.map((City) {
+                          return DropdownMenuItem<String>(
+                            child: new Text(City),
+                            value: City,
+                          );
+                        }).toList(),
+                      ):CircularProgressIndicator(),
+                    ),
+                  ),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: InputFiled(
+                          controller: pincodetxt,
+                          hintText: "Pincode",
+                          label: "Pincode",
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -194,6 +236,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           "AddressArea": areadetailtxt.text,
           "AddressType": _addressTypeList[selected_Index].toString(),
           "AddressPincode": pincodetxt.text,
+          "AddressPincode": SelectedCity,
         });
         setState(() {
           isAddressLoading = true;
@@ -221,4 +264,36 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       Fluttertoast.showToast(msg: "No Internet Connection.");
     }
   }
+
+  getCityData() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        Services.postforlist(apiname: 'getCity').then(
+                (responselist) async {
+              setState(() {
+                isLoading = false;
+              });
+              if (responselist.length > 0) {
+                setState(() {
+                  _City = responselist;
+                });
+                print(_City);
+              } else {
+                Fluttertoast.showToast(msg: "No City Found!");
+              }
+            }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
+
 }

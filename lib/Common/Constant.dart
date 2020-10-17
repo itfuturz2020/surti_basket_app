@@ -17,4 +17,17 @@ class Session {
   static const String v = "__v";
 }
 
+class AddressSession{
+  static const  String AddressId = "AddressId";
+  static const  String AddressHouseNo = "HomeNo";
+  static const String AddressName ="AddressName";
+  static const String AddressAppartmentName = "ApartmentName";
+  static const String AddressStreet = "AddressStreet";
+  static const String AddressLandmark = "AddressLandmark";
+  static const String AddressArea="AddressArea";
+  static const String AddressType="AddressType";
+  static const String AddressPincode="AddressPincode";
+  static const String City="City";
+}
+
 
