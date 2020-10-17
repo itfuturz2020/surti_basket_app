@@ -28,7 +28,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   DateTime currentBackPressTime;
   List _dashboardList = [];
   List _bannerList = [];
@@ -36,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List _suggestedProductList = [];
   List _Offerlist = [];
   bool isLoading = false;
-
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -60,14 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        backgroundColor: isLoading == true ? Colors.white:Colors.grey[400],
+        backgroundColor: isLoading == true ? Colors.white : Colors.grey[400],
         appBar: AppBar(
           actions: [
             IconButton(
                 icon: Icon(Icons.account_box),
                 onPressed: () {
-                  Navigator.push(context,
-                      SlideLeftRoute(page: ProfileScreen("Hello World")));
+                  Navigator.push(
+                      context, SlideLeftRoute(page: ProfileScreen()));
                 })
           ],
           title: InkWell(
@@ -92,96 +90,106 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         drawer: DrawerComponent(),
-        body: isLoading == true ? LoadingComponent():
-        _dashboardList.length > 0 ?
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              _bannerList.length > 0 ?
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: SizedBox(
-                  height: 170.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: Carousel(
-                    boxFit: BoxFit.cover,
-                    autoplay: true,
-                    animationCurve: Curves.fastOutSlowIn,
-                    animationDuration: Duration(milliseconds: 1000),
-                    dotSize: 4.0,
-                    dotIncreasedColor: Colors.black54,
-                    dotBgColor: Colors.transparent,
-                    dotPosition: DotPosition.bottomCenter,
-                    dotVerticalPadding: 10.0,
-                    showIndicator: true,
-                    indicatorBgPadding: 7.0,
-                    images: _bannerList.map((item) => Container(
-                        child:Image.network(IMG_URL+item["BannerImage"],fit: BoxFit.fill)
-
-                    )).toList(),
-                  ),
-                ),
-              ):Container(),
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0, right: 4.0, top: 4.0),
-                child: Card(
-                  child: Column(
-                    children: [
-                      TitlePattern(title: "Category"),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: _categoryList.length,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
+        body: isLoading == true
+            ? LoadingComponent()
+            : _dashboardList.length > 0
+                ? SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _bannerList.length > 0
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: SizedBox(
+                                  height: 170.0,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Carousel(
+                                    boxFit: BoxFit.cover,
+                                    autoplay: true,
+                                    animationCurve: Curves.fastOutSlowIn,
+                                    animationDuration:
+                                        Duration(milliseconds: 1000),
+                                    dotSize: 4.0,
+                                    dotIncreasedColor: Colors.black54,
+                                    dotBgColor: Colors.transparent,
+                                    dotPosition: DotPosition.bottomCenter,
+                                    dotVerticalPadding: 10.0,
+                                    showIndicator: true,
+                                    indicatorBgPadding: 7.0,
+                                    images: _bannerList
+                                        .map((item) => Container(
+                                            child: Image.network(
+                                                IMG_URL + item["BannerImage"],
+                                                fit: BoxFit.fill)))
+                                        .toList(),
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 4.0, right: 4.0, top: 4.0),
+                          child: Card(
+                            child: Column(
+                              children: [
+                                TitlePattern(title: "Category"),
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: _categoryList.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return CategoryComponent(
+                                        _categoryList[index]);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        itemBuilder: (context, index) {
-                          return CategoryComponent(_categoryList[index]);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Card(
-                      child: TitlePattern(title:"Suggested Products")
-                  ),
-                ),
-              ),
-              SizedBox(
-                child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: _suggestedProductList.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return ProductComponent(product: _suggestedProductList[index]);
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Card(
-                    child: TitlePattern(title: "Offers"),
-                  ),
-                ),
-              ),
-              // ignore: missing_return
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return OfferComponent(_Offerlist[index]);
-                },
-                itemCount: _Offerlist.length,
-              )
-            ],
-          ),
-        ):Container(color: Colors.white),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Card(
+                                child:
+                                    TitlePattern(title: "Suggested Products")),
+                          ),
+                        ),
+                        SizedBox(
+                          child: ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: _suggestedProductList.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return ProductComponent(
+                                    product: _suggestedProductList[index]);
+                              }),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Card(
+                              child: TitlePattern(title: "Offers"),
+                            ),
+                          ),
+                        ),
+                        // ignore: missing_return
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            return OfferComponent(_Offerlist[index]);
+                          },
+                          itemCount: _Offerlist.length,
+                        )
+                      ],
+                    ),
+                  )
+                : Container(color: Colors.white),
         bottomNavigationBar: Container(
           height: 54,
           decoration: BoxDecoration(
@@ -275,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   _dashboardData() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -283,24 +292,23 @@ class _HomeScreenState extends State<HomeScreen> {
           isLoading = true;
         });
         Services.postforlist(apiname: 'getDashboardData').then(
-                (responselist) async {
-              if(responselist.length > 0){
-                setState(() {
-                  isLoading = false;
-                  _dashboardList=responselist;
-                  _bannerList=responselist[0]["Banner"];
-                  _categoryList=responselist[1]["Category"];
-                 _Offerlist=responselist[2]["Offer"];
-                 _suggestedProductList=responselist[3]["SuggestedProduct"];
-                });
-                print(_bannerList);
-              }
-              else{
-                setState(() {
-                  isLoading=false;
-                });
-              }
-            }, onError: (e) {
+            (responselist) async {
+          if (responselist.length > 0) {
+            setState(() {
+              isLoading = false;
+              _dashboardList = responselist;
+              _bannerList = responselist[0]["Banner"];
+              _categoryList = responselist[1]["Category"];
+              _Offerlist = responselist[2]["Offer"];
+              _suggestedProductList = responselist[3]["SuggestedProduct"];
+            });
+            print(_bannerList);
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });
@@ -313,4 +321,3 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
-

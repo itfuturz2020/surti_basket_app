@@ -44,12 +44,12 @@ class _MyCartComponentState extends State<MyCartComponent> {
     }
   }
 
-  @override
-  void initState() {
-    setState(() {
-      Qty = int.parse("${widget.cartData["CartQuantity"]}");
-    });
-  }
+  // @override
+  // void initState() {
+  //   setState(() {
+  //     Qty = int.parse("${widget.cartData["CartQuantity"]}");
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

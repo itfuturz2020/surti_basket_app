@@ -12,10 +12,10 @@ import 'package:surti_basket_app/Screens/UpdateAddressScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 
 class AddressComponent extends StatefulWidget {
-  var addressData,fromwhere;
+  var addressData, fromwhere;
   Function onremove;
 
-  AddressComponent({this.addressData, this.onremove,this.fromwhere});
+  AddressComponent({this.addressData, this.onremove, this.fromwhere});
 
   @override
   _AddressComponentState createState() => _AddressComponentState();
@@ -48,15 +48,17 @@ class _AddressComponentState extends State<AddressComponent> {
       alignment: Alignment.center,
       children: [
         InkWell(
-          onTap: (){
-            if(widget.fromwhere == "Checkout"){
-              Navigator.pushReplacement(context, FadeRoute(page: CheckoutPage(addressdata: widget.addressData)));
+          onTap: () {
+            if (widget.fromwhere == "Checkout") {
+              Navigator.pushReplacement(
+                  context,
+                  FadeRoute(
+                      page: CheckoutPage(addressdata: widget.addressData)));
             }
           },
           child: Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Container(
-              color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -122,19 +124,24 @@ class _AddressComponentState extends State<AddressComponent> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("${CustomerName}",
-                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey)),
                           Text(
                               "${widget.addressData["AddressHouseNo"]}" +
                                   " - " +
                                   "${widget.addressData["AddressAppartmentName"]}",
                               //"44 , Rambaug Society",
-                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey)),
                           Text("${widget.addressData["AddressStreet"]}",
-                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey)),
                           Text("${widget.addressData["AddressLandmark"]}",
-                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey)),
                           Text("${Customerphone}",
-                              style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey)),
                         ],
                       ),
                     ),
