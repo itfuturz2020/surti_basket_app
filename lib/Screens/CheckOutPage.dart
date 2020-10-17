@@ -21,7 +21,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
 
-  String CustomerId,CustomerName,Customerphone;
+  String CustomerId,CustomerName,Customerphone,AddressId,AddressHouseNo,AddressName,AddressAppartmentName,AddressStreet,AddressLandmark,AddressArea,AddressType,AddressPincode,City;
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -29,14 +29,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
       CustomerId = preferences.getString(Session.customerId);
       CustomerName = preferences.getString(Session.CustomerName);
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
+      AddressId =  preferences.getString(AddressSession.AddressId);
+      AddressHouseNo =  preferences.getString(AddressSession.AddressHouseNo);
+      AddressAppartmentName =  preferences.getString(AddressSession.AddressAppartmentName);
+      AddressStreet =  preferences.getString(AddressSession.AddressStreet);
+      AddressLandmark =  preferences.getString(AddressSession.AddressLandmark);
+      AddressArea =  preferences.getString(AddressSession.AddressArea);
+      AddressType =  preferences.getString(AddressSession.AddressType);
+      City =  preferences.getString(AddressSession.City);
     });
   }
 
-/*  @override
+  @override
   void initState() {
-    print(""+ widget.addressdata);
+    getlocaldata();
     super.initState();
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,79 +58,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            widget.addressdata == ""?
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Text("Defualt Address:",
-                                          style: TextStyle(
-                                              color: Colors.deepOrangeAccent,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15)),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 5.0),
-                                        child: Text(
-                                            "${widget.addressdata["AddressType"]}",
-                                            style: TextStyle(
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0, bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("${CustomerName}",
-                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
-                                  Text(
-                                      "${widget.addressdata["AddressHouseNo"]}" +
-                                          " - " +
-                                          "${widget.addressdata["AddressAppartmentName"]}",
-                                      //"44 , Rambaug Society",
-                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
-                                  Text("${widget.addressdata["AddressStreet"]}",
-                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
-                                  Text("${widget.addressdata["AddressLandmark"]}",
-                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
-                                  Text("${Customerphone}",
-                                      style: TextStyle(fontSize: 14, color: Colors.grey)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+            RaisedButton(onPressed: (){
+            }),
+            widget.addressdata != null ?
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                        ],
                       ),
-                    ),
-                  )
-                ],
+                    ],
+                  ),
+                ),
               ),
-            ):RaisedButton(
-              onPressed: (){
-                Navigator.push(context, FadeRoute(page: AddressScreen(fromwehere: "Checkout")) );
-              },
-            ),
+            ):Container()
           ],
         ),
       ),

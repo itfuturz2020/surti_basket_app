@@ -49,8 +49,9 @@ class _AddressComponentState extends State<AddressComponent> {
       children: [
         InkWell(
           onTap: (){
-            if(widget.fromwhere == "Checkout"){
-              Navigator.pushReplacement(context, FadeRoute(page: CheckoutPage(addressdata: widget.addressData)));
+            print(widget.fromwhere);
+            if(widget.fromwhere == "MyCart"){
+              Navigator.pop(context,widget.addressData);
             }
           },
           child: Padding(

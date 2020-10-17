@@ -8,7 +8,7 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/AddressComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
-import 'package:surti_basket_app/Screens/UpdateProfileScreen.dart';
+import 'package:surti_basket_app/Screens/Add_AddressScreen.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -97,6 +97,20 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
+  saveDataToSession(var data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AddressSession.AddressId, data["AddressId"].toString());
+    await prefs.setString(AddressSession.AddressHouseNo, data["AddressHouseNo"]);
+    await prefs.setString(AddressSession.AddressName, data["AddressName"]);
+    await prefs.setString(AddressSession.AddressAppartmentName, data["AddressAppartmentName"]);
+    await prefs.setString(AddressSession.AddressStreet, data["AddressStreet"]);
+    await prefs.setString(AddressSession.AddressLandmark, data["AddressLandmark"]);
+    await prefs.setString(AddressSession.AddressArea, data["AddressArea"]);
+    await prefs.setString(AddressSession.AddressType, data["AddressType"]);
+    await prefs.setString(AddressSession.AddressPincode, data["AddressPincode"]);
+    await prefs.setString(AddressSession.City, data["AddressCityName"]);
+  }
+
   _getAddress() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -116,6 +130,7 @@ class _AddressScreenState extends State<AddressScreen> {
               getaddressList = ResponseList;
               isgetaddressLoading = false;
             });
+            saveDataToSession(ResponseList[0]);
           } else {
             Fluttertoast.showToast(msg: "Address Not Found");
           }
