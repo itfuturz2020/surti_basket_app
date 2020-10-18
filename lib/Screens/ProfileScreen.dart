@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/Screens/MyOrder.dart';
 import 'package:surti_basket_app/Screens/OrderHistoryScreen.dart';
 import 'package:surti_basket_app/Screens/OrderDetailScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
@@ -206,8 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.only(left: 12.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context, FadeRoute(page: OrderHistoryScreen()));
+                        Navigator.push(context, FadeRoute(page: MyOrder()));
                       },
                       child: Text("My Orders",
                           style:
