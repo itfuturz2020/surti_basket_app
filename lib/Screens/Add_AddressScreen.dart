@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
@@ -31,10 +32,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   bool isAddressLoading = false;
   bool isLoading=false;
   List _City = [];
+  Location location = new Location();
+  LocationData locationData;
+  String latitude,longitude;
 
   @override
   void initState() {
     getCityData();
+    _getLocation();
     super.initState();
   }
 
@@ -222,6 +227,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     );
   }
 
+  _getLocation() async {
+    try {
+      locationData = await location.getLocation();
+      if(locationData != null){
+        setState(() {
+          latitude=locationData.latitude.toString();
+          longitude=locationData.longitude.toString();
+        });
+      }
+    } catch (e) {
+      locationData = null;
+    }
+  }
+
   _addAddress() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -237,7 +256,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           "AddressType": _addressTypeList[selected_Index].toString(),
           "AddressPincode": pincodetxt.text,
           "AddressCityName": SelectedCity,
+          "AddressLat": latitude,
+          "AddressLong": longitude,
         });
+        print(body.fields);
         setState(() {
           isAddressLoading = true;
         });
