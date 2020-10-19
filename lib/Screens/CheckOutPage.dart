@@ -58,26 +58,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   _changeAddress(BuildContext context) async {
-    Map<String,dynamic> _addressData = await Navigator.push(
+    Map<String, dynamic> _addressData = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddressScreen(fromwehere: "Checkout")),
+      MaterialPageRoute(
+          builder: (context) => AddressScreen(fromwehere: "Checkout")),
     );
     print(_addressData);
     setState(() {
-        CustomerId = _addressData["CustomerId"];
-        AddressId = _addressData["AddressId"];
-        AddressHouseNo = _addressData["AddressHouseNo"];
-        AddressAppartmentName = _addressData["AddressAppartmentName"];
-        AddressStreet = _addressData["AddressStreet"];
-        AddressLandmark = _addressData["AddressLandmark"];
-        AddressArea = _addressData["AddressArea"];
-        AddressPincode =_addressData["AddressPincode"];
-        AddressType = _addressData["AddressType"];
-        City = _addressData["City"];
-      });
+      CustomerId = _addressData["CustomerId"];
+      AddressId = _addressData["AddressId"];
+      AddressHouseNo = _addressData["AddressHouseNo"];
+      AddressAppartmentName = _addressData["AddressAppartmentName"];
+      AddressStreet = _addressData["AddressStreet"];
+      AddressLandmark = _addressData["AddressLandmark"];
+      AddressArea = _addressData["AddressArea"];
+      AddressPincode = _addressData["AddressPincode"];
+      AddressType = _addressData["AddressType"];
+      City = _addressData["City"];
+    });
     print(AddressId);
   }
-
 
   @override
   void initState() {
@@ -112,14 +112,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.location_on_outlined, size: 18),
+                                  Icon(Icons.location_on, size: 18),
                                   Text("Deliver to: ${AddressType}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               InkWell(
-                                onTap: (){
+                                onTap: () {
                                   _changeAddress(context);
                                 },
                                 child: Container(
@@ -170,9 +170,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           children: [
                             Checkbox(
                                 value: _usePoints,
-                                onChanged: (value){
+                                onChanged: (value) {
                                   setState(() {
-                                    _usePoints=value;
+                                    _usePoints = value;
                                   });
                                 }),
                             Image.asset("assets/coin.png", width: 25),
