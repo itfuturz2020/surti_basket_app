@@ -24,10 +24,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
 
   @override
   void initState() {
-    setState(() {
-      _getorderHistory();
-      getlocaldata();
-    });
+    _getorderHistory();
+    getlocaldata();
   }
 
   getlocaldata() async {
@@ -51,9 +49,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           });
           if (responselist.length > 0) {
             setState(() {
-              OrderHistoryList = responselist[0]["Order"];
-              PaymentList = responselist[1]["Payment"];
-              TotalList = responselist[1]["Total"];
+              OrderHistoryList = responselist[0];
             });
           } else {
             Fluttertoast.showToast(msg: "Data Not Found!");
@@ -75,11 +71,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        elevation: 1,
-        title: Text("Order History",
-            style: TextStyle(color: Colors.white, fontSize: 18)),
-      ),
+      // appBar: AppBar(
+      //   elevation: 1,
+      //   title: Text("Order History",
+      //       style: TextStyle(color: Colors.white, fontSize: 18)),
+      // ),
       body: isorderDetailLoading
           ? LoadingComponent()
           : Column(
@@ -197,7 +193,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(
-                          context, FadeRoute(page: OrderDetailScreen()));
+                          context,
+                          FadeRoute(
+                              page: OrderDetailScreen(
+                            orderid: OrderHistoryList[0]["OrderId"],
+                          )));
                     },
                     child: Container(
                       color: Colors.white,

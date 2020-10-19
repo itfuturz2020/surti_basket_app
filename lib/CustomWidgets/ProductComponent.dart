@@ -1,6 +1,17 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
+import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class ProductComponent extends StatefulWidget {
@@ -13,6 +24,20 @@ class ProductComponent extends StatefulWidget {
 }
 
 class _ProductComponentState extends State<ProductComponent> {
+  bool iscartlist = false;
+  bool iscartLoading = false;
+  String CustomerId;
+
+  getlocaldata() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    CustomerId = await preferences.getString(Session.customerId);
+  }
+
+  @override
+  void initState() {
+    getlocaldata();
+  }
+
   int Qty = 0;
 
   void add() {
@@ -47,7 +72,9 @@ class _ProductComponentState extends State<ProductComponent> {
                       Navigator.push(
                           context,
                           SlideLeftRoute(
-                              page: ProductDetailScreen(productId: "${widget.product["ProductId"]}")));
+                              page: ProductDetailScreen(
+                                  productId:
+                                      "${widget.product["ProductId"]}")));
                     },
                     child: Image.network(
                       '${IMG_URL + widget.product["ProductImages"]}',
@@ -97,102 +124,100 @@ class _ProductComponentState extends State<ProductComponent> {
                                     " ${Inr_Rupee + widget.product["ProductSrp"]}",
                                     style: TextStyle(
                                         fontSize: 17, color: Colors.black)),
-                                Qty == 0
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: SizedBox(
-                                          height: 35,
-                                          width: 70,
-                                          child: FlatButton(
-                                            color: Colors.redAccent,
-                                            child: Text('Add',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15)),
-                                            //`Text` to display
-                                            onPressed: () {
-                                              setState(() {
-                                                Qty = 1;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                    : Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 10.0),
-                                        child: Row(
-                                          children: [
-                                            InkWell(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey[300],
-                                                        blurRadius: 2.0,
-                                                      ),
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0),
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color:
-                                                            Colors.red[400])),
-                                                width: 30,
-                                                height: 30,
-                                                child: Center(
-                                                  child: Icon(Icons.remove,
-                                                      color: Colors.red[400],
-                                                      size: 20),
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                remove();
-                                              },
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0, right: 10.0),
-                                              child: Text(
-                                                "${Qty}",
-                                                style: TextStyle(fontSize: 20),
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                add();
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey[300],
-                                                        blurRadius: 2.0,
-                                                      ),
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0),
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color:
-                                                            Colors.red[400])),
-                                                width: 30,
-                                                height: 30,
-                                                child: Center(
-                                                  child: Icon(Icons.add,
-                                                      color: Colors.red[400],
-                                                      size: 20),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: SizedBox(
+                                    height: 35,
+                                    width: 70,
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        _addTocart();
+                                      },
+                                      color: Colors.redAccent,
+                                      child: iscartLoading
+                                          ? LoadingComponent()
+                                          : Text('Add',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15)),
+                                    ),
+                                  ),
+                                ),
+
+                                // : Padding(
+                                //     padding:
+                                //         const EdgeInsets.only(right: 10.0),
+                                //     child: Row(
+                                //       children: [
+                                //         InkWell(
+                                //           child: Container(
+                                //             decoration: BoxDecoration(
+                                //                 color: Colors.white,
+                                //                 boxShadow: [
+                                //                   BoxShadow(
+                                //                     color: Colors.grey[300],
+                                //                     blurRadius: 2.0,
+                                //                   ),
+                                //                 ],
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(
+                                //                         4.0),
+                                //                 border: Border.all(
+                                //                     width: 1,
+                                //                     color:
+                                //                         Colors.red[400])),
+                                //             width: 30,
+                                //             height: 30,
+                                //             child: Center(
+                                //               child: Icon(Icons.remove,
+                                //                   color: Colors.red[400],
+                                //                   size: 20),
+                                //             ),
+                                //           ),
+                                //           onTap: () {
+                                //             remove();
+                                //           },
+                                //         ),
+                                //         Padding(
+                                //           padding: const EdgeInsets.only(
+                                //               left: 10.0, right: 10.0),
+                                //           child: Text(
+                                //             "${Qty}",
+                                //             style: TextStyle(fontSize: 20),
+                                //           ),
+                                //         ),
+                                //         InkWell(
+                                //           onTap: () {
+                                //             add();
+                                //           },
+                                //           child: Container(
+                                //             decoration: BoxDecoration(
+                                //                 color: Colors.white,
+                                //                 boxShadow: [
+                                //                   BoxShadow(
+                                //                     color: Colors.grey[300],
+                                //                     blurRadius: 2.0,
+                                //                   ),
+                                //                 ],
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(
+                                //                         4.0),
+                                //                 border: Border.all(
+                                //                     width: 1,
+                                //                     color:
+                                //                         Colors.red[400])),
+                                //             width: 30,
+                                //             height: 30,
+                                //             child: Center(
+                                //               child: Icon(Icons.add,
+                                //                   color: Colors.red[400],
+                                //                   size: 20),
+                                //             ),
+                                //           ),
+                                //         )
+                                //       ],
+                                //     ),
+                                //   ),
                               ],
                             ),
                           ),
@@ -207,5 +232,46 @@ class _ProductComponentState extends State<ProductComponent> {
         ],
       ),
     );
+  }
+
+  _addTocart() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          iscartLoading = true;
+        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        FormData body = FormData.fromMap({
+          "CustomerId": CustomerId,
+          "ProductId": "${widget.product["ProductId"]}",
+          "CartQuantity": "1",
+          "ProductDetailId": "",
+        });
+        print(body.fields);
+        Services.postForSave(apiname: 'addToCart', body: body).then(
+            (responseadd) async {
+          if (responseadd.IsSuccess == true && responseadd.Data == "1") {
+            Navigator.push(context, FadeRoute(page: MyCartScreen()));
+            setState(() {
+              iscartLoading = false;
+
+              // iscartlist = !iscartlist;
+            });
+            Provider.of<CartProvider>(context, listen: false).increaseCart();
+            Fluttertoast.showToast(
+                msg: "Added Successfully", gravity: ToastGravity.BOTTOM);
+          }
+        }, onError: (e) {
+          setState(() {
+            iscartLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
   }
 }

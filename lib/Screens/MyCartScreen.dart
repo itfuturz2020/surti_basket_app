@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
@@ -11,6 +12,7 @@ import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/MyCartComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/CheckOutPage.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
@@ -26,20 +28,30 @@ class MyCartScreen extends StatefulWidget {
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
   List cartList = [];
-  String CustomerId,AddressId,AddressHouseNo,AddressName,AddressAppartmentName,AddressStreet,AddressLandmark,AddressArea,AddressType,AddressPincode;
+  String CustomerId,
+      AddressId,
+      AddressHouseNo,
+      AddressName,
+      AddressAppartmentName,
+      AddressStreet,
+      AddressLandmark,
+      AddressArea,
+      AddressType,
+      AddressPincode;
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      CustomerId =  preferences.getString(Session.customerId);
-      AddressId =  preferences.getString(AddressSession.AddressId);
-      AddressHouseNo =  preferences.getString(AddressSession.AddressHouseNo);
-      AddressAppartmentName =  preferences.getString(AddressSession.AddressAppartmentName);
-      AddressStreet =  preferences.getString(AddressSession.AddressStreet);
-      AddressLandmark =  preferences.getString(AddressSession.AddressLandmark);
-      AddressArea =  preferences.getString(AddressSession.AddressArea);
-      AddressType =  preferences.getString(AddressSession.AddressType);
-      AddressPincode =  preferences.getString(AddressSession.AddressPincode);
+      CustomerId = preferences.getString(Session.customerId);
+      AddressId = preferences.getString(AddressSession.AddressId);
+      AddressHouseNo = preferences.getString(AddressSession.AddressHouseNo);
+      AddressAppartmentName =
+          preferences.getString(AddressSession.AddressAppartmentName);
+      AddressStreet = preferences.getString(AddressSession.AddressStreet);
+      AddressLandmark = preferences.getString(AddressSession.AddressLandmark);
+      AddressArea = preferences.getString(AddressSession.AddressArea);
+      AddressType = preferences.getString(AddressSession.AddressType);
+      AddressPincode = preferences.getString(AddressSession.AddressPincode);
     });
   }
 
@@ -50,12 +62,15 @@ class _MyCartScreenState extends State<MyCartScreen> {
   }
 
   _changeAddress(BuildContext context) async {
-      List _addressData = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => AddressScreen(fromwehere: "MyCart",)),
-      );
-      print(_addressData);
-      /*setState(() {
+    List _addressData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddressScreen(
+                fromwehere: "MyCart",
+              )),
+    );
+    print(_addressData);
+    /*setState(() {
         CustomerId = _addressData[0];
         AddressId = _addressData[1];
         AddressHouseNo = _addressData[2];
@@ -191,24 +206,27 @@ class _MyCartScreenState extends State<MyCartScreen> {
       body: isLoading == true
           ? LoadingComponent()
           : cartList.length > 0
-              ? Column(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return MyCartComponent(
-                        cartData: cartList[index],
-                        onRemove: () {
-                          setState(() {
-                            cartList.removeAt(index);
-                          });
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return MyCartComponent(
+                            cartData: cartList[index],
+                            onRemove: () {
+                              setState(() {
+                                cartList.removeAt(index);
+                              });
+                            },
+                          );
                         },
-                      );
-                    },
-                    itemCount: cartList.length,
+                        itemCount: cartList.length,
+                      ),
+                    ],
                   ),
-                ],
-              )
+                )
               : NoFoundComponent(
                   ImagePath: 'assets/noProduct.png',
                   Title: 'Your cart is empty'),
@@ -275,45 +293,45 @@ class _MyCartScreenState extends State<MyCartScreen> {
   }
 
   _placeOrder() async {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          setState(() {
-            isLoading = true;
-          });
-          FormData body = FormData.fromMap({
-            "CustomerId":"${CustomerId}",
-            "AddressId":"21",
-            "OrderPaymentMethod":"cash",
-            "OrderTransactionNo":"",
-            "OrderPromoCode":"",
-            "OrderTransactionNo":"",
-            "OrderBonusPoint":""
-          });
-          Services.postForSave(apiname: 'placeOrder', body: body).then(
-                  (responseremove) async {
-                if (responseremove.IsSuccess == true && responseremove.Data == "1") {
-                  setState(() {
-                    isLoading = false;
-                  });
-                  Navigator.pushReplacement(context, FadeRoute(page:HomeScreen()));
-                  Fluttertoast.showToast(msg: "Order Place Successfully");
-                }
-                else{
-                  setState(() {
-                    isLoading=false;
-                  });
-                }
-              }, onError: (e) {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        FormData body = FormData.fromMap({
+          "CustomerId": "${CustomerId}",
+          "AddressId": "21",
+          "OrderPaymentMethod": "cash",
+          "OrderTransactionNo": "",
+          "OrderPromoCode": "",
+          "OrderTransactionNo": "",
+          "OrderBonusPoint": ""
+        });
+        Services.postForSave(apiname: 'placeOrder', body: body).then(
+            (responseremove) async {
+          if (responseremove.IsSuccess == true && responseremove.Data == "1") {
+            Provider.of<CartProvider>(context, listen: false).removecart();
             setState(() {
               isLoading = false;
             });
-            print("error on call -> ${e.message}");
-            Fluttertoast.showToast(msg: "something went wrong");
+            Navigator.pushReplacement(context, FadeRoute(page: HomeScreen()));
+            Fluttertoast.showToast(msg: "Order Place Successfully");
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
           });
-        }
-      } on SocketException catch (_) {
-        Fluttertoast.showToast(msg: "No Internet Connection");
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
       }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
   }
 }

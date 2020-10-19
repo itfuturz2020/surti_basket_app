@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
@@ -14,6 +16,7 @@ import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/OfferComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/ProfileScreen.dart';
@@ -55,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider provider = Provider.of<CartProvider>(context);
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
@@ -256,25 +260,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Flexible(
-                child: InkWell(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset('assets/shoppingcart.png',
-                            width: 22, color: Colors.grey),
-                        Text("My Cart",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 11))
-                      ],
+                child: Stack(
+                  children: [
+                    InkWell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Image.asset('assets/shoppingcart.png',
+                                width: 22, color: Colors.grey),
+                            Text("My Cart",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 11))
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context, SlideLeftRoute(page: MyCartScreen()));
+                      },
                     ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context, SlideLeftRoute(page: MyCartScreen()));
-                  },
+                    Container(
+                      alignment: Alignment.topCenter,
+                      child: provider.cartCount > 0
+                          ? CircleAvatar(
+                              radius: 8.0,
+                              backgroundColor: Colors.red[400],
+                              foregroundColor: Colors.white,
+                              child: Text(
+                                provider.cartCount.toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11.0,
+                                ),
+                              ),
+                            )
+                          : Container(),
+                    )
+                  ],
                 ),
               ),
             ],

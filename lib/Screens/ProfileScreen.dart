@@ -38,6 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: Text("My Profile",
@@ -196,25 +197,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(14.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Image.asset('assets/shoppingcart.png',
-                        width: 25, color: Colors.black54),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, FadeRoute(page: MyOrder()));
+                },
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.asset('assets/shoppingcart.png',
+                            width: 25, color: Colors.black54),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text("My Orders",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16)),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, FadeRoute(page: MyOrder()));
-                      },
-                      child: Text("My Orders",
-                          style:
-                              TextStyle(color: Colors.black54, fontSize: 16)),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
             Container(

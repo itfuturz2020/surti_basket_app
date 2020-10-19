@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/OrderDetailComponent.dart';
 
 class OrderDetailScreen extends StatefulWidget {
+  var orderid;
+  OrderDetailScreen({this.orderid});
+
   @override
   _OrderDetailScreenState createState() => _OrderDetailScreenState();
 }
@@ -20,15 +22,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   void initState() {
-    setState(() {
-      _getorderhistorydetail();
-      getlocaldata();
-    });
-  }
-
-  getlocaldata() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    CustomerId = await preferences.getString(Session.customerId);
+    _getorderhistorydetail();
   }
 
   _getorderhistorydetail() async {
@@ -38,7 +32,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         setState(() {
           isorderLoading = true;
         });
-        FormData body = FormData.fromMap({"OrderId": "74"});
+        FormData body = FormData.fromMap({"OrderId": widget.orderid});
         print(body.fields);
         Services.postforlist(apiname: 'orderHistoryDetail', body: body).then(
             (responselist) async {
@@ -69,24 +63,28 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        elevation: 1,
-        title: Text("Order Detail",
-            style: TextStyle(color: Colors.white, fontSize: 18)),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: ListView.separated(
-          physics: BouncingScrollPhysics(),
-          itemCount: OrderDetailList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return OrderDetailComponent(
-              orderDetaildata: OrderDetailList[index],
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) => Divider(),
-        ),
-      ),
+      // appBar: AppBar(
+      //   elevation: 1,
+      //   title: Text("Order Detail",
+      //       style: TextStyle(color: Colors.white, fontSize: 18)),
+      // ),
+      body: isorderLoading
+          ? LoadingComponent()
+          : Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: ListView.separated(
+                physics: BouncingScrollPhysics(),
+                itemCount: OrderDetailList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container();
+                  /*return OrderDetailComponent(
+                    orderDetaildata: OrderDetailList[index],
+                  );*/
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    Divider(),
+              ),
+            ),
     );
   }
 }

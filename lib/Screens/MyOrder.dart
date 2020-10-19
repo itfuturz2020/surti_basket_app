@@ -15,9 +15,6 @@ class MyOrder extends StatefulWidget {
 
 class _MyOrderState extends State<MyOrder> {
   List MyOrderList = [];
-  List PaymentList = [];
-  List TotalList = [];
-  List MainList = [];
   String CustomerId;
   bool isorderDetailLoading = false;
 
@@ -50,10 +47,7 @@ class _MyOrderState extends State<MyOrder> {
           });
           if (responselist.length > 0) {
             setState(() {
-              MainList = responselist;
-              MyOrderList = responselist[0]["Order"];
-              PaymentList = responselist[1]["Payment"];
-              TotalList = responselist[1]["Total"];
+              MyOrderList = responselist;
             });
           } else {
             Fluttertoast.showToast(msg: "Data Not Found!");
@@ -83,12 +77,10 @@ class _MyOrderState extends State<MyOrder> {
       body: ListView.separated(
         padding: EdgeInsets.only(top: 10),
         physics: BouncingScrollPhysics(),
-        itemCount: MainList.length,
+        itemCount: MyOrderList.length,
         itemBuilder: (BuildContext context, int index) {
           return MyorderComponent(
-            MyOrderData: MyOrderList,
-            orderPayment: PaymentList,
-            ordertotal: TotalList,
+            MyOrderData: MyOrderList[index],
           );
         },
         separatorBuilder: (BuildContext context, int index) => Container(
