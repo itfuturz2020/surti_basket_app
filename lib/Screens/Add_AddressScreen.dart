@@ -236,7 +236,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           "AddressArea": areadetailtxt.text,
           "AddressType": _addressTypeList[selected_Index].toString(),
           "AddressPincode": pincodetxt.text,
-          "AddressPincode": SelectedCity,
+          "AddressCityName": SelectedCity,
         });
         setState(() {
           isAddressLoading = true;

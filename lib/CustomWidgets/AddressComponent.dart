@@ -27,6 +27,7 @@ class _AddressComponentState extends State<AddressComponent> {
   String CustomerId;
   String CustomerName;
   String Customerphone;
+  List data=[];
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -50,8 +51,9 @@ class _AddressComponentState extends State<AddressComponent> {
         InkWell(
           onTap: () {
             print(widget.fromwhere);
-            if (widget.fromwhere == "MyCart") {
-              Navigator.pop(context, widget.addressData);
+            if (widget.fromwhere == "Checkout") {
+              //print(widget.addressData);
+             Navigator.pop(context, widget.addressData);
             }
           },
           child: Padding(

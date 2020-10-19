@@ -62,15 +62,12 @@ class _MyCartScreenState extends State<MyCartScreen> {
   }
 
   _changeAddress(BuildContext context) async {
-    List _addressData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => AddressScreen(
-                fromwehere: "MyCart",
-              )),
-    );
-    print(_addressData);
-    /*setState(() {
+      List _addressData = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddressScreen(fromwehere: "MyCart",)),
+      );
+      print(_addressData);
+      /*setState(() {
         CustomerId = _addressData[0];
         AddressId = _addressData[1];
         AddressHouseNo = _addressData[2];

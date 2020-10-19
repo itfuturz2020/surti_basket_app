@@ -14,31 +14,70 @@ import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class CheckoutPage extends StatefulWidget {
   var addressdata;
+
   CheckoutPage({this.addressdata});
+
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-
-  String CustomerId,CustomerName,Customerphone,AddressId,AddressHouseNo,AddressName,AddressAppartmentName,AddressStreet,AddressLandmark,AddressArea,AddressType,AddressPincode,City;
+  String CustomerId,
+      CustomerName,
+      Customerphone,
+      AddressId,
+      AddressHouseNo,
+      AddressName,
+      AddressAppartmentName,
+      AddressStreet,
+      AddressLandmark,
+      AddressArea,
+      AddressType,
+      AddressPincode,
+      City;
+  SharedPreferences preferences;
+  bool _usePoints = false;
 
   getlocaldata() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences = await SharedPreferences.getInstance();
     setState(() {
       CustomerId = preferences.getString(Session.customerId);
       CustomerName = preferences.getString(Session.CustomerName);
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
-      AddressId =  preferences.getString(AddressSession.AddressId);
-      AddressHouseNo =  preferences.getString(AddressSession.AddressHouseNo);
-      AddressAppartmentName =  preferences.getString(AddressSession.AddressAppartmentName);
-      AddressStreet =  preferences.getString(AddressSession.AddressStreet);
-      AddressLandmark =  preferences.getString(AddressSession.AddressLandmark);
-      AddressArea =  preferences.getString(AddressSession.AddressArea);
-      AddressType =  preferences.getString(AddressSession.AddressType);
-      City =  preferences.getString(AddressSession.City);
+      AddressId = preferences.getString(AddressSession.AddressId);
+      AddressHouseNo = preferences.getString(AddressSession.AddressHouseNo);
+      AddressPincode = preferences.getString(AddressSession.AddressPincode);
+      AddressAppartmentName =
+          preferences.getString(AddressSession.AddressAppartmentName);
+      AddressStreet = preferences.getString(AddressSession.AddressStreet);
+      AddressLandmark = preferences.getString(AddressSession.AddressLandmark);
+      AddressArea = preferences.getString(AddressSession.AddressArea);
+      AddressType = preferences.getString(AddressSession.AddressType);
+      City = preferences.getString(AddressSession.City);
     });
   }
+
+  _changeAddress(BuildContext context) async {
+    Map<String,dynamic> _addressData = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddressScreen(fromwehere: "Checkout")),
+    );
+    print(_addressData);
+    setState(() {
+        CustomerId = _addressData["CustomerId"];
+        AddressId = _addressData["AddressId"];
+        AddressHouseNo = _addressData["AddressHouseNo"];
+        AddressAppartmentName = _addressData["AddressAppartmentName"];
+        AddressStreet = _addressData["AddressStreet"];
+        AddressLandmark = _addressData["AddressLandmark"];
+        AddressArea = _addressData["AddressArea"];
+        AddressPincode =_addressData["AddressPincode"];
+        AddressType = _addressData["AddressType"];
+        City = _addressData["City"];
+      });
+    print(AddressId);
+  }
+
 
   @override
   void initState() {
@@ -57,29 +96,110 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RaisedButton(onPressed: (){
-            }),
-            widget.addressdata != null ?
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width,
+              child: preferences == ""
+                  ? FlatButton(onPressed: () {}, child: Text("Select Address"))
+                  : Padding(
+                      padding: const EdgeInsets.all(9.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.location_on_outlined, size: 18),
+                                  Text("Deliver to: ${AddressType}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                              InkWell(
+                                onTap: (){
+                                  _changeAddress(context);
+                                },
+                                child: Container(
+                                  child: Center(
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text("Change",
+                                        style: TextStyle(fontSize: 13)),
+                                  )),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 1, color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(4.0)),
+                                ),
+                              )
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 6.0, left: 4.0, bottom: 4.0),
+                            child: Text(
+                                "${AddressHouseNo}-" +
+                                    "${AddressAppartmentName}" +
+                                    "," +
+                                    "${AddressStreet}" +
+                                    "\n${AddressLandmark}, " +
+                                    "${AddressArea} ," +
+                                    "${City}-" +
+                                    "${AddressPincode}",
+                                style: TextStyle(color: Colors.grey[700])),
+                          ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ):Container()
+                    ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                                value: _usePoints,
+                                onChanged: (value){
+                                  setState(() {
+                                    _usePoints=value;
+                                  });
+                                }),
+                            Image.asset("assets/coin.png", width: 25),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text("Redeem Points",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black54)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text("100 Points ",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black54)),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
+            )
           ],
         ),
       ),
@@ -87,15 +207,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 }
 
-
 class PinCodePopup extends StatefulWidget {
   @override
   _PinCodePopupState createState() => _PinCodePopupState();
 }
 
 class _PinCodePopupState extends State<PinCodePopup> {
-  TextEditingController pincode=new TextEditingController();
-  bool isLoading=false;
+  TextEditingController pincode = new TextEditingController();
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -127,10 +247,10 @@ class _PinCodePopupState extends State<PinCodePopup> {
               hasTextBorderColor: appPrimaryMaterialColor,
               maxLength: 6,
               pinBoxDecoration:
-              ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+                  ProvidedPinBoxDecoration.defaultPinBoxDecoration,
               pinTextStyle: TextStyle(fontSize: 14.0),
               pinTextAnimatedSwitcherTransition:
-              ProvidedPinBoxTextAnimation.scalingTransition,
+                  ProvidedPinBoxTextAnimation.scalingTransition,
               pinTextAnimatedSwitcherDuration: Duration(milliseconds: 200),
             ),
           ),
@@ -149,29 +269,27 @@ class _PinCodePopupState extends State<PinCodePopup> {
   }
 
   _checkPinCode() async {
-    if(pincode.text != null){
+    if (pincode.text != null) {
       try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           setState(() {
             isLoading = true;
           });
-          FormData body = FormData.fromMap({
-            "PincodeNo":pincode.text
-          });
+          FormData body = FormData.fromMap({"PincodeNo": pincode.text});
           Services.postForSave(apiname: 'checkPincode', body: body).then(
-                  (responseremove) async {
-                if (responseremove.IsSuccess == true && responseremove.Data == "1") {
-                  setState(() {
-                    isLoading = false;
-                  });
-                }
-                else{
-                  setState(() {
-                    isLoading=false;
-                  });
-                }
-              }, onError: (e) {
+              (responseremove) async {
+            if (responseremove.IsSuccess == true &&
+                responseremove.Data == "1") {
+              setState(() {
+                isLoading = false;
+              });
+            } else {
+              setState(() {
+                isLoading = false;
+              });
+            }
+          }, onError: (e) {
             setState(() {
               isLoading = false;
             });
@@ -182,14 +300,13 @@ class _PinCodePopupState extends State<PinCodePopup> {
       } on SocketException catch (_) {
         Fluttertoast.showToast(msg: "No Internet Connection");
       }
-    }
-    else{
+    } else {
       Fluttertoast.showToast(msg: "Please Enter PinCode");
     }
   }
 
   _placeOrder() async {
-    if(pincode.text != null){
+    if (pincode.text != null) {
       try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -197,27 +314,27 @@ class _PinCodePopupState extends State<PinCodePopup> {
             isLoading = true;
           });
           FormData body = FormData.fromMap({
-          "CustomerId":"",
-          "AddressId":"",
-          "OrderPaymentMethod":"",
-          "OrderTransactionNo":"",
-          "OrderPromoCode":"",
-          "OrderTransactionNo":"",
-          "OrderBonusPoint":""
+            "CustomerId": "",
+            "AddressId": "",
+            "OrderPaymentMethod": "",
+            "OrderTransactionNo": "",
+            "OrderPromoCode": "",
+            "OrderTransactionNo": "",
+            "OrderBonusPoint": ""
           });
           Services.postForSave(apiname: 'placeOrder', body: body).then(
-                  (responseremove) async {
-                if (responseremove.IsSuccess == true && responseremove.Data == "1") {
-                  setState(() {
-                    isLoading = false;
-                  });
-                }
-                else{
-                  setState(() {
-                    isLoading=false;
-                  });
-                }
-              }, onError: (e) {
+              (responseremove) async {
+            if (responseremove.IsSuccess == true &&
+                responseremove.Data == "1") {
+              setState(() {
+                isLoading = false;
+              });
+            } else {
+              setState(() {
+                isLoading = false;
+              });
+            }
+          }, onError: (e) {
             setState(() {
               isLoading = false;
             });
@@ -228,10 +345,8 @@ class _PinCodePopupState extends State<PinCodePopup> {
       } on SocketException catch (_) {
         Fluttertoast.showToast(msg: "No Internet Connection");
       }
-    }
-    else{
+    } else {
       Fluttertoast.showToast(msg: "Please Enter PinCode");
     }
   }
-
 }
