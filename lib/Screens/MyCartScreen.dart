@@ -28,6 +28,7 @@ class MyCartScreen extends StatefulWidget {
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
   List cartList = [];
+  List priceList = [];
   String CustomerId,
       AddressId,
       AddressHouseNo,
@@ -85,17 +86,18 @@ class _MyCartScreenState extends State<MyCartScreen> {
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         FormData body = FormData.fromMap({"CustomerId": CustomerId});
         print(body.fields);
-        Services.postforlist(apiname: 'getCart', body: body).then(
+        Services.postforlist(apiname: 'getCarttest', body: body).then(
             (responselist) async {
           setState(() {
             isLoading = false;
           });
           if (responselist.length > 0) {
             setState(() {
-              cartList = responselist;
+              cartList = responselist[0]["Cart"];
+              priceList = responselist[1]["carttotal"];
               print(body.fields);
             });
-            for (int i = 0; i < responselist.length; i++) {}
+            print(cartList);
           } else {
             Fluttertoast.showToast(msg: "No Product Found!");
           }
@@ -240,24 +242,16 @@ class _MyCartScreenState extends State<MyCartScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 10.0, top: 12.0),
-              child: Column(
+              child:priceList.length> 0 ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    child: Text("Redeem Points ►",
-                        style: TextStyle(
-                            color: Colors.orange, fontWeight: FontWeight.bold)),
-                    onTap: () {
-                      _showRedeemPoints();
-                    },
-                  ),
                   Text(
-                    "Rs 450",
+                    "Rs: ${priceList[0]["Total"]}",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("Saved  Rs. 25"),
+                  Text("Saved  Rs. ${priceList[0]["Save"]}"),
                 ],
-              ),
+              ):Container(),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
@@ -287,48 +281,5 @@ class _MyCartScreenState extends State<MyCartScreen> {
         ),
       ),
     );
-  }
-
-  _placeOrder() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          isLoading = true;
-        });
-        FormData body = FormData.fromMap({
-          "CustomerId": "${CustomerId}",
-          "AddressId": "21",
-          "OrderPaymentMethod": "cash",
-          "OrderTransactionNo": "",
-          "OrderPromoCode": "",
-          "OrderTransactionNo": "",
-          "OrderBonusPoint": ""
-        });
-        Services.postForSave(apiname: 'placeOrder', body: body).then(
-            (responseremove) async {
-          if (responseremove.IsSuccess == true && responseremove.Data == "1") {
-            Provider.of<CartProvider>(context, listen: false).removecart();
-            setState(() {
-              isLoading = false;
-            });
-            Navigator.pushReplacement(context, FadeRoute(page: HomeScreen()));
-            Fluttertoast.showToast(msg: "Order Place Successfully");
-          } else {
-            setState(() {
-              isLoading = false;
-            });
-          }
-        }, onError: (e) {
-          setState(() {
-            isLoading = false;
-          });
-          print("error on call -> ${e.message}");
-          Fluttertoast.showToast(msg: "something went wrong");
-        });
-      }
-    } on SocketException catch (_) {
-      Fluttertoast.showToast(msg: "No Internet Connection");
-    }
   }
 }

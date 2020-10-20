@@ -8,6 +8,7 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/AddressComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
 import 'package:surti_basket_app/Screens/Add_AddressScreen.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
@@ -30,7 +31,7 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor:getaddressList.length == 0 ? Colors.white:Colors.grey[300],
       appBar: AppBar(
         centerTitle: true,
         title: Text("My Address",
@@ -69,9 +70,9 @@ class _AddressScreenState extends State<AddressScreen> {
                     ],
                   ),
                 ),
-                // isgetaddressLoading == true
-                //     ? LoadingComponent()
-                //     :
+                isgetaddressLoading == true ?
+                    LoadingComponent():
+                    getaddressList.length > 0 ?
                 ListView.builder(
                   itemBuilder: (context, index) {
                     return AddressComponent(
@@ -87,11 +88,10 @@ class _AddressScreenState extends State<AddressScreen> {
                   itemCount: getaddressList.length,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                )
+                ):NoFoundComponent(ImagePath: 'assets/address.png',Title: "No Address Found")
               ],
             ),
           ),
-          isgetaddressLoading == true ? LoadingComponent() : Container()
         ],
       ),
     );
@@ -132,6 +132,9 @@ class _AddressScreenState extends State<AddressScreen> {
             });
             saveDataToSession(ResponseList[0]);
           } else {
+            setState(() {
+              isgetaddressLoading = false;
+            });
             Fluttertoast.showToast(msg: "Address Not Found");
           }
         }, onError: (e) {

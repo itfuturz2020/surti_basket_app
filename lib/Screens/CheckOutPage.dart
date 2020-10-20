@@ -4,10 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
@@ -35,6 +38,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       AddressType,
       AddressPincode,
       City;
+  bool isLoading = false;
+  String PaymentMode;
   SharedPreferences preferences;
   bool _usePoints = false;
 
@@ -74,7 +79,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       AddressArea = _addressData["AddressArea"];
       AddressPincode = _addressData["AddressPincode"];
       AddressType = _addressData["AddressType"];
-      City = _addressData["City"];
+      City = _addressData["AddressCityName"];
     });
     print(AddressId);
   }
@@ -199,11 +204,187 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ],
                     ),
                   )),
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                      child: Text("Apply Promocode",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 8),
+                              child: Container(
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.8, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(4.0)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0,bottom: 5.0,top:5.0),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: "Enter Coupon Code",
+                                      hintStyle: TextStyle(fontSize: 12),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 6.0, left: 6.0),
+                            child: FlatButton(
+                              color: appPrimaryMaterialColor,
+                              onPressed: () {},
+                              child: Text("APPLY",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Payment Mode",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  PaymentMode = "Cash";
+                                });
+                              },
+                              child: Text("COD",
+                                  style: TextStyle(color: PaymentMode == "Cash"? Colors.white:Colors.black54)),
+                              color: PaymentMode == "Cash"
+                                  ? appPrimaryMaterialColor
+                                  : Colors.grey[200]),
+                          FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  PaymentMode = "Online";
+                                });
+                              },
+                              child: Text("Online",
+                                  style: TextStyle(color: PaymentMode != "Cash"? Colors.white:Colors.black54)),
+                              color: PaymentMode != "Cash"
+                                  ? appPrimaryMaterialColor
+                                  : Colors.grey[200]),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10, top: 40),
+              child: SizedBox(
+                height: 45,
+                child: FlatButton(
+                  color: appPrimaryMaterialColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      side: BorderSide(color: Colors.grey[200])),
+                  onPressed: () {
+                    _placeOrder();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 3.0),
+                        child: isLoading
+                            ? Center(
+                          child: CircularProgressIndicator(
+                            valueColor:
+                            new AlwaysStoppedAnimation<Color>(
+                                Colors.white),
+                          ),
+                        )
+                            : Text(
+                          "Place Order",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              // color: Colors.grey[700],
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  _placeOrder() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        FormData body = FormData.fromMap({
+          "CustomerId": "${CustomerId}",
+          "AddressId": "${AddressId}",
+          "OrderPaymentMethod": "${PaymentMode}",
+          "OrderTransactionNo": "",
+          "OrderPromoCode": "",
+          "OrderTransactionNo": "",
+          "OrderBonusPoint": ""
+        });
+        Services.postForSave(apiname: 'placeOrder', body: body).then(
+            (responseremove) async {
+          if (responseremove.IsSuccess == true && responseremove.Data == "1") {
+            Provider.of<CartProvider>(context, listen: false).removecart();
+            setState(() {
+              isLoading = false;
+            });
+            Fluttertoast.showToast(msg: "Order Place Successfully");
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
   }
 }
 
@@ -278,51 +459,6 @@ class _PinCodePopupState extends State<PinCodePopup> {
           });
           FormData body = FormData.fromMap({"PincodeNo": pincode.text});
           Services.postForSave(apiname: 'checkPincode', body: body).then(
-              (responseremove) async {
-            if (responseremove.IsSuccess == true &&
-                responseremove.Data == "1") {
-              setState(() {
-                isLoading = false;
-              });
-            } else {
-              setState(() {
-                isLoading = false;
-              });
-            }
-          }, onError: (e) {
-            setState(() {
-              isLoading = false;
-            });
-            print("error on call -> ${e.message}");
-            Fluttertoast.showToast(msg: "something went wrong");
-          });
-        }
-      } on SocketException catch (_) {
-        Fluttertoast.showToast(msg: "No Internet Connection");
-      }
-    } else {
-      Fluttertoast.showToast(msg: "Please Enter PinCode");
-    }
-  }
-
-  _placeOrder() async {
-    if (pincode.text != null) {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          setState(() {
-            isLoading = true;
-          });
-          FormData body = FormData.fromMap({
-            "CustomerId": "",
-            "AddressId": "",
-            "OrderPaymentMethod": "",
-            "OrderTransactionNo": "",
-            "OrderPromoCode": "",
-            "OrderTransactionNo": "",
-            "OrderBonusPoint": ""
-          });
-          Services.postForSave(apiname: 'placeOrder', body: body).then(
               (responseremove) async {
             if (responseremove.IsSuccess == true &&
                 responseremove.Data == "1") {
