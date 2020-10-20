@@ -233,7 +233,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         width: 0.8, color: Colors.grey),
                                     borderRadius: BorderRadius.circular(4.0)),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0,bottom: 5.0,top:5.0),
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, bottom: 5.0, top: 5.0),
                                   child: TextField(
                                     decoration: InputDecoration(
                                       hintText: "Enter Coupon Code",
@@ -277,7 +278,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 });
                               },
                               child: Text("COD",
-                                  style: TextStyle(color: PaymentMode == "Cash"? Colors.white:Colors.black54)),
+                                  style: TextStyle(
+                                      color: PaymentMode == "Cash"
+                                          ? Colors.white
+                                          : Colors.black54)),
                               color: PaymentMode == "Cash"
                                   ? appPrimaryMaterialColor
                                   : Colors.grey[200]),
@@ -288,7 +292,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 });
                               },
                               child: Text("Online",
-                                  style: TextStyle(color: PaymentMode != "Cash"? Colors.white:Colors.black54)),
+                                  style: TextStyle(
+                                      color: PaymentMode != "Cash"
+                                          ? Colors.white
+                                          : Colors.black54)),
                               color: PaymentMode != "Cash"
                                   ? appPrimaryMaterialColor
                                   : Colors.grey[200]),
@@ -319,20 +326,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         padding: const EdgeInsets.only(left: 3.0),
                         child: isLoading
                             ? Center(
-                          child: CircularProgressIndicator(
-                            valueColor:
-                            new AlwaysStoppedAnimation<Color>(
-                                Colors.white),
-                          ),
-                        )
+                                child: CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
                             : Text(
-                          "Place Order",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              // color: Colors.grey[700],
-                              fontWeight: FontWeight.bold),
-                        ),
+                                "Place Order",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    // color: Colors.grey[700],
+                                    fontWeight: FontWeight.bold),
+                              ),
                       ),
                     ],
                   ),
@@ -386,6 +392,83 @@ class _CheckoutPageState extends State<CheckoutPage> {
       Fluttertoast.showToast(msg: "No Internet Connection");
     }
   }
+
+  amountCalulation() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        FormData body = FormData.fromMap({
+              "CustomerId": "${CustomerId}",
+              "Promocode": "",
+              "Points": ""
+            });
+        Services.postForSave(apiname: 'beforePlaceOrder', body: body).then(
+            (responseremove) async {
+          if (responseremove.IsSuccess == true && responseremove.Data == "1") {
+            Provider.of<CartProvider>(context, listen: false).removecart();
+            setState(() {
+              isLoading = false;
+            });
+            Fluttertoast.showToast(msg: "Order Place Successfully");
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
+/*
+  startPayment() async {
+    double payableAmount = double.parse(totalamount);
+    //double payableAmount=1;
+    print(int.parse(payableAmount.roundToDouble().floor().toString() + "00"));
+    Services.GetOrderIDForPayment(
+        int.parse(payableAmount.roundToDouble().floor().toString() + "00"),
+        'ORD1001')
+        .then((data) async {
+      if (data != null) {
+        print("order Id---> ${data.Data}");
+        var options = {
+          'image': '',
+          'key': 'rzp_live_XCxat4CzDhDGNj',
+          'order_id': data.Data,
+          'amount': payableAmount.toString(),
+          'name': 'Pick N DeliverE',
+          'description': 'Order Payment',
+          'prefill': {'contact': MobileNo, 'email': email},
+        };
+        try {
+          _razorpay.open(options);
+        } catch (e) {
+          debugPrint(e);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "Payment Gateway Not Open",
+            backgroundColor: Colors.red,
+            gravity: ToastGravity.TOP,
+            toastLength: Toast.LENGTH_LONG);
+      }
+    }, onError: (e) {
+      Fluttertoast.showToast(
+          msg: "Data Not Saved" + e.toString(), backgroundColor: Colors.red);
+    });
+  }
+*/
 }
 
 class PinCodePopup extends StatefulWidget {

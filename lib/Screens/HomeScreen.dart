@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:location/location.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List _suggestedProductList = [];
   List _Offerlist = [];
   bool isLoading = false;
+  Location location = new Location();
+  LocationData locationData;
+  String latitude,longitude;
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -54,6 +59,24 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _dashboardData();
+    _getLocation();
+  }
+
+  _getLocation() async {
+    try {
+      locationData = await location.getLocation();
+      if(locationData != null){
+        final coordinates = new Coordinates(
+            locationData.latitude, locationData.longitude);
+        var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        setState(() {
+          latitude=locationData.latitude.toString();
+          longitude=locationData.longitude.toString();
+        });
+      }
+    } catch (e) {
+      locationData = null;
+    }
   }
 
   @override
@@ -64,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: isLoading == true ? Colors.white : Colors.grey[400],
         appBar: AppBar(
+          centerTitle: false,
           actions: [
             IconButton(
                 icon: Icon(Icons.account_box),
@@ -76,24 +100,23 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               Navigator.push(context, SlideLeftRoute(page: AddressScreen()));
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text("Your Location",
-                    style: TextStyle(fontSize: 13, color: Colors.white)),
-                Row(
+                Icon(Icons.location_on_outlined),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Surat",
-                        style: TextStyle(fontSize: 17, color: Colors.white)),
-                    Icon(Icons.location_on, size: 15)
+                    Text("Surat-395008",
+                        style: TextStyle(fontSize: 15, color: Colors.white)),
+                    Text("Your Location",
+                        style: TextStyle(fontSize: 11, color: Colors.white)),
                   ],
                 ),
               ],
             ),
           ),
         ),
-        drawer: DrawerComponent(),
         body: isLoading == true
             ? LoadingComponent()
             : _dashboardList.length > 0
@@ -226,25 +249,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset('assets/category.png',
-                            width: 20, color: Colors.grey),
-                        Text("Category", style: TextStyle(fontSize: 11))
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    // Navigator.pushNamed(context, "/MyGuestList");
-                  },
-                ),
-              ),
-              Flexible(
-                child: InkWell(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
                         Image.asset('assets/loupe.png',
                             width: 20, color: Colors.grey),
                         Text("Search",
@@ -256,6 +260,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                         context, FadeRoute(page: SearchProductPage()));
+                  },
+                ),
+              ),
+              Flexible(
+                child: InkWell(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Image.asset('assets/discount.png',
+                            width: 20, color: Colors.grey),
+                        Text("Offers", style: TextStyle(fontSize: 11))
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    // Navigator.pushNamed(context, "/MyGuestList");
                   },
                 ),
               ),
@@ -342,6 +365,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } on SocketException catch (_) {
+      setState(() {
+        isLoading = false;
+      });
       Fluttertoast.showToast(msg: "No Internet Connection");
     }
   }
