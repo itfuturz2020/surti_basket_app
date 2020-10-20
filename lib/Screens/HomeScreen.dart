@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
@@ -38,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
   Location location = new Location();
   LocationData locationData;
-  String latitude,longitude;
+  String latitude, longitude;
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -61,13 +60,14 @@ class _HomeScreenState extends State<HomeScreen> {
   _getLocation() async {
     try {
       locationData = await location.getLocation();
-      if(locationData != null){
-        final coordinates = new Coordinates(
-            locationData.latitude, locationData.longitude);
-        var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      if (locationData != null) {
+        final coordinates =
+            new Coordinates(locationData.latitude, locationData.longitude);
+        var addresses =
+            await Geocoder.local.findAddressesFromCoordinates(coordinates);
         setState(() {
-          latitude=locationData.latitude.toString();
-          longitude=locationData.longitude.toString();
+          latitude = locationData.latitude.toString();
+          longitude = locationData.longitude.toString();
         });
       }
     } catch (e) {
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Row(
               children: [
-                Icon(Icons.location_on_outlined),
+                Icon(Icons.location_on),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
