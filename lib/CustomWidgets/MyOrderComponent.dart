@@ -20,7 +20,8 @@ class _MyorderComponentState extends State<MyorderComponent> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacement(context, FadeRoute(page: OrderTab()));
+        Navigator.push(context,
+            FadeRoute(page: OrderTab(OrderId: widget.MyOrderData["OrderId"])));
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 17.0),
@@ -97,26 +98,39 @@ class _MyorderComponentState extends State<MyorderComponent> {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Container(
-                                            child: Text("Rs",
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey[700])),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                4.2,
+                                          Row(
+                                            children: [
+                                              Container(
+                                                child: Text("Rs",
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color:
+                                                            Colors.grey[700])),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    4.2,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0),
+                                                child: Text(
+                                                    "${widget.MyOrderData["OrderTotal"][0]["Total"]}",
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black)),
+                                              ),
+                                            ],
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
+                                            padding:
+                                                const EdgeInsets.only(top: 8.0),
                                             child: Text(
-                                                "${widget.MyOrderData["OrderTotal"][0]["Total"]}",
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black)),
-                                          ),
+                                                "${widget.MyOrderData["OrderStageDropDown"]}"),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -145,7 +159,7 @@ class _MyorderComponentState extends State<MyorderComponent> {
                                               padding: const EdgeInsets.only(
                                                   top: 8.0),
                                               child: Text(
-                                                  "${widget.MyOrderData["OrderId"]}",
+                                                  "${widget.MyOrderData["OrderTotalQty"]}",
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.grey[700])),
@@ -154,10 +168,19 @@ class _MyorderComponentState extends State<MyorderComponent> {
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 8.0),
-                                          child: Text(
-                                              "${widget.MyOrderData["OrderStageDropDown"]}"),
-                                        )
+                                              const EdgeInsets.only(top: 10.0),
+                                          child: SizedBox(
+                                            height: 25,
+                                            child: FlatButton(
+                                              onPressed: () {},
+                                              color: appPrimaryMaterialColor,
+                                              child: Text('Reorder',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15)),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ],
