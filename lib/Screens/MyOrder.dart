@@ -6,7 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/MyOrderComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
 
 class MyOrder extends StatefulWidget {
   @override
@@ -74,20 +76,25 @@ class _MyOrderState extends State<MyOrder> {
         title: Text("My Order",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
-      body: ListView.separated(
-        padding: EdgeInsets.only(top: 10),
-        physics: BouncingScrollPhysics(),
-        itemCount: MyOrderList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return MyorderComponent(
-            MyOrderData: MyOrderList[index],
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) => Container(
-          color: Colors.white,
-          height: 10,
-        ),
-      ),
+      body: isorderDetailLoading == true
+          ? LoadingComponent()
+          : MyOrderList.length > 0
+              ? ListView.separated(
+                  padding: EdgeInsets.only(top: 10),
+                  physics: BouncingScrollPhysics(),
+                  itemCount: MyOrderList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return MyorderComponent(
+                      MyOrderData: MyOrderList[index],
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Container(
+                    color: Colors.white,
+                    height: 10,
+                  ),
+                )
+              : NoFoundComponent(),
     );
   }
 }

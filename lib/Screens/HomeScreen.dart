@@ -286,14 +286,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       alignment: Alignment.topCenter,
                       child: provider.cartCount > 0
                           ? CircleAvatar(
-                              radius: 8.0,
+                              radius: 7.0,
                               backgroundColor: Colors.red[400],
                               foregroundColor: Colors.white,
-                              child: Text(
-                                provider.cartCount.toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11.0,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 2.0),
+                                child: Text(
+                                  provider.cartCount.toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10.0,
+                                  ),
                                 ),
                               ),
                             )

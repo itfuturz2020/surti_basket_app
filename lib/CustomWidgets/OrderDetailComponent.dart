@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
-import 'package:surti_basket_app/Screens/OrderHistoryScreen.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
 
 class OrderDetailComponent extends StatefulWidget {
   var orderDetaildata;

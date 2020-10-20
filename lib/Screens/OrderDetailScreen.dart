@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/OrderDetailComponent.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   void initState() {
     _getorderhistorydetail();
+    print(widget.orderid);
   }
 
   _getorderhistorydetail() async {
@@ -62,29 +64,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      // appBar: AppBar(
-      //   elevation: 1,
-      //   title: Text("Order Detail",
-      //       style: TextStyle(color: Colors.white, fontSize: 18)),
-      // ),
-      body: isorderLoading
-          ? LoadingComponent()
-          : Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: ListView.separated(
-                physics: BouncingScrollPhysics(),
-                itemCount: OrderDetailList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container();
-                  /*return OrderDetailComponent(
-                    orderDetaildata: OrderDetailList[index],
-                  );*/
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    Divider(),
-              ),
-            ),
-    );
+        backgroundColor: Colors.grey[100],
+        // appBar: AppBar(
+        //   elevation: 1,
+        //   title: Text("Order Detail",
+        //       style: TextStyle(color: Colors.white, fontSize: 18)),
+        // ),
+        body: isorderLoading
+            ? LoadingComponent()
+            : OrderDetailList.length > 0
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ListView.separated(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: OrderDetailList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return OrderDetailComponent(
+                          orderDetaildata: OrderDetailList[index],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(),
+                    ),
+                  )
+                : NoFoundComponent());
   }
 }

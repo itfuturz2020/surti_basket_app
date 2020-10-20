@@ -4,6 +4,8 @@ import 'package:surti_basket_app/Screens/OrderDetailScreen.dart';
 import 'package:surti_basket_app/Screens/OrderHistoryScreen.dart';
 
 class OrderTab extends StatefulWidget {
+  var OrderId;
+  OrderTab({this.OrderId});
   @override
   _OrderTabState createState() => _OrderTabState();
 }
@@ -32,8 +34,10 @@ class _OrderTabState extends State<OrderTab> {
                   Tab(text: "Order Item"),
                 ]),
             Expanded(
-              child: TabBarView(
-                  children: [OrderHistoryScreen(), OrderDetailScreen()]),
+              child: TabBarView(children: [
+                OrderHistoryScreen(),
+                OrderDetailScreen(orderid: widget.OrderId)
+              ]),
             )
           ],
         ),

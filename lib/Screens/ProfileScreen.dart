@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/Screens/LoginScreen.dart';
 import 'package:surti_basket_app/Screens/MyOrder.dart';
-import 'package:surti_basket_app/Screens/OrderHistoryScreen.dart';
-import 'package:surti_basket_app/Screens/OrderDetailScreen.dart';
+import 'package:surti_basket_app/Screens/MyPointScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
@@ -33,6 +34,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
       CustomerEmail = preferences.getString(Session.CustomerEmailId);
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
     });
+  }
+
+  _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(
+            "Logout",
+            style: TextStyle(color: appPrimaryMaterialColor),
+          ),
+          content: new Text("Are you sure want to logout..."),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "Cancel",
+                style: TextStyle(color: appPrimaryMaterialColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: new Text(
+                "Yes",
+                style: TextStyle(color: appPrimaryMaterialColor),
+              ),
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+                Navigator.pushReplacement(
+                    context, FadeRoute(page: LoginScreen()));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -230,20 +269,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Image.asset('assets/earning.png',
-                              width: 25, color: Colors.black54),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context, FadeRoute(page: MyPointScreen()));
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Image.asset('assets/earning.png',
+                                  width: 25, color: Colors.black54),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12.0),
+                              child: Text("My Points",
+                                  style: TextStyle(
+                                      color: Colors.black54, fontSize: 16)),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Text("My Points",
-                              style: TextStyle(
-                                  color: Colors.black54, fontSize: 16)),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   Text('00.00',
@@ -257,19 +305,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(14.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Image.asset('assets/logout.png',
-                        width: 23, color: Colors.grey),
+              child: GestureDetector(
+                onTap: () {
+                  _showDialog(context);
+                },
+                child: Container(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.asset('assets/logout.png',
+                            width: 23, color: Colors.grey),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text("Logout",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16)),
+                      )
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: Text("Logout",
-                        style: TextStyle(color: Colors.black54, fontSize: 16)),
-                  )
-                ],
+                ),
               ),
             ),
             Container(
