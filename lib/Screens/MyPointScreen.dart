@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/MyPointsComponent.dart';
 
 class MyPointScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class MyPointScreen extends StatefulWidget {
 }
 
 class _MyPointScreenState extends State<MyPointScreen> {
-  bool isPointsLoading = true;
+  bool isPointsLoading = false;
   List pointsList = [];
   String CustomerId;
 
@@ -38,20 +39,22 @@ class _MyPointScreenState extends State<MyPointScreen> {
         title: Text("My Points",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
-      body: ListView.separated(
-        padding: EdgeInsets.only(top: 10),
-        physics: BouncingScrollPhysics(),
-        itemCount: 5,
-        itemBuilder: (BuildContext context, int index) {
-          return MyPointsComponent(
-            pointsdata: pointsList[index],
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) => Container(
-          color: Colors.white,
-          height: 10,
-        ),
-      ),
+      body: isPointsLoading == true
+          ? LoadingComponent()
+          : ListView.separated(
+              padding: EdgeInsets.only(top: 10),
+              physics: BouncingScrollPhysics(),
+              itemCount: pointsList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return MyPointsComponent(
+                  pointsdata: pointsList[index],
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) => Container(
+                color: Colors.white,
+                height: 10,
+              ),
+            ),
     );
   }
 

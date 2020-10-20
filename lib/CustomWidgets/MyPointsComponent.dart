@@ -23,9 +23,9 @@ class _MyPointsComponentState extends State<MyPointsComponent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
+                    padding: const EdgeInsets.only(left: 5.0, top: 8),
                     child: Text(
-                      "${widget.pointsdata[""]}",
+                      "${widget.pointsdata["OrderDate"]}",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
@@ -61,7 +61,7 @@ class _MyPointsComponentState extends State<MyPointsComponent> {
                                     fontSize: 14),
                               ),
                               Text(
-                                "101",
+                                "${widget.pointsdata["OrderId"]}",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
@@ -80,14 +80,14 @@ class _MyPointsComponentState extends State<MyPointsComponent> {
                   Padding(
                     padding: const EdgeInsets.only(right: 10.0),
                     child: Text(
-                      "Earned Points",
+                      "${widget.pointsdata["BonusType"]}",
                       style: TextStyle(color: Colors.green),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 10.0, top: 6),
                     child: Text(
-                      "50,000",
+                      "${widget.pointsdata["BonusPoints"]}",
                       style: TextStyle(color: Colors.green),
                     ),
                   ),

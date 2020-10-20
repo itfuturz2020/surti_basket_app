@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/LoginScreen.dart';
 import 'package:surti_basket_app/Screens/MyOrder.dart';
@@ -17,23 +22,49 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  bool isgetaddressLoading = false;
+  List getaddressList = [];
+
   void initState() {
     getlocaldata();
+    _getAddress();
   }
 
-  String CustomerId;
-  String CustomerName;
-  String CustomerEmail;
-  String Customerphone;
+  String CustomerId,
+      CustomerName,
+      Customerphone,
+      CustomerEmail,
+      AddressId,
+      AddressHouseNo,
+      AddressName,
+      AddressAppartmentName,
+      AddressStreet,
+      AddressLandmark,
+      AddressArea,
+      AddressType,
+      AddressPincode,
+      City;
+  SharedPreferences preferences;
 
   getlocaldata() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences = await SharedPreferences.getInstance();
     setState(() {
       CustomerId = preferences.getString(Session.customerId);
       CustomerName = preferences.getString(Session.CustomerName);
-      CustomerEmail = preferences.getString(Session.CustomerEmailId);
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
+      CustomerEmail = preferences.getString(Session.CustomerEmailId);
+      AddressId = preferences.getString(AddressSession.AddressId);
+      AddressHouseNo = preferences.getString(AddressSession.AddressHouseNo);
+      AddressPincode = preferences.getString(AddressSession.AddressPincode);
+      AddressAppartmentName =
+          preferences.getString(AddressSession.AddressAppartmentName);
+      AddressStreet = preferences.getString(AddressSession.AddressStreet);
+      AddressLandmark = preferences.getString(AddressSession.AddressLandmark);
+      AddressArea = preferences.getString(AddressSession.AddressArea);
+      AddressType = preferences.getString(AddressSession.AddressType);
+      City = preferences.getString(AddressSession.City);
     });
+    print(AddressPincode);
   }
 
   _showDialog(BuildContext context) {
@@ -88,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 4.4,
+              height: MediaQuery.of(context).size.height / 3.9,
               color: Colors.red[300],
               child: Column(
                 children: [
@@ -117,23 +148,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Text("${CustomerName}",
                                         style: TextStyle(
                                             fontSize: 18, color: Colors.white)),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            SlideLeftRoute(
-                                                page: AddressScreen()));
-                                      },
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 10.0),
-                                        child: Image.asset(
-                                            'assets/editicon.png',
-                                            width: 18,
-                                            height: 18,
-                                            color: Colors.white),
-                                      ),
-                                    ),
                                   ],
                                 ),
                                 Padding(
@@ -157,77 +171,176 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.only(top: 10.0, right: 12, left: 12),
-                    child: Container(
-                      height: 65,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6.0),
-                                child: Icon(
-                                  Icons.location_on,
-                                  color: Colors.red[400],
-                                ),
+                        const EdgeInsets.only(top: 20.0, right: 12, left: 12),
+                    child: isgetaddressLoading == true
+                        ? Container(
+                            height: MediaQuery.of(context).size.height / 13,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Colors.white, width: 0.5)),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3.5,
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0, bottom: 10, top: 2),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Text("Surat City Gymkhana",
-                                          style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontSize: 14,
-                                          )),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 2.0),
-                                      child: Text("Surat - 395007",
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.grey[700])),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 7.0),
-                            child: Container(
-                              height: 30,
-                              width: MediaQuery.of(context).size.width / 4.5,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.red[400]),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Center(
-                                  child: Text(
-                                "Change",
-                                style: TextStyle(color: Colors.red[400]),
-                              )),
                             ),
                           )
-                        ],
-                      ),
-                    ),
+                        : getaddressList.length > 0
+                            ? Container(
+                                height: 79,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white,
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 6.0),
+                                          child: Icon(
+                                            Icons.location_on,
+                                            color: Colors.red[300],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 15.0, bottom: 10, top: 2),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5.0),
+                                                child: Text(
+                                                    "${AddressHouseNo}" +
+                                                        "," +
+                                                        "${AddressAppartmentName}" +
+                                                        "," +
+                                                        "${AddressStreet}",
+                                                    style: TextStyle(
+                                                      color: Colors.grey[700],
+                                                      fontSize: 14,
+                                                    )),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 2.0),
+                                                child: Text(
+                                                    "${AddressLandmark}" +
+                                                        "," +
+                                                        "${AddressArea}",
+                                                    style: TextStyle(
+                                                      color: Colors.grey[700],
+                                                      fontSize: 14,
+                                                    )),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 2.0),
+                                                child: Text(
+                                                    "${City}" +
+                                                        "-" +
+                                                        "${AddressPincode}",
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        color:
+                                                            Colors.grey[700])),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            SlideLeftRoute(
+                                                page: AddressScreen()));
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 18.0),
+                                        child: Image.asset(
+                                            'assets/editicon.png',
+                                            width: 18,
+                                            height: 18,
+                                            color: Colors.red[300]),
+                                      ),
+                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(right: 7.0, top: 20),
+                                    //   child: Container(
+                                    //     height: 30,
+                                    //     width: MediaQuery.of(context).size.width / 4.5,
+                                    //     decoration: BoxDecoration(
+                                    //         border: Border.all(color: Colors.red[400]),
+                                    //         borderRadius: BorderRadius.circular(5)),
+                                    //     child: Center(
+                                    //         child: Text(
+                                    //       "Change",
+                                    //       style: TextStyle(color: Colors.red[400]),
+                                    //     )),
+                                    //   ),
+                                    // )
+                                  ],
+                                ),
+                              )
+                            : Center(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pushReplacement(context,
+                                        SlideLeftRoute(page: AddressScreen()));
+                                  },
+                                  child: Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 13,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(
+                                            color: Colors.white, width: 0.5)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          size: 18,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 3.0),
+                                          child: Text(
+                                            "Add Address",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: Container(
                 color: Colors.grey[200],
                 height: 10,
@@ -340,5 +453,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Center(child: Text("Version 1.0.0")),
       ),
     );
+  }
+
+  _getAddress() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isgetaddressLoading = true;
+        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        FormData body = FormData.fromMap({
+          "CustomerId": prefs.getString(Session.customerId),
+        });
+        Services.postforlist(apiname: 'getAddress', body: body).then(
+            (ResponseList) async {
+          if (ResponseList.length > 0) {
+            setState(() {
+              getaddressList = ResponseList;
+              isgetaddressLoading = false;
+              AddressStreet = ResponseList[0]["AddressStreet"];
+              AddressArea = ResponseList[0]["AddressArea"];
+              AddressLandmark = ResponseList[0]["AddressLandmark"];
+              AddressAppartmentName = ResponseList[0]["AddressAppartmentName"];
+              AddressPincode = ResponseList[0]["AddressPincode"];
+              AddressAppartmentName = ResponseList[0]["AddressAppartmentName"];
+              AddressHouseNo = ResponseList[0]["AddressHouseNo"];
+            });
+          } else {
+            setState(() {
+              isgetaddressLoading = false;
+            });
+          }
+        }, onError: (e) {
+          setState(() {
+            isgetaddressLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "Something Went Wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection.");
+    }
   }
 }
