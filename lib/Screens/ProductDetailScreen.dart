@@ -99,7 +99,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 12.0, left: 18.0, right: 10.0),
-                          child: Text("${productdetail[0]["ProductName"]}",
+                          child: Text("${packageInfo.length> 0 ? packageInfo[currentIndex]["ProductdetailName"]:productdetail[0]["ProductName"]}",
                               style: TextStyle(fontSize: 18)),
                         ),
                         Padding(
@@ -109,7 +109,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                    "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"] : productdetail[0][""]}",
+                                    "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"] : productdetail[0]["ProductSrp"]}",
                                     style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.black,
@@ -125,7 +125,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       children: <TextSpan>[
                                         TextSpan(
                                           text:
-                                              "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"] : productdetail[0][""]}",
+                                              "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"] : productdetail[0]["ProductMrp"]}",
                                           style: TextStyle(
                                               color: Colors.grey,
                                               fontSize: 15,
@@ -168,8 +168,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
-                                child: Image.network(
-                                    '${IMG_URL + packageInfo[currentImageIndex]["ProductdetailImage"]}',
+                                child:Image.network(
+                                    '${IMG_URL +productdetail[0]["ProductImages"]}',
                                     height: 300),
                               ),
                             ],
@@ -220,6 +220,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             child: Text('Pack Sizes',
                                 style: TextStyle(fontSize: 16)),
                           ),
+                          packageInfo.length> 0?
                           Column(
                             children:
                                 List.generate(packageInfo.length, (index) {
@@ -243,42 +244,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       child: Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
                                             children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(top:6.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        " $Inr_Rupee ${packageInfo[index]["ProductdetailSRP"]}",
+                                                        style: TextStyle(
+                                                            fontSize: 13,
+                                                            color: Colors.black)),
+                                                    RichText(
+                                                      text: TextSpan(
+                                                          text: 'MRP: ',
+                                                          style: TextStyle(
+                                                              color: Colors.grey,
+                                                              fontSize: 13),
+                                                          children: <TextSpan>[
+                                                            TextSpan(
+                                                              text:
+                                                                  "${Inr_Rupee} ${packageInfo[index]["ProductdetailMRP"]}",
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      Colors.grey,
+                                                                  fontSize: 13,
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .lineThrough),
+                                                            )
+                                                          ]),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                               Text(
                                                   "${packageInfo[index]["ProductdetailName"]}"),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      " $Inr_Rupee ${packageInfo[index]["ProductdetailSRP"]}",
-                                                      style: TextStyle(
-                                                          fontSize: 13,
-                                                          color: Colors.black)),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                        text: 'MRP: ',
-                                                        style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 13),
-                                                        children: <TextSpan>[
-                                                          TextSpan(
-                                                            text:
-                                                                "${Inr_Rupee} ${packageInfo[index]["ProductdetailMRP"]}",
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 13,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .lineThrough),
-                                                          )
-                                                        ]),
-                                                  ),
-                                                ],
-                                              ),
                                               currentIndex == index
                                                   ? Icon(
                                                       Icons
@@ -293,7 +298,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                               );
                             }),
-                          ),
+                          ):Container(),
                           SizedBox(
                             height: 8,
                           ),
