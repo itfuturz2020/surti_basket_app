@@ -12,8 +12,232 @@ import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/LoginScreen.dart';
 import 'package:surti_basket_app/Screens/MyOrder.dart';
 import 'package:surti_basket_app/Screens/MyPointScreen.dart';
+import 'package:surti_basket_app/Screens/Tearmscondition.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class contactUs extends StatefulWidget {
+  var contactdata, whtspdata, whtscall;
+  contactUs({this.contactdata, this.whtspdata, this.whtscall});
+
+  @override
+  _contactUsState createState() => _contactUsState();
+}
+
+class _contactUsState extends State<contactUs> {
+  void launchwhatsapp({
+    @required String phone,
+    @required String message,
+  }) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+      }
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 9.0, top: 3),
+                  child: Icon(
+                    Icons.clear,
+                    size: 20,
+                    color: Colors.grey,
+                  ),
+                ),
+              )),
+          Container(
+            // color: Colors.redAccent,
+            height: 100,
+            width: 120,
+            child: Image.asset("assets/basket.png"),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 50.0, top: 8),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: Icon(
+                        Icons.mail,
+                        color: Colors.grey,
+                        size: 19,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Text(
+                        "meghatech@gmail.com",
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 7.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0),
+                        child: Icon(
+                          Icons.call,
+                          color: Colors.grey,
+                          size: 19,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 7.0),
+                        child: Text(
+                          "+9664742543",
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 7.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(top: 3.0),
+                          child: Image.asset(
+                            "assets/whatsapp.png",
+                            width: 21,
+                            color: Colors.grey,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Text(
+                          "+9664742543",
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 21.0, bottom: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  child: Icon(
+                    Icons.mail,
+                    color: Colors.white,
+                    size: 19,
+                  ),
+                  backgroundColor: appPrimaryMaterialColor,
+                  radius: 19,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: CircleAvatar(
+                      child: Icon(
+                        Icons.call,
+                        color: Colors.white,
+                        size: 19,
+                      ),
+                      backgroundColor: appPrimaryMaterialColor,
+                      radius: 19,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    launchwhatsapp(
+                        phone: "${widget.whtspdata}",
+                        message: "${widget.whtscall}");
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: CircleAvatar(
+                      child: Image.asset(
+                        "assets/whatsapp.png",
+                        width: 21,
+                        color: Colors.white,
+                      ),
+                      backgroundColor: appPrimaryMaterialColor,
+                      radius: 19,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 13.0, bottom: 25, left: 9, right: 9),
+            child: Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: appPrimaryMaterialColor, width: 1)),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: Text(
+                    "${widget.contactdata}",
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 4,
+            color: appPrimaryMaterialColor,
+            width: MediaQuery.of(context).size.width,
+          ),
+        ],
+      ),
+      contentPadding: const EdgeInsets.only(
+        top: 6.0,
+        bottom: 0.0,
+      ),
+    );
+  }
+}
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -24,12 +248,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   bool isgetaddressLoading = false;
   List getaddressList = [];
+  bool isLoading = false;
+  List generaldatalist = [];
 
   void initState() {
     getlocaldata();
     _getAddress();
+    _SettingApi();
   }
 
+  String whatsapp, msg, address;
   String CustomerId,
       CustomerName,
       Customerphone,
@@ -43,7 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AddressArea,
       AddressType,
       AddressPincode,
-      City;
+      AddressCityName;
   SharedPreferences preferences;
 
   getlocaldata() async {
@@ -62,7 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AddressLandmark = preferences.getString(AddressSession.AddressLandmark);
       AddressArea = preferences.getString(AddressSession.AddressArea);
       AddressType = preferences.getString(AddressSession.AddressType);
-      City = preferences.getString(AddressSession.City);
+      AddressCityName = preferences.getString(AddressSession.City);
     });
     print(AddressPincode);
   }
@@ -104,6 +332,172 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
+
+  _contactUs() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return contactUs(
+            contactdata: address, whtspdata: msg, whtscall: whatsapp);
+      },
+    );
+  }
+  //AlertDialog(
+  //           content: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               Align(
+  //                   alignment: Alignment.topRight,
+  //                   child: GestureDetector(
+  //                     onTap: () {
+  //                       Navigator.of(context).pop();
+  //                     },
+  //                     child: Padding(
+  //                       padding: const EdgeInsets.only(right: 9.0, top: 3),
+  //                       child: Icon(
+  //                         Icons.clear,
+  //                         size: 20,
+  //                         color: Colors.grey,
+  //                       ),
+  //                     ),
+  //                   )),
+  //               Container(
+  //                 // color: Colors.redAccent,
+  //                 height: 100,
+  //                 width: 120,
+  //                 child: Image.asset("assets/basket.png"),
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.only(left: 50.0, top: 8),
+  //                 child: Column(
+  //                   children: [
+  //                     Row(
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.only(top: 3.0),
+  //                           child: Icon(
+  //                             Icons.mail,
+  //                             color: Colors.grey,
+  //                             size: 19,
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.only(left: 5.0),
+  //                           child: Text(
+  //                             "meghatech@gmail.com",
+  //                             style: TextStyle(
+  //                                 color: Colors.black54,
+  //                                 fontSize: 14,
+  //                                 fontWeight: FontWeight.w500),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(top: 7.0),
+  //                       child: Row(
+  //                         children: [
+  //                           Padding(
+  //                             padding: const EdgeInsets.only(top: 3.0),
+  //                             child: Icon(
+  //                               Icons.call,
+  //                               color: Colors.grey,
+  //                               size: 19,
+  //                             ),
+  //                           ),
+  //                           Padding(
+  //                             padding: const EdgeInsets.only(left: 7.0),
+  //                             child: Text(
+  //                               "+9664742543",
+  //                               style: TextStyle(
+  //                                   color: Colors.black54,
+  //                                   fontSize: 12,
+  //                                   fontWeight: FontWeight.w500),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(top: 7.0),
+  //                       child: Row(
+  //                         children: [
+  //                           Padding(
+  //                               padding: const EdgeInsets.only(top: 3.0),
+  //                               child: Image.asset(
+  //                                 "assets/whatsapp.png",
+  //                                 width: 21,
+  //                                 color: Colors.grey,
+  //                               )),
+  //                           Padding(
+  //                             padding: const EdgeInsets.only(left: 5.0),
+  //                             child: Text(
+  //                               "+9664742543",
+  //                               style: TextStyle(
+  //                                   color: Colors.black54,
+  //                                   fontSize: 12,
+  //                                   fontWeight: FontWeight.w500),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.only(top: 21.0, bottom: 35),
+  //                 child: Row(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: [
+  //                     CircleAvatar(
+  //                       child: Icon(
+  //                         Icons.mail,
+  //                         color: Colors.white,
+  //                         size: 19,
+  //                       ),
+  //                       backgroundColor: appPrimaryMaterialColor,
+  //                       radius: 19,
+  //                     ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(left: 12.0),
+  //                       child: CircleAvatar(
+  //                         child: Icon(
+  //                           Icons.call,
+  //                           color: Colors.white,
+  //                           size: 19,
+  //                         ),
+  //                         backgroundColor: appPrimaryMaterialColor,
+  //                         radius: 19,
+  //                       ),
+  //                     ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(left: 12.0),
+  //                       child: CircleAvatar(
+  //                         child: Image.asset(
+  //                           "assets/whatsapp.png",
+  //                           width: 21,
+  //                           color: Colors.white,
+  //                         ),
+  //                         backgroundColor: appPrimaryMaterialColor,
+  //                         radius: 19,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //               Container(
+  //                 height: 4,
+  //                 color: appPrimaryMaterialColor,
+  //                 width: MediaQuery.of(context).size.width,
+  //               ),
+  //             ],
+  //           ),
+  //           contentPadding: const EdgeInsets.only(
+  //             top: 6.0,
+  //             bottom: 0.0,
+  //           ),
+  //         );
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +642,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 padding: const EdgeInsets.only(
                                                     top: 2.0),
                                                 child: Text(
-                                                    "${City}" +
+                                                    "${AddressCityName}" +
                                                         "-" +
                                                         "${AddressPincode}",
                                                     style: TextStyle(
@@ -420,6 +814,113 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(14.0),
               child: GestureDetector(
                 onTap: () {
+                  Navigator.push(
+                      context,
+                      FadeRoute(
+                          page: TearmsCon(
+                        tearmscondition: generaldatalist[0]
+                            ["SettingAboutUsURL"],
+                        title: "About Us",
+                      )));
+                },
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Icon(
+                            Icons.info_outline,
+                            color: Colors.black54,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text("About Us",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 0.8,
+              color: Colors.grey[300],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      FadeRoute(
+                          page: TearmsCon(
+                        tearmscondition: getaddressList[0]
+                            ["SettingTermsConditionURL"],
+                        title: "Tearms & Condition",
+                      )));
+                },
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.asset('assets/tearmscon.png',
+                            width: 25, color: Colors.black54),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text("Tearms & Condition",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 0.8,
+              color: Colors.grey[300],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: GestureDetector(
+                onTap: () {
+                  _contactUs();
+                },
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Icon(
+                            Icons.call,
+                            size: 22,
+                            color: Colors.black54,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text("Contact Us",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 0.8,
+              color: Colors.grey[300],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: GestureDetector(
+                onTap: () {
                   _showDialog(context);
                 },
                 child: Container(
@@ -496,6 +997,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } on SocketException catch (_) {
       Fluttertoast.showToast(msg: "No Internet Connection.");
+    }
+  }
+
+  _SettingApi() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        Services.postforlist(apiname: 'getSetting').then((responselist) async {
+          setState(() {
+            isLoading = false;
+          });
+          if (responselist.length > 0) {
+            setState(() {
+              generaldatalist = responselist;
+              whatsapp = "+91" + responselist[0]["SettingPhoneNumber"];
+              msg = responselist[0]["SettingWhatsAppMessage"];
+              address = responselist[0]["SettingAddress"];
+              //set "data" here to your variable
+            });
+          } else {
+            Fluttertoast.showToast(msg: "No Data Found !");
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+//      showMsg("No Internet Connection.");
     }
   }
 }

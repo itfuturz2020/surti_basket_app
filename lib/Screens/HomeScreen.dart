@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
