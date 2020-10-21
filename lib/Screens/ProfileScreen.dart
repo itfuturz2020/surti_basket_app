@@ -271,7 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AddressArea,
       AddressType,
       AddressPincode,
-      AddressCityName;
+      City;
   SharedPreferences preferences;
 
   getlocaldata() async {
@@ -290,7 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AddressLandmark = preferences.getString(AddressSession.AddressLandmark);
       AddressArea = preferences.getString(AddressSession.AddressArea);
       AddressType = preferences.getString(AddressSession.AddressType);
-      AddressCityName = preferences.getString(AddressSession.City);
+      City = preferences.getString(AddressSession.City);
     });
     print(AddressPincode);
   }
@@ -642,7 +642,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 padding: const EdgeInsets.only(
                                                     top: 2.0),
                                                 child: Text(
-                                                    "${AddressCityName}" +
+                                                    "${City}" +
                                                         "-" +
                                                         "${AddressPincode}",
                                                     style: TextStyle(
