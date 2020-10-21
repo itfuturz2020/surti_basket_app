@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
@@ -42,6 +43,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String PaymentMode;
   SharedPreferences preferences;
   bool _usePoints = false;
+  List priceList=[];
+  List specificationList=[];
 
   getlocaldata() async {
     preferences = await SharedPreferences.getInstance();
@@ -84,9 +87,60 @@ class _CheckoutPageState extends State<CheckoutPage> {
     print(AddressId);
   }
 
+  Razorpay _razorpay;
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    _placeOrder(transactionId: response.paymentId);
+    Fluttertoast.showToast(
+        msg: "Payment Successfully " + response.paymentId, timeInSecForIosWeb: 4);
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Fluttertoast.showToast(
+        msg: "ERROR: " + response.code.toString() + " - " + response.message,
+        timeInSecForIosWeb: 4);
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
+  }
+
+
+  void openPaymentGateway() async {
+    var options = {
+      'key': 'rzp_live_XCxat4CzDhDGNj',
+      'amount': 100,
+      'name': 'Keval',
+      'description': '-Shopping',
+      'prefill': {'contact': '9429828152', 'email': 'kevaltech9teen@gmail.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint(e);
+    }
+  }
+
   @override
   void initState() {
     getlocaldata();
+    amountCalulation();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     super.initState();
   }
 
@@ -307,41 +361,83 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10, top: 40),
-              child: SizedBox(
-                height: 45,
-                child: FlatButton(
-                  color: appPrimaryMaterialColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      side: BorderSide(color: Colors.grey[200])),
-                  onPressed: () {
-                    _placeOrder();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 3.0),
-                        child: isLoading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: new AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                ),
-                              )
-                            : Text(
-                                "Place Order",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    // color: Colors.grey[700],
-                                    fontWeight: FontWeight.bold),
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0,top:8.0),
+                      child: Text("Payment Detail",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context,int index){
+                      return Padding(
+                        padding: const EdgeInsets.only(left:8.0,right: 8.0,top: 8.0),
+                        child: Column(
+                          children: [
+                            specificationList[index]["Key"]=="Total"?
+                            Divider():Container(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("${specificationList[index]["Key"]}"),
+                                Text("${specificationList[index]["Value"]}"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                     },
+                      itemCount: specificationList.length,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: SizedBox(
+                        height: 45,
+                        child: FlatButton(
+                          color: appPrimaryMaterialColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              side: BorderSide(color: Colors.grey[200])),
+                          onPressed: () {
+                            if(PaymentMode=="Online"){
+                              openPaymentGateway();
+                            }
+                            else{
+                              _placeOrder();
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 3.0),
+                                child: isLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          valueColor: new AlwaysStoppedAnimation<Color>(
+                                              Colors.white),
+                                        ),
+                                      )
+                                    : Text(
+                                        "Place Order",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            // color: Colors.grey[700],
+                                            fontWeight: FontWeight.bold),
+                                      ),
                               ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -351,7 +447,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  _placeOrder() async {
+  _placeOrder({String transactionId}) async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -362,7 +458,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           "CustomerId": "${CustomerId}",
           "AddressId": "${AddressId}",
           "OrderPaymentMethod": "${PaymentMode}",
-          "OrderTransactionNo": "",
+          "OrderTransactionNo": "${transactionId}",
           "OrderPromoCode": "",
           "OrderTransactionNo": "",
           "OrderBonusPoint": ""
@@ -402,17 +498,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
         });
         FormData body = FormData.fromMap({
               "CustomerId": "${CustomerId}",
-              "Promocode": "",
-              "Points": ""
             });
-        Services.postForSave(apiname: 'beforePlaceOrder', body: body).then(
-            (responseremove) async {
-          if (responseremove.IsSuccess == true && responseremove.Data == "1") {
-            Provider.of<CartProvider>(context, listen: false).removecart();
+        Services.postforlist(apiname: 'beforePlaceOrder', body: body).then(
+            (responselist) async {
+          if (responselist.length > 0) {
             setState(() {
               isLoading = false;
+              priceList=responselist;
+              specificationList=responselist[2]["tot"];
             });
-            Fluttertoast.showToast(msg: "Order Place Successfully");
           } else {
             setState(() {
               isLoading = false;
@@ -421,6 +515,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         }, onError: (e) {
           setState(() {
             isLoading = false;
+            Fluttertoast.showToast(msg: "Error : $e");
           });
           print("error on call -> ${e.message}");
           Fluttertoast.showToast(msg: "something went wrong");
@@ -430,142 +525,5 @@ class _CheckoutPageState extends State<CheckoutPage> {
       Fluttertoast.showToast(msg: "No Internet Connection");
     }
   }
-
-/*
-  startPayment() async {
-    double payableAmount = double.parse(totalamount);
-    //double payableAmount=1;
-    print(int.parse(payableAmount.roundToDouble().floor().toString() + "00"));
-    Services.GetOrderIDForPayment(
-        int.parse(payableAmount.roundToDouble().floor().toString() + "00"),
-        'ORD1001')
-        .then((data) async {
-      if (data != null) {
-        print("order Id---> ${data.Data}");
-        var options = {
-          'image': '',
-          'key': 'rzp_live_XCxat4CzDhDGNj',
-          'order_id': data.Data,
-          'amount': payableAmount.toString(),
-          'name': 'Pick N DeliverE',
-          'description': 'Order Payment',
-          'prefill': {'contact': MobileNo, 'email': email},
-        };
-        try {
-          _razorpay.open(options);
-        } catch (e) {
-          debugPrint(e);
-        }
-      } else {
-        Fluttertoast.showToast(
-            msg: "Payment Gateway Not Open",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.TOP,
-            toastLength: Toast.LENGTH_LONG);
-      }
-    }, onError: (e) {
-      Fluttertoast.showToast(
-          msg: "Data Not Saved" + e.toString(), backgroundColor: Colors.red);
-    });
-  }
-*/
 }
 
-class PinCodePopup extends StatefulWidget {
-  @override
-  _PinCodePopupState createState() => _PinCodePopupState();
-}
-
-class _PinCodePopupState extends State<PinCodePopup> {
-  TextEditingController pincode = new TextEditingController();
-  bool isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "Enter Pincode",
-              style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black54),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
-            child: PinCodeTextField(
-              controller: pincode,
-              wrapAlignment: WrapAlignment.center,
-              autofocus: false,
-              pinBoxRadius: 6,
-              highlight: true,
-              pinBoxHeight: 35,
-              pinBoxWidth: 35,
-              highlightColor: appPrimaryMaterialColor,
-              defaultBorderColor: Colors.grey,
-              hasTextBorderColor: appPrimaryMaterialColor,
-              maxLength: 6,
-              pinBoxDecoration:
-                  ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-              pinTextStyle: TextStyle(fontSize: 14.0),
-              pinTextAnimatedSwitcherTransition:
-                  ProvidedPinBoxTextAnimation.scalingTransition,
-              pinTextAnimatedSwitcherDuration: Duration(milliseconds: 200),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                color: appPrimaryMaterialColor,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK", style: TextStyle(color: Colors.white))),
-          )
-        ],
-      ),
-    );
-  }
-
-  _checkPinCode() async {
-    if (pincode.text != null) {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          setState(() {
-            isLoading = true;
-          });
-          FormData body = FormData.fromMap({"PincodeNo": pincode.text});
-          Services.postForSave(apiname: 'checkPincode', body: body).then(
-              (responseremove) async {
-            if (responseremove.IsSuccess == true &&
-                responseremove.Data == "1") {
-              setState(() {
-                isLoading = false;
-              });
-            } else {
-              setState(() {
-                isLoading = false;
-              });
-            }
-          }, onError: (e) {
-            setState(() {
-              isLoading = false;
-            });
-            print("error on call -> ${e.message}");
-            Fluttertoast.showToast(msg: "something went wrong");
-          });
-        }
-      } on SocketException catch (_) {
-        Fluttertoast.showToast(msg: "No Internet Connection");
-      }
-    } else {
-      Fluttertoast.showToast(msg: "Please Enter PinCode");
-    }
-  }
-}
