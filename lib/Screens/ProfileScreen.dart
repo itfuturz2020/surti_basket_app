@@ -634,8 +634,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         "," +
                                                         "${AddressArea}",
                                                     style: TextStyle(
-                                                      color: Colors.grey[700],
-                                                      fontSize: 14,
+                                                      color: Colors.grey[700], fontSize: 14,
                                                     )),
                                               ),
                                               Padding(
