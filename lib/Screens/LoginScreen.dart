@@ -39,8 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString(Session.CustomerName, data["CustomerName"]);
     await prefs.setString(Session.CustomerEmailId, data["CustomerEmailId"]);
     await prefs.setString(Session.CustomerPhoneNo, data["CustomerPhoneNo"]);
-    Navigator.pushAndRemoveUntil(context,SlideLeftRoute(page: HomeScreen()) ,(route)=>false);
-
+    Navigator.pushAndRemoveUntil(
+        context, SlideLeftRoute(page: HomeScreen()), (route) => false);
   }
 
   @override
@@ -247,6 +247,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       builder: (BuildContext context) => new VerificationScreen(
                             mobile: _loginController.text,
                             logindata: responselist[0],
+                            onLoginSuccess: () {
+                              saveDataToSession(responselist[0]);
+                            },
                           )));
                 }
               } else {
@@ -254,6 +257,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     builder: (BuildContext context) => new VerificationScreen(
                           mobile: _loginController.text,
                           logindata: responselist[0],
+                          onLoginSuccess: () {
+                            saveDataToSession(responselist[0]);
+                          },
                         )));
               }
             } else {
@@ -267,12 +273,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => new VerificationScreen(
                             mobile: _loginController.text,
+                            onLoginSuccess: () {
+                              saveDataToSession(responselist[0]);
+                            },
                           )));
                 }
               } else {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => new VerificationScreen(
                           mobile: _loginController.text,
+                          onLoginSuccess: () {
+                            saveDataToSession(responselist[0]);
+                          },
                         )));
               }
             }

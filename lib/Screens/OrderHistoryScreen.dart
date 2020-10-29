@@ -8,8 +8,6 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
-import 'package:surti_basket_app/Screens/OrderTab.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   @override

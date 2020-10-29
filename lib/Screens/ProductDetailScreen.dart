@@ -99,7 +99,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 12.0, left: 18.0, right: 10.0),
-                          child: Text("${packageInfo.length> 0 ? packageInfo[currentIndex]["ProductdetailName"]:productdetail[0]["ProductName"]}",
+                          child: Text(
+                              "${packageInfo.length > 0 ? packageInfo[currentIndex]["ProductdetailName"] : productdetail[0]["ProductName"]}",
                               style: TextStyle(fontSize: 18)),
                         ),
                         Padding(
@@ -168,8 +169,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
-                                child:Image.network(
-                                    '${IMG_URL +productdetail[0]["ProductImages"]}',
+                                child: Image.network(
+                                    '${IMG_URL + productdetail[0]["ProductImages"]}',
                                     height: 300),
                               ),
                             ],
@@ -220,85 +221,98 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             child: Text('Pack Sizes',
                                 style: TextStyle(fontSize: 16)),
                           ),
-                          packageInfo.length> 0?
-                          Column(
-                            children:
-                                List.generate(packageInfo.length, (index) {
-                              return InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    currentIndex = index;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 0.5,
-                                              color: Colors.grey[400]),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0))),
+                          packageInfo.length > 0
+                              ? Column(
+                                  children: List.generate(packageInfo.length,
+                                      (index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          currentIndex = index;
+                                        });
+                                      },
                                       child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(top:6.0),
-                                                child: Column(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 45,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.5,
+                                                    color: Colors.grey[400]),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(4.0))),
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                child: Row(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
                                                   children: [
-                                                    Text(
-                                                        " $Inr_Rupee ${packageInfo[index]["ProductdetailSRP"]}",
-                                                        style: TextStyle(
-                                                            fontSize: 13,
-                                                            color: Colors.black)),
-                                                    RichText(
-                                                      text: TextSpan(
-                                                          text: 'MRP: ',
-                                                          style: TextStyle(
-                                                              color: Colors.grey,
-                                                              fontSize: 13),
-                                                          children: <TextSpan>[
-                                                            TextSpan(
-                                                              text:
-                                                                  "${Inr_Rupee} ${packageInfo[index]["ProductdetailMRP"]}",
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 6.0),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              " $Inr_Rupee ${packageInfo[index]["ProductdetailSRP"]}",
                                                               style: TextStyle(
-                                                                  color:
-                                                                      Colors.grey,
                                                                   fontSize: 13,
-                                                                  decoration:
-                                                                      TextDecoration
-                                                                          .lineThrough),
-                                                            )
-                                                          ]),
+                                                                  color: Colors
+                                                                      .black)),
+                                                          RichText(
+                                                            text: TextSpan(
+                                                                text: 'MRP: ',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontSize:
+                                                                        13),
+                                                                children: <
+                                                                    TextSpan>[
+                                                                  TextSpan(
+                                                                    text:
+                                                                        "${Inr_Rupee} ${packageInfo[index]["ProductdetailMRP"]}",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontSize:
+                                                                            13,
+                                                                        decoration:
+                                                                            TextDecoration.lineThrough),
+                                                                  )
+                                                                ]),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
+                                                    Text(
+                                                        "${packageInfo[index]["ProductdetailName"]}"),
+                                                    currentIndex == index
+                                                        ? Icon(
+                                                            Icons
+                                                                .radio_button_checked,
+                                                            size: 20)
+                                                        : Icon(
+                                                            Icons
+                                                                .radio_button_unchecked,
+                                                            size: 20)
                                                   ],
-                                                ),
-                                              ),
-                                              Text(
-                                                  "${packageInfo[index]["ProductdetailName"]}"),
-                                              currentIndex == index
-                                                  ? Icon(
-                                                      Icons
-                                                          .radio_button_checked,
-                                                      size: 20)
-                                                  : Icon(
-                                                      Icons
-                                                          .radio_button_unchecked,
-                                                      size: 20)
-                                            ],
-                                          ))),
-                                ),
-                              );
-                            }),
-                          ):Container(),
+                                                ))),
+                                      ),
+                                    );
+                                  }),
+                                )
+                              : Container(),
                           SizedBox(
                             height: 8,
                           ),
@@ -344,10 +358,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         width: 26, color: Colors.white),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("ADD TO CART",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
+                      child: iscartlist == true
+                          ? Text("Already in cart",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))
+                          : Text("Add to cart",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
                     )
                   ],
                 ),
@@ -409,12 +428,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         Services.postForSave(apiname: 'addToCart', body: body).then(
             (responseadd) async {
           if (responseadd.IsSuccess == true && responseadd.Data == "1") {
-            Navigator.push(context, FadeRoute(page: MyCartScreen()));
             setState(() {
               iscartLoading = false;
-
-              // iscartlist = !iscartlist;
+              iscartlist = !iscartlist;
             });
+            Navigator.push(context, FadeRoute(page: MyCartScreen()));
             Provider.of<CartProvider>(context, listen: false).increaseCart();
             Fluttertoast.showToast(
                 msg: "Added Successfully", gravity: ToastGravity.BOTTOM);

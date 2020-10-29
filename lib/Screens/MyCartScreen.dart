@@ -63,12 +63,15 @@ class _MyCartScreenState extends State<MyCartScreen> {
   }
 
   _changeAddress(BuildContext context) async {
-      List _addressData = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => AddressScreen(fromwehere: "MyCart",)),
-      );
-      print(_addressData);
-      /*setState(() {
+    List _addressData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddressScreen(
+                fromwehere: "MyCart",
+              )),
+    );
+    print(_addressData);
+    /*setState(() {
         CustomerId = _addressData[0];
         AddressId = _addressData[1];
         AddressHouseNo = _addressData[2];
@@ -208,21 +211,26 @@ class _MyCartScreenState extends State<MyCartScreen> {
               ? SingleChildScrollView(
                   child: Column(
                     children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return MyCartComponent(
-                            cartData: cartList[index],
-                            onRemove: () {
-                              setState(() {
-                                cartList.removeAt(index);
-                              });
-                            },
-                          );
-                        },
-                        itemCount: cartList.length,
-                      ),
+                      ListView.separated(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            return MyCartComponent(
+                              cartData: cartList[index],
+                              onRemove: () {
+                                setState(() {
+                                  cartList.removeAt(index);
+                                });
+                              },
+                            );
+                          },
+                          itemCount: cartList.length,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              Container(
+                                height: 7,
+                                color: Colors.grey[300],
+                              )),
                     ],
                   ),
                 )
@@ -242,16 +250,19 @@ class _MyCartScreenState extends State<MyCartScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 10.0, top: 12.0),
-              child:priceList.length> 0 ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Rs: ${priceList[0]["Total"]}",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text("Saved  Rs. ${priceList[0]["Save"]}"),
-                ],
-              ):Container(),
+              child: priceList.length > 0
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Rs: ${priceList[0]["Total"]}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        Text("Saved  Rs. ${priceList[0]["Save"]}"),
+                      ],
+                    )
+                  : Container(),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
@@ -265,7 +276,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
                 child: Row(
                   children: [
                     Text(
-                      "Check Out",
+                      "Place Order",
                       style: TextStyle(
                           fontSize: 17.0, fontWeight: FontWeight.bold),
                     ),

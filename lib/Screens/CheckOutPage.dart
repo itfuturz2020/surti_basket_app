@@ -43,8 +43,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String PaymentMode;
   SharedPreferences preferences;
   bool _usePoints = false;
-  List priceList=[];
-  List specificationList=[];
+  List priceList = [];
+  List specificationList = [];
 
   getlocaldata() async {
     preferences = await SharedPreferences.getInstance();
@@ -89,7 +89,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Razorpay _razorpay;
 
-
   @override
   void dispose() {
     super.dispose();
@@ -99,7 +98,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     _placeOrder(transactionId: response.paymentId);
     Fluttertoast.showToast(
-        msg: "Payment Successfully " + response.paymentId, timeInSecForIosWeb: 4);
+        msg: "Payment Successfully " + response.paymentId,
+        timeInSecForIosWeb: 4);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -112,7 +112,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Fluttertoast.showToast(
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
   }
-
 
   void openPaymentGateway() async {
     var options = {
@@ -136,7 +135,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     getlocaldata();
-    amountCalulation();
+    beforPlaceOrder();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -146,6 +145,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider provider = Provider.of<CartProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -215,151 +215,177 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                     ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                  color: Colors.white,
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                                value: _usePoints,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _usePoints = value;
-                                  });
-                                }),
-                            Image.asset("assets/coin.png", width: 25),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text("Redeem Points",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black54)),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text("100 Points ",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black54)),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                      child: Text("Apply Promocode",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
+            provider.settingList[0]["SettingShowReedemPoints"] == true
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
+                        color: Colors.white,
+                        width: MediaQuery.of(context).size.width,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Checkbox(
+                                      value: _usePoints,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _usePoints = value;
+                                        });
+                                        beforPlaceOrder();
+                                        print(value);
+                                      }),
+                                  Image.asset("assets/coin.png", width: 25),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text("Redeem Points",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54)),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text("100 Points ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54)),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        )),
+                  )
+                : Container(),
+            provider.settingList[0]["SettingShowPromocode"] == true
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Flexible(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 8),
-                              child: Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.8, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(4.0)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, bottom: 5.0, top: 5.0),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter Coupon Code",
-                                      hintStyle: TextStyle(fontSize: 12),
-                                      border: InputBorder.none,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                            child: Text("Apply Promocode",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Container(
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 0.8, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(4.0)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0, bottom: 5.0, top: 5.0),
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                            hintText: "Enter Coupon Code",
+                                            hintStyle: TextStyle(fontSize: 12),
+                                            border: InputBorder.none,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 6.0, left: 6.0),
+                                  child: FlatButton(
+                                    color: appPrimaryMaterialColor,
+                                    onPressed: () {},
+                                    child: Text("APPLY",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 6.0, left: 6.0),
-                            child: FlatButton(
-                              color: appPrimaryMaterialColor,
-                              onPressed: () {},
-                              child: Text("APPLY",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+            provider.settingList[0]["SettingShowOnlinePayment"] == true
+                ? Column(
+                    children: [
+                      Container(
+                        color: Colors.grey[300],
+                        height: 8,
+                      ),
+                      Container(
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0, top: 8),
+                              child: Text("Payment Mode",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Payment Mode",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FlatButton(
-                              onPressed: () {
-                                setState(() {
-                                  PaymentMode = "Cash";
-                                });
-                              },
-                              child: Text("COD",
-                                  style: TextStyle(
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FlatButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          PaymentMode = "Cash";
+                                        });
+                                      },
+                                      child: Text("COD",
+                                          style: TextStyle(
+                                              color: PaymentMode == "Cash"
+                                                  ? Colors.white
+                                                  : Colors.black54)),
                                       color: PaymentMode == "Cash"
-                                          ? Colors.white
-                                          : Colors.black54)),
-                              color: PaymentMode == "Cash"
-                                  ? appPrimaryMaterialColor
-                                  : Colors.grey[200]),
-                          FlatButton(
-                              onPressed: () {
-                                setState(() {
-                                  PaymentMode = "Online";
-                                });
-                              },
-                              child: Text("Online",
-                                  style: TextStyle(
+                                          ? appPrimaryMaterialColor
+                                          : Colors.grey[200]),
+                                  FlatButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          PaymentMode = "Online";
+                                        });
+                                      },
+                                      child: Text("Online",
+                                          style: TextStyle(
+                                              color: PaymentMode != "Cash"
+                                                  ? Colors.white
+                                                  : Colors.black54)),
                                       color: PaymentMode != "Cash"
-                                          ? Colors.white
-                                          : Colors.black54)),
-                              color: PaymentMode != "Cash"
-                                  ? appPrimaryMaterialColor
-                                  : Colors.grey[200]),
-                        ],
+                                          ? appPrimaryMaterialColor
+                                          : Colors.grey[200]),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+                    ],
+                  )
+                : Container(),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Container(
@@ -367,30 +393,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0,top:8.0),
+                      padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                       child: Text("Payment Detail",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      itemBuilder: (BuildContext context,int index){
-                      return Padding(
-                        padding: const EdgeInsets.only(left:8.0,right: 8.0,top: 8.0),
-                        child: Column(
-                          children: [
-                            specificationList[index]["Key"]=="Total"?
-                            Divider():Container(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("${specificationList[index]["Key"]}"),
-                                Text("${specificationList[index]["Value"]}"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                     },
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 8.0),
+                          child: Column(
+                            children: [
+                              specificationList[index]["Key"] == "Total"
+                                  ? Divider()
+                                  : Container(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("${specificationList[index]["Key"]}"),
+                                  Text("${specificationList[index]["Value"]}"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       itemCount: specificationList.length,
                     ),
                     Padding(
@@ -403,10 +432,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               borderRadius: BorderRadius.circular(5),
                               side: BorderSide(color: Colors.grey[200])),
                           onPressed: () {
-                            if(PaymentMode=="Online"){
+                            if (PaymentMode == "Online") {
                               openPaymentGateway();
-                            }
-                            else{
+                            } else {
                               _placeOrder();
                             }
                           },
@@ -419,12 +447,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 child: isLoading
                                     ? Center(
                                         child: CircularProgressIndicator(
-                                          valueColor: new AlwaysStoppedAnimation<Color>(
-                                              Colors.white),
+                                          valueColor:
+                                              new AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
                                         ),
                                       )
                                     : Text(
-                                        "Place Order",
+                                        "Confirm Order",
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
@@ -489,7 +518,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
-  amountCalulation() async {
+  beforPlaceOrder() async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -497,15 +526,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
           isLoading = true;
         });
         FormData body = FormData.fromMap({
-              "CustomerId": "${CustomerId}",
-            });
+          "CustomerId": "${CustomerId}",
+          "Promocode": "",
+          "Points": "",
+        });
         Services.postforlist(apiname: 'beforePlaceOrder', body: body).then(
             (responselist) async {
           if (responselist.length > 0) {
             setState(() {
               isLoading = false;
-              priceList=responselist;
-              specificationList=responselist[2]["tot"];
+              priceList = responselist;
+              specificationList = responselist[2]["tot"];
             });
           } else {
             setState(() {
@@ -526,4 +557,3 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 }
-

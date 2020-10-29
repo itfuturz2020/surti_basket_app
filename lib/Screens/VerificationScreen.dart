@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -16,8 +17,9 @@ import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class VerificationScreen extends StatefulWidget {
   var mobile, logindata;
+  Function onLoginSuccess;
 
-  VerificationScreen({this.mobile, this.logindata});
+  VerificationScreen({this.mobile, this.logindata, this.onLoginSuccess});
 
   @override
   _VerificationScreenState createState() => _VerificationScreenState();
@@ -27,12 +29,103 @@ class _VerificationScreenState extends State<VerificationScreen> {
   bool isLoading = false;
   String rndnumber;
   TextEditingController txtOTP = new TextEditingController();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  bool isCodeSent = false;
+  String _verificationId;
 
   @override
   void initState() {
-    _sendOTP();
+    // _sendOTP();
+    _onVerifyCode();
   }
 
+  void _onVerifyCode() async {
+    setState(() {
+      isCodeSent = true;
+    });
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential phoneAuthCredential) {
+      _firebaseAuth
+          .signInWithCredential(phoneAuthCredential)
+          .then((UserCredential value) {
+        if (value.user != null) {
+          if (widget.logindata != "") {
+            widget.onLoginSuccess();
+          } else {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => RegistrationScreen(
+                          Mobile: widget.mobile,
+                        )),
+                (route) => false);
+          }
+        } else {
+          Fluttertoast.showToast(msg: "Error validating OTP, try again");
+        }
+      }).catchError((error) {
+        Fluttertoast.showToast(msg: "Try again in sometime");
+      });
+    };
+    final PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException authException) {
+      Fluttertoast.showToast(msg: authException.message);
+      setState(() {
+        isCodeSent = false;
+      });
+    };
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) async {
+      _verificationId = verificationId;
+      setState(() {
+        _verificationId = verificationId;
+      });
+    };
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      _verificationId = verificationId;
+      setState(() {
+        _verificationId = verificationId;
+      });
+    };
+
+    // TODO: Change country code
+
+    await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: "+91${widget.mobile}",
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+  }
+
+  void _onFormSubmitted() async {
+    AuthCredential _authCredential = PhoneAuthProvider.getCredential(
+        verificationId: _verificationId, smsCode: txtOTP.text);
+    _firebaseAuth
+        .signInWithCredential(_authCredential)
+        .then((UserCredential value) {
+      if (value.user != null) {
+        if (widget.logindata != "") {
+          widget.onLoginSuccess();
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (BuildContext context) => RegistrationScreen(
+                        Mobile: widget.mobile,
+                      )),
+              (route) => false);
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Error validating OTP, try again");
+      }
+    }).catchError((error) {
+      Fluttertoast.showToast(msg: "$error Something went wrong");
+      print(error);
+    });
+  }
+
+/*
   saveDataToSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(
@@ -44,9 +137,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
     await prefs.setString(
         Session.CustomerPhoneNo, widget.logindata["CustomerPhoneNo"]);
 
-    Navigator.pushAndRemoveUntil(context, SlideLeftRoute(page: HomeScreen()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context, SlideLeftRoute(page: HomeScreen()), (route) => false);
   }
+*/
 
+/*
   _sendOTP() async {
     var rnd = new Random();
     setState(() {
@@ -91,6 +187,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
       Fluttertoast.showToast(msg: "No Internet Connection");
     }
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -151,13 +248,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       autofocus: false,
                       wrapAlignment: WrapAlignment.center,
                       highlight: true,
-                      pinBoxHeight: 50,
-                      pinBoxWidth: 50,
+                      pinBoxHeight: 40,
+                      pinBoxWidth: 40,
                       pinBoxRadius: 8,
                       highlightColor: Colors.grey,
                       defaultBorderColor: Colors.grey,
                       hasTextBorderColor: Colors.black,
-                      maxLength: 4,
+                      maxLength: 6,
                       pinBoxDecoration:
                           ProvidedPinBoxDecoration.defaultPinBoxDecoration,
                       pinTextStyle: TextStyle(fontSize: 20),
@@ -183,17 +280,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         onPressed: () {
-                          rndnumber == txtOTP.text
-                              ? widget.logindata == null
-                                  ? Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              RegistrationScreen(
-                                                Mobile: widget.mobile,
-                                              )),
-                                      (route) => false)
-                                  : saveDataToSession()
-                              : Fluttertoast.showToast(msg: "OTP is wrong");
+                          _onFormSubmitted();
                         },
                         child: Text(
                           "Verify",
@@ -206,8 +293,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ),
                   ),
                   InkWell(
-                    onTap: (){
-                      _sendOTP();
+                    onTap: () {
+                      _onVerifyCode();
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(top: 35.0),

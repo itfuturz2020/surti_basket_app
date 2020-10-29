@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,7 +95,15 @@ class _MyOrderState extends State<MyOrder> {
                     height: 10,
                   ),
                 )
-              : NoFoundComponent(),
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    NoFoundComponent(
+                      ImagePath: 'assets/noProduct.png',
+                      Title: "No Data Found",
+                    ),
+                  ],
+                ),
     );
   }
 }

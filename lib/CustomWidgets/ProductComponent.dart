@@ -56,180 +56,199 @@ class _ProductComponentState extends State<ProductComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 1),
-      child: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          SlideLeftRoute(
-                              page: ProductDetailScreen(
-                                  productId:
-                                      "${widget.product["ProductId"]}")));
-                    },
-                    child: Image.network(
-                      '${IMG_URL + widget.product["ProductImages"]}',
-                      width: 110,
-                      height: 110,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${widget.product["ProductName"]}",
-                            style: TextStyle(fontSize: 15),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            "${widget.product["SubcategoryName"]}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                text: 'MRP: ',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 14),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text:
-                                        "${Inr_Rupee + widget.product["ProductMrp"]} ",
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                        decoration: TextDecoration.lineThrough),
-                                  )
-                                ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    " ${Inr_Rupee + widget.product["ProductSrp"]}",
-                                    style: TextStyle(
-                                        fontSize: 17, color: Colors.black)),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: SizedBox(
-                                    height: 35,
-                                    width: 70,
-                                    child: FlatButton(
-                                      onPressed: () {
-                                        _addTocart();
-                                      },
-                                      color: Colors.redAccent,
-                                      child: iscartLoading
-                                          ? LoadingComponent()
-                                          : Text('Add',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15)),
-                                    ),
-                                  ),
-                                ),
-
-                                // : Padding(
-                                //     padding:
-                                //         const EdgeInsets.only(right: 10.0),
-                                //     child: Row(
-                                //       children: [
-                                //         InkWell(
-                                //           child: Container(
-                                //             decoration: BoxDecoration(
-                                //                 color: Colors.white,
-                                //                 boxShadow: [
-                                //                   BoxShadow(
-                                //                     color: Colors.grey[300],
-                                //                     blurRadius: 2.0,
-                                //                   ),
-                                //                 ],
-                                //                 borderRadius:
-                                //                     BorderRadius.circular(
-                                //                         4.0),
-                                //                 border: Border.all(
-                                //                     width: 1,
-                                //                     color:
-                                //                         Colors.red[400])),
-                                //             width: 30,
-                                //             height: 30,
-                                //             child: Center(
-                                //               child: Icon(Icons.remove,
-                                //                   color: Colors.red[400],
-                                //                   size: 20),
-                                //             ),
-                                //           ),
-                                //           onTap: () {
-                                //             remove();
-                                //           },
-                                //         ),
-                                //         Padding(
-                                //           padding: const EdgeInsets.only(
-                                //               left: 10.0, right: 10.0),
-                                //           child: Text(
-                                //             "${Qty}",
-                                //             style: TextStyle(fontSize: 20),
-                                //           ),
-                                //         ),
-                                //         InkWell(
-                                //           onTap: () {
-                                //             add();
-                                //           },
-                                //           child: Container(
-                                //             decoration: BoxDecoration(
-                                //                 color: Colors.white,
-                                //                 boxShadow: [
-                                //                   BoxShadow(
-                                //                     color: Colors.grey[300],
-                                //                     blurRadius: 2.0,
-                                //                   ),
-                                //                 ],
-                                //                 borderRadius:
-                                //                     BorderRadius.circular(
-                                //                         4.0),
-                                //                 border: Border.all(
-                                //                     width: 1,
-                                //                     color:
-                                //                         Colors.red[400])),
-                                //             width: 30,
-                                //             height: 30,
-                                //             child: Center(
-                                //               child: Icon(Icons.add,
-                                //                   color: Colors.red[400],
-                                //                   size: 20),
-                                //             ),
-                                //           ),
-                                //         )
-                                //       ],
-                                //     ),
-                                //   ),
-                              ],
-                            ),
-                          ),
-                        ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductDetailScreen(
+                    productId: widget.product["ProductId"],
+                  )),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 1),
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            SlideLeftRoute(
+                                page: ProductDetailScreen(
+                                    productId:
+                                        "${widget.product["ProductId"]}")));
+                      },
+                      child: Image.network(
+                        '${IMG_URL + widget.product["ProductImages"]}',
+                        width: 110,
+                        height: 110,
                       ),
                     ),
-                  )
-                ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${widget.product["ProductName"]}",
+                              style: TextStyle(fontSize: 15),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "${widget.product["SubcategoryName"]}",
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text: 'MRP: ',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          "${Inr_Rupee + widget.product["ProductMrp"]} ",
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    )
+                                  ]),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      " ${Inr_Rupee + widget.product["ProductSrp"]}",
+                                      style: TextStyle(
+                                          fontSize: 17, color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: SizedBox(
+                                      height: 35,
+                                      width: 75,
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          _addTocart();
+                                        },
+                                        color: Colors.redAccent,
+                                        child: iscartLoading
+                                            ? LoadingComponent()
+                                            : iscartlist == true
+                                                ? Text('Added',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14))
+                                                : Text('Add',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15)),
+                                      ),
+                                    ),
+                                  ),
+
+                                  // : Padding(
+                                  //     padding:
+                                  //         const EdgeInsets.only(right: 10.0),
+                                  //     child: Row(
+                                  //       children: [
+                                  //         InkWell(
+                                  //           child: Container(
+                                  //             decoration: BoxDecoration(
+                                  //                 color: Colors.white,
+                                  //                 boxShadow: [
+                                  //                   BoxShadow(
+                                  //                     color: Colors.grey[300],
+                                  //                     blurRadius: 2.0,
+                                  //                   ),
+                                  //                 ],
+                                  //                 borderRadius:
+                                  //                     BorderRadius.circular(
+                                  //                         4.0),
+                                  //                 border: Border.all(
+                                  //                     width: 1,
+                                  //                     color:
+                                  //                         Colors.red[400])),
+                                  //             width: 30,
+                                  //             height: 30,
+                                  //             child: Center(
+                                  //               child: Icon(Icons.remove,
+                                  //                   color: Colors.red[400],
+                                  //                   size: 20),
+                                  //             ),
+                                  //           ),
+                                  //           onTap: () {
+                                  //             remove();
+                                  //           },
+                                  //         ),
+                                  //         Padding(
+                                  //           padding: const EdgeInsets.only(
+                                  //               left: 10.0, right: 10.0),
+                                  //           child: Text(
+                                  //             "${Qty}",
+                                  //             style: TextStyle(fontSize: 20),
+                                  //           ),
+                                  //         ),
+                                  //         InkWell(
+                                  //           onTap: () {
+                                  //             add();
+                                  //           },
+                                  //           child: Container(
+                                  //             decoration: BoxDecoration(
+                                  //                 color: Colors.white,
+                                  //                 boxShadow: [
+                                  //                   BoxShadow(
+                                  //                     color: Colors.grey[300],
+                                  //                     blurRadius: 2.0,
+                                  //                   ),
+                                  //                 ],
+                                  //                 borderRadius:
+                                  //                     BorderRadius.circular(
+                                  //                         4.0),
+                                  //                 border: Border.all(
+                                  //                     width: 1,
+                                  //                     color:
+                                  //                         Colors.red[400])),
+                                  //             width: 30,
+                                  //             height: 30,
+                                  //             child: Center(
+                                  //               child: Icon(Icons.add,
+                                  //                   color: Colors.red[400],
+                                  //                   size: 20),
+                                  //             ),
+                                  //           ),
+                                  //         )
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -252,11 +271,10 @@ class _ProductComponentState extends State<ProductComponent> {
         Services.postForSave(apiname: 'addToCart', body: body).then(
             (responseadd) async {
           if (responseadd.IsSuccess == true && responseadd.Data == "1") {
-            Navigator.push(context, FadeRoute(page: MyCartScreen()));
+            // Navigator.push(context, FadeRoute(page: MyCartScreen()));
             setState(() {
               iscartLoading = false;
-
-              // iscartlist = !iscartlist;
+              iscartlist = !iscartlist;
             });
             Provider.of<CartProvider>(context, listen: false).increaseCart();
             Fluttertoast.showToast(

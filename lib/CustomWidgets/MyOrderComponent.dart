@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
-import 'package:surti_basket_app/Screens/OrderHistoryScreen.dart';
+import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/OrderTab.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 
@@ -38,18 +38,18 @@ class _MyorderComponentState extends State<MyorderComponent> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12),
+                padding: const EdgeInsets.only(left: 8, right: 8),
                 child: Container(
                   color: Colors.grey[100],
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(7.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 13.0, bottom: 10),
+                          padding: const EdgeInsets.only(
+                              left: 8.0, bottom: 8, right: 8),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -65,43 +65,35 @@ class _MyorderComponentState extends State<MyorderComponent> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 8.0, top: 8),
+                                    const EdgeInsets.only(left: 8.0, top: 12),
                                 child: Column(
                                   children: [
                                     Row(
                                       children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 9.0),
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                4,
-                                            child: Text("Order ID ",
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey[700])),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 9.0, left: 8),
-                                          child: Text(
-                                              "${widget.MyOrderData["OrderId"]}",
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              4,
+                                          child: Text("Order ID ",
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.grey[700])),
                                         ),
+                                        Text("${widget.MyOrderData["OrderId"]}",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[700])),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: Row(
                                             children: [
                                               Container(
                                                 child: Text("Rs",
@@ -112,67 +104,64 @@ class _MyorderComponentState extends State<MyorderComponent> {
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width /
-                                                    4.2,
+                                                    4.0,
                                               ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10.0),
-                                                child: Text(
-                                                    "${widget.MyOrderData["OrderTotal"][0]["Total"]}",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.black)),
-                                              ),
+                                              Text(
+                                                  "${widget.MyOrderData["OrderTotal"][0]["Total"]}",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey[700])),
                                             ],
                                           ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: Text(
-                                                "${widget.MyOrderData["OrderStageDropDown"]}"),
-                                          )
-                                        ],
-                                      ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 5.0),
+                                          child: Text(
+                                              "${widget.MyOrderData["OrderStageDropDown"]}"),
+                                        )
+                                      ],
                                     ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Row(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 8.0),
-                                              child: Container(
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: Row(
+                                            children: [
+                                              Container(
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width /
-                                                    3.7,
+                                                    3.5,
                                                 child: Text("Items ",
                                                     style: TextStyle(
                                                         fontSize: 14,
                                                         color:
                                                             Colors.grey[700])),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 8.0),
-                                              child: Text(
+                                              Text(
                                                   "${widget.MyOrderData["OrderTotalQty"]}",
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.grey[700])),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 10.0),
+                                              const EdgeInsets.only(top: 8.0),
                                           child: SizedBox(
                                             height: 25,
                                             child: FlatButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    FadeRoute(
+                                                        page: MyCartScreen()));
+                                              },
                                               color: appPrimaryMaterialColor,
                                               child: Text('Reorder',
                                                   style: TextStyle(

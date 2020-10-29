@@ -55,16 +55,16 @@ class _MyCartComponentState extends State<MyCartComponent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Fruits & Vegetables"),
-              Text("1 Item"),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(10.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text("Fruits & Vegetables"),
+        //       Text("1 Item"),
+        //     ],
+        //   ),
+        // ),
         Container(
           height: 120,
           color: Colors.white,

@@ -18,14 +18,22 @@ import 'package:surti_basket_app/transitions/slide_route.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class contactUs extends StatefulWidget {
-  var contactdata, whtspdata, whtscall;
-  contactUs({this.contactdata, this.whtspdata, this.whtscall});
+  var contactdata, whtspdata, whtscall, phonedata, emaildata;
+
+  contactUs(
+      {this.contactdata,
+      this.whtspdata,
+      this.whtscall,
+      this.phonedata,
+      this.emaildata});
 
   @override
   _contactUsState createState() => _contactUsState();
 }
 
 class _contactUsState extends State<contactUs> {
+  bool isLoading = false;
+
   void launchwhatsapp({
     @required String phone,
     @required String message,
@@ -89,7 +97,7 @@ class _contactUsState extends State<contactUs> {
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
                       child: Text(
-                        "meghatech@gmail.com",
+                        "${widget.emaildata}",
                         style: TextStyle(
                             color: Colors.black54,
                             fontSize: 14,
@@ -113,7 +121,7 @@ class _contactUsState extends State<contactUs> {
                       Padding(
                         padding: const EdgeInsets.only(left: 7.0),
                         child: Text(
-                          "+9664742543",
+                          "${widget.phonedata}",
                           style: TextStyle(
                               color: Colors.black54,
                               fontSize: 12,
@@ -137,7 +145,7 @@ class _contactUsState extends State<contactUs> {
                       Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: Text(
-                          "+9664742543",
+                          "${widget.whtscall}",
                           style: TextStyle(
                               color: Colors.black54,
                               fontSize: 12,
@@ -155,19 +163,26 @@ class _contactUsState extends State<contactUs> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  child: Icon(
-                    Icons.mail,
-                    color: Colors.white,
-                    size: 19,
+                GestureDetector(
+                  onTap: () {
+                    launch(('mailto:// ${widget.emaildata}'));
+                  },
+                  child: CircleAvatar(
+                    child: Icon(
+                      Icons.mail,
+                      color: Colors.white,
+                      size: 19,
+                    ),
+                    backgroundColor: appPrimaryMaterialColor,
+                    radius: 19,
                   ),
-                  backgroundColor: appPrimaryMaterialColor,
-                  radius: 19,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0),
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      launch(('tel:// ${widget.phonedata}'));
+                    },
                     child: CircleAvatar(
                       child: Icon(
                         Icons.call,
@@ -258,6 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String whatsapp, msg, address;
+  String phone, email;
   String CustomerId,
       CustomerName,
       Customerphone,
@@ -338,7 +354,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return contactUs(
-            contactdata: address, whtspdata: msg, whtscall: whatsapp);
+            contactdata: address,
+            whtspdata: msg,
+            emaildata: email,
+            whtscall: whatsapp,
+            phonedata: phone);
       },
     );
   }
@@ -513,8 +533,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 3.9,
-              color: Colors.red[300],
+              height: 190,
+              //color: Colors.red[300],
               child: Column(
                 children: [
                   Padding(
@@ -541,20 +561,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     Text("${CustomerName}",
                                         style: TextStyle(
-                                            fontSize: 18, color: Colors.white)),
+                                            fontSize: 18,
+                                            color: Colors.grey[600])),
                                   ],
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: Text("${CustomerEmail}",
                                       style: TextStyle(
-                                          fontSize: 15, color: Colors.white)),
+                                          fontSize: 15,
+                                          color: Colors.grey[600])),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: Text("${Customerphone}",
                                       style: TextStyle(
-                                          fontSize: 14, color: Colors.white)),
+                                          fontSize: 14,
+                                          color: Colors.grey[600])),
                                 )
                               ],
                             ),
@@ -565,20 +588,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.only(top: 20.0, right: 12, left: 12),
+                        const EdgeInsets.only(top: 22.0, right: 12, left: 12),
                     child: isgetaddressLoading == true
                         ? Container(
-                            height: MediaQuery.of(context).size.height / 13,
+                            height: 75,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
+                                color: Colors.grey[100],
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(
-                                    color: Colors.white, width: 0.5)),
+                                    color: Colors.grey[100], width: 0.5)),
                             child: Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 3.5,
                                 valueColor: new AlwaysStoppedAnimation<Color>(
-                                    Colors.white),
+                                    appPrimaryMaterialColor),
                               ),
                             ),
                           )
@@ -587,7 +611,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 79,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: Colors.white,
+                                  color: Colors.grey[100],
                                 ),
                                 width: MediaQuery.of(context).size.width,
                                 child: Row(
@@ -601,7 +625,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               const EdgeInsets.only(left: 6.0),
                                           child: Icon(
                                             Icons.location_on,
-                                            color: Colors.red[300],
+                                            color: appPrimaryMaterialColor,
                                           ),
                                         ),
                                         Padding(
@@ -634,7 +658,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         "," +
                                                         "${AddressArea}",
                                                     style: TextStyle(
-                                                      color: Colors.grey[700], fontSize: 14,
+                                                      color: Colors.grey[700],
+                                                      fontSize: 14,
                                                     )),
                                               ),
                                               Padding(
@@ -668,7 +693,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'assets/editicon.png',
                                             width: 18,
                                             height: 18,
-                                            color: Colors.red[300]),
+                                            color: appPrimaryMaterialColor),
                                       ),
                                     ),
                                     // Padding(
@@ -702,7 +727,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
                                         border: Border.all(
-                                            color: Colors.white, width: 0.5)),
+                                            color: appPrimaryMaterialColor,
+                                            width: 0.5)),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -710,7 +736,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Icon(
                                           Icons.add,
                                           size: 18,
-                                          color: Colors.white,
+                                          color: appPrimaryMaterialColor,
                                         ),
                                         Padding(
                                           padding:
@@ -719,7 +745,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             "Add Address",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                              color: appPrimaryMaterialColor,
                                             ),
                                           ),
                                         ),
@@ -835,6 +861,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0),
                         child: Text("About Us",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 0.8,
+              color: Colors.grey[300],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      FadeRoute(
+                          page: TearmsCon(
+                        tearmscondition: generaldatalist[0]["SettingFAQ"],
+                        title: "FAQ",
+                      )));
+                },
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Icon(
+                            Icons.help_outline,
+                            color: Colors.black54,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text("FAQ",
                             style:
                                 TextStyle(color: Colors.black54, fontSize: 16)),
                       ),
@@ -1016,8 +1079,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               whatsapp = "+91" + responselist[0]["SettingPhoneNumber"];
               msg = responselist[0]["SettingWhatsAppMessage"];
               address = responselist[0]["SettingAddress"];
+              phone = "+91" + responselist[0]["SettingPhoneNumber"];
+              email = responselist[0]["SettingEmailId"];
               //set "data" here to your variable
             });
+            print(phone);
+            print(email);
           } else {
             Fluttertoast.showToast(msg: "No Data Found !");
           }

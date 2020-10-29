@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
-import 'package:surti_basket_app/CustomWidgets/DrawerComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/OfferComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/Screens/FilterScreen.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/ProfileScreen.dart';
+import 'package:surti_basket_app/Screens/PromocodePage.dart';
 import 'package:surti_basket_app/Screens/SearchProductPage.dart';
 import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List _suggestedProductList = [];
   List _Offerlist = [];
   bool isLoading = false;
+  bool iscartlist = false;
   Location location = new Location();
   LocationData locationData;
   String latitude, longitude;
@@ -275,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   onTap: () {
-                    // Navigator.pushNamed(context, "/MyGuestList");
+                    Navigator.push(context, SlideLeftRoute(page: promoCode()));
                   },
                 ),
               ),

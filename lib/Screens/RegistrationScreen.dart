@@ -7,6 +7,8 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Screens/HomeScreen.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class RegistrationScreen extends StatefulWidget {
   var Mobile;
@@ -36,6 +38,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     print(_phonenumberController.text);
     super.initState();
+  }
+
+  saveDataToSession(var data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(Session.customerId, data["CustomerId"].toString());
+//            prefs.setString(Session.addressId,responselist[0]["addressId"]);
+    await prefs.setString(Session.CustomerName, data["CustomerName"]);
+    await prefs.setString(Session.CustomerEmailId, data["CustomerEmailId"]);
+    await prefs.setString(Session.CustomerPhoneNo, data["CustomerPhoneNo"]);
+    Navigator.pushAndRemoveUntil(
+        context, SlideLeftRoute(page: HomeScreen()), (route) => false);
   }
 
   Widget build(BuildContext context) {
@@ -336,18 +349,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           Services.postforlist(apiname: 'addCustomer', body: body).then(
               (responselist) async {
             if (responselist.length > 0) {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.setString(
-                  Session.customerId, responselist[0]["CustomerId"]);
-              await prefs.setString(
-                  Session.CustomerName, responselist[0]["CustomerName"]);
-              await prefs.setString(
-                  Session.CustomerEmailId, responselist[0]["CustomerEmailId"]);
-              await prefs.setString(
-                  Session.CustomerPhoneNo, responselist[0]["CustomerPhoneNo"]);
-
-
-
+              saveDataToSession(responselist[0]);
             } else {
               Fluttertoast.showToast(msg: " Registration fail");
             }
