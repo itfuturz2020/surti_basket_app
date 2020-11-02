@@ -4,10 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/LoginScreen.dart';
 import 'package:surti_basket_app/Screens/MyOrder.dart';
@@ -521,6 +523,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider provider = Provider.of<CartProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -721,8 +724,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         SlideLeftRoute(page: AddressScreen()));
                                   },
                                   child: Container(
-                                    height:
-                                        MediaQuery.of(context).size.height / 13,
+                                    height: 70,
                                     width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
@@ -759,7 +761,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 10.0),
               child: Container(
                 color: Colors.grey[200],
                 height: 10,
@@ -796,41 +798,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 0.8,
               color: Colors.grey[300],
             ),
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context, FadeRoute(page: MyPointScreen()));
-                      },
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Image.asset('assets/earning.png',
-                                  width: 25, color: Colors.black54),
+            provider.settingList[0]["SettingShowReedemPoints"] == true
+                ? Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context, FadeRoute(page: MyPointScreen()));
+                            },
+                            child: Container(
+                              color: Colors.white,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Image.asset('assets/earning.png',
+                                        width: 25, color: Colors.black54),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Text("My Points",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 16)),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
-                              child: Text("My Points",
-                                  style: TextStyle(
-                                      color: Colors.black54, fontSize: 16)),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                        Text('00.00',
+                            style: TextStyle(color: Colors.green, fontSize: 16))
+                      ],
                     ),
-                  ),
-                  Text('00.00',
-                      style: TextStyle(color: Colors.green, fontSize: 16))
-                ],
-              ),
-            ),
+                  )
+                : Container(),
             Container(
               height: 0.8,
               color: Colors.grey[300],

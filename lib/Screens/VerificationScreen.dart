@@ -1,19 +1,12 @@
-import 'dart:io';
-import 'dart:math';
-import 'package:dio/dio.dart';
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
-import 'package:surti_basket_app/Common/Constant.dart';
-import 'package:surti_basket_app/Common/services.dart';
-import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/RegistrationScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
-import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class VerificationScreen extends StatefulWidget {
   var mobile, logindata;
@@ -30,26 +23,24 @@ class _VerificationScreenState extends State<VerificationScreen> {
   String rndnumber;
   TextEditingController txtOTP = new TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  bool isCodeSent = false;
   String _verificationId;
 
   @override
   void initState() {
-    // _sendOTP();
     _onVerifyCode();
+    log("->>>>" + widget.logindata.toString());
   }
 
   void _onVerifyCode() async {
-    setState(() {
-      isCodeSent = true;
-    });
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential phoneAuthCredential) {
       _firebaseAuth
           .signInWithCredential(phoneAuthCredential)
           .then((UserCredential value) {
         if (value.user != null) {
-          if (widget.logindata != "") {
+          print(value.user);
+          if (widget.logindata != null) {
+            log("OTP sent successfully");
             widget.onLoginSuccess();
           } else {
             Navigator.of(context).pushAndRemoveUntil(
@@ -63,15 +54,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
           Fluttertoast.showToast(msg: "Error validating OTP, try again");
         }
       }).catchError((error) {
-        Fluttertoast.showToast(msg: "Try again in sometime");
+        log("->>>" + error.toString());
+        Fluttertoast.showToast(msg: " $error");
       });
     };
     final PhoneVerificationFailed verificationFailed =
         (FirebaseAuthException authException) {
       Fluttertoast.showToast(msg: authException.message);
-      setState(() {
-        isCodeSent = false;
-      });
     };
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
@@ -100,13 +89,20 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   void _onFormSubmitted() async {
-    AuthCredential _authCredential = PhoneAuthProvider.getCredential(
+    setState(() {
+      isLoading = true;
+    });
+    AuthCredential _authCredential = PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: txtOTP.text);
     _firebaseAuth
         .signInWithCredential(_authCredential)
         .then((UserCredential value) {
+      setState(() {
+        isLoading = false;
+      });
       if (value.user != null) {
-        if (widget.logindata != "") {
+        print(value.user);
+        if (widget.logindata != null) {
           widget.onLoginSuccess();
         } else {
           Navigator.of(context).pushAndRemoveUntil(
@@ -117,11 +113,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
               (route) => false);
         }
       } else {
-        Fluttertoast.showToast(msg: "Error validating OTP, try again");
+        Fluttertoast.showToast(msg: "Invalid OTP");
       }
     }).catchError((error) {
+      log(error.toString());
       Fluttertoast.showToast(msg: "$error Something went wrong");
-      print(error);
     });
   }
 
@@ -248,8 +244,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       autofocus: false,
                       wrapAlignment: WrapAlignment.center,
                       highlight: true,
-                      pinBoxHeight: 40,
-                      pinBoxWidth: 40,
+                      pinBoxHeight: 38,
+                      pinBoxWidth: 38,
                       pinBoxRadius: 8,
                       highlightColor: Colors.grey,
                       defaultBorderColor: Colors.grey,
@@ -282,13 +278,21 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         onPressed: () {
                           _onFormSubmitted();
                         },
-                        child: Text(
-                          "Verify",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17),
-                        ),
+                        child: isLoading == true
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3.5,
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : Text(
+                                "Verify",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17),
+                              ),
                       ),
                     ),
                   ),
