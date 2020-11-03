@@ -342,7 +342,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.clear();
                 Navigator.pushReplacement(
-                    context, FadeRoute(page: LoginScreen()));
+                    context, SlideLeftRoute(page: LoginScreen()));
               },
             ),
           ],
@@ -772,7 +772,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(14.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context, FadeRoute(page: MyOrder()));
+                  Navigator.push(context, SlideLeftRoute(page: MyOrder()));
                 },
                 child: Container(
                   color: Colors.white,
@@ -807,7 +807,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                  context, FadeRoute(page: MyPointScreen()));
+                                  context, SlideLeftRoute(page: MyPointScreen()));
                             },
                             child: Container(
                               color: Colors.white,
@@ -846,7 +846,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   Navigator.push(
                       context,
-                      FadeRoute(
+                      SlideLeftRoute(
                           page: TearmsCon(
                         tearmscondition: generaldatalist[0]
                             ["SettingAboutUsURL"],
@@ -884,7 +884,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   Navigator.push(
                       context,
-                      FadeRoute(
+                      SlideLeftRoute(
                           page: TearmsCon(
                         tearmscondition: generaldatalist[0]["SettingFAQ"],
                         title: "FAQ",
@@ -921,7 +921,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   Navigator.push(
                       context,
-                      FadeRoute(
+                      SlideLeftRoute(
                           page: TearmsCon(
                         tearmscondition: getaddressList[0]
                             ["SettingTermsConditionURL"],
@@ -1048,6 +1048,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               AddressPincode = ResponseList[0]["AddressPincode"];
               AddressAppartmentName = ResponseList[0]["AddressAppartmentName"];
               AddressHouseNo = ResponseList[0]["AddressHouseNo"];
+              City =ResponseList[0]["AddressCityName"];
             });
           } else {
             setState(() {

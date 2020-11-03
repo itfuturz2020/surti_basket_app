@@ -180,6 +180,17 @@ class _AddressComponentState extends State<AddressComponent> {
             setState(() {
               isremoveaddLoading = false;
             });
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.remove(AddressSession.AddressId);
+            prefs.remove(AddressSession.AddressHouseNo);
+            prefs.remove(AddressSession.AddressAppartmentName);
+            prefs.remove(AddressSession.AddressArea);
+            prefs.remove(AddressSession.AddressLandmark);
+            prefs.remove(AddressSession.AddressStreet);
+            prefs.remove(AddressSession.AddressType);
+            prefs.remove(AddressSession.AddressPincode);
+            prefs.remove(AddressSession.City);
+            prefs.remove(AddressSession.AddressName);
             Fluttertoast.showToast(
                 msg: "Address Removed Successfully",
                 gravity: ToastGravity.BOTTOM);

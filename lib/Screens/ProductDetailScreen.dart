@@ -12,6 +12,7 @@ import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   var productId;
@@ -62,7 +63,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   icon: Image.asset('assets/shoppingcart.png',
                       width: 26, color: Colors.white),
                   onPressed: () {
-                    Navigator.push(context, FadeRoute(page: MyCartScreen()));
+                    Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
                   }),
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
@@ -432,7 +433,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               iscartLoading = false;
               iscartlist = !iscartlist;
             });
-            Navigator.push(context, FadeRoute(page: MyCartScreen()));
+            Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
             Provider.of<CartProvider>(context, listen: false).increaseCart();
             Fluttertoast.showToast(
                 msg: "Added Successfully", gravity: ToastGravity.BOTTOM);

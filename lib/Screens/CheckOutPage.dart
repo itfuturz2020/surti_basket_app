@@ -160,8 +160,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Container(
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
-              child: preferences == ""
-                  ? FlatButton(onPressed: () {}, child: Text("Select Address"))
+              child: AddressId == null
+                  ? FlatButton(onPressed: () {
+                _changeAddress(context);
+              }, child: Text("+ Add Address"))
                   : Padding(
                       padding: const EdgeInsets.all(9.0),
                       child: Column(

@@ -193,7 +193,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(15),
-                          hintText: 'Enter Company Email',
+                          hintText: 'Enter your Email',
                           prefixIcon: Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: Container(
