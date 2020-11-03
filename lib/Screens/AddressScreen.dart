@@ -37,6 +37,7 @@ class _AddressScreenState extends State<AddressScreen> {
         centerTitle: true,
         title: Text("My Address",
             style: TextStyle(fontSize: 18, color: Colors.white)),
+        automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
