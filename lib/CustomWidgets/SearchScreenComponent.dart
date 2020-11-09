@@ -9,6 +9,7 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
+import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
 
 class SearchScreenComponent extends StatefulWidget {
   var searchdata;
@@ -35,100 +36,111 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4),
-      child: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(
-                    '${IMG_URL + widget.searchdata["ProductImages"]}',
-                    width: 110,
-                    height: 110,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${widget.searchdata["ProductName"]}",
-                            style: TextStyle(fontSize: 15),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            "${widget.searchdata["SubcategoryName"]}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                text: 'MRP : ',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 14),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text:
-                                        "${Inr_Rupee + widget.searchdata["ProductMrp"]} ",
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                        decoration: TextDecoration.lineThrough),
-                                  )
-                                ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    " ${Inr_Rupee + widget.searchdata["ProductSrp"]}",
-                                    style: TextStyle(
-                                        fontSize: 17, color: Colors.black)),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: SizedBox(
-                                    height: 35,
-                                    width: 75,
-                                    child: FlatButton(
-                                      onPressed: () {
-                                        _addTocart();
-                                      },
-                                      color: Colors.redAccent,
-                                      child: iscartLoading == true
-                                          ? LoadingComponent()
-                                          : iscartlist == true
-                                              ? Text('Added',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14))
-                                              : Text('Add',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14)),
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductDetailScreen(
+                productId: widget.searchdata["ProductId"],
+              )),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4),
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.network(
+                      '${IMG_URL + widget.searchdata["ProductImages"]}',
+                      width: 110,
+                      height: 110,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${widget.searchdata["ProductName"]}",
+                              style: TextStyle(fontSize: 15),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "${widget.searchdata["SubcategoryName"]}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text: 'MRP : ',
+                                  style:
+                                      TextStyle(color: Colors.grey, fontSize: 14),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          "${Inr_Rupee + widget.searchdata["ProductMrp"]} ",
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                          decoration: TextDecoration.lineThrough),
+                                    )
+                                  ]),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      " ${Inr_Rupee + widget.searchdata["ProductSrp"]}",
+                                      style: TextStyle(
+                                          fontSize: 17, color: Colors.black)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: SizedBox(
+                                      height: 35,
+                                      width: 75,
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          _addTocart();
+                                        },
+                                        color: Colors.redAccent,
+                                        child: iscartLoading == true
+                                            ? LoadingComponent()
+                                            : iscartlist == true
+                                                ? Text('Added',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14))
+                                                : Text('Add',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14)),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

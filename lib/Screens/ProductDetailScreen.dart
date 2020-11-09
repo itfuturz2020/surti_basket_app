@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -97,6 +98,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(
+                          height: 170.0,
+                          width: MediaQuery.of(context).size.width,
+                          child: Carousel(
+                            boxFit: BoxFit.cover,
+                            autoplay: true,
+                            animationCurve: Curves.fastOutSlowIn,
+                            animationDuration:
+                            Duration(milliseconds: 1000),
+                            dotSize: 4.0,
+                            dotIncreasedColor: Colors.black54,
+                            dotBgColor: Colors.transparent,
+                            dotPosition: DotPosition.bottomCenter,
+                            dotVerticalPadding: 10.0,
+                            showIndicator: true,
+                            indicatorBgPadding: 7.0,
+                            images: packageInfo
+                                .map((item) => Container(
+                                child: Image.network(
+                                    IMG_URL + item["ProductdetailImages"],
+                                    fit: BoxFit.fill)))
+                                .toList(),
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 12.0, left: 18.0, right: 10.0),
@@ -176,7 +201,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ),
                             ],
                           ),
-/*
                           Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: Row(
@@ -205,17 +229,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 Radius.circular(4.0))),
                                         child: Padding(
                                           padding: const EdgeInsets.all(2.0),
-                                          child: Image.network(
+                                          /*child: Image.network(
                                               '${IMG_URL + packageInfo[index]["ProductdetailImage"]}',
                                               fit: BoxFit.cover,
-                                              width: 50),
+                                              width: 50),*/
                                         )),
                                   ),
                                 );
                               }),
                             ),
                           ),
-*/
                           Divider(),
                           Padding(
                             padding: const EdgeInsets.all(6.0),

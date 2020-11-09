@@ -18,6 +18,12 @@ class _SearchProductPageState extends State<SearchProductPage> {
   bool issearchLoading = false;
 
   @override
+  void initState() {
+    _getSearching();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],

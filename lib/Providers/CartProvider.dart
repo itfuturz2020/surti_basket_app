@@ -46,7 +46,7 @@ class CartProvider extends ChangeNotifier {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         FormData body = FormData.fromMap(
             {"CustomerId": preferences.getString(Session.customerId)});
-        Services.postforlist(apiname: 'getCart', body: body).then(
+        Services.postforlist(apiname: 'getCarttest', body: body).then(
             (responselist) async {
           if (responselist.length > 0) {
             setCartCount(responselist.length);
@@ -66,7 +66,6 @@ class CartProvider extends ChangeNotifier {
 
   Future<int> getSettingData() async {
     try {
-      log("------------------------");
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         Services.postforlist(apiname: 'getSetting').then((responselist) async {
