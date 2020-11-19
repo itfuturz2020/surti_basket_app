@@ -340,7 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           isLoading = true;
         });
-        Services.postforlist(apiname: 'getDashboardData').then(
+        Services.postforlist(apiname: 'getDashboardDataTest').then(
             (responselist) async {
           if (responselist.length > 0) {
             setState(() {
@@ -349,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _bannerList = responselist[0]["Banner"];
               _categoryList = responselist[1]["Category"];
               _Offerlist = responselist[2]["Offer"];
-              _suggestedProductList = responselist[3]["SuggestedProduct"];
+              _suggestedProductList = responselist[3]["product"];
             });
             print(_bannerList);
           } else {

@@ -12,7 +12,6 @@ import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -34,6 +33,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String productDetailId;
   List productdetail = [];
   List packageInfo = [];
+  List packageImageList = [];
   String CustomerId;
 
   getlocaldata() async {
@@ -64,7 +64,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   icon: Image.asset('assets/shoppingcart.png',
                       width: 26, color: Colors.white),
                   onPressed: () {
-                    Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
+                    Navigator.push(
+                        context, SlideLeftRoute(page: MyCartScreen()));
                   }),
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
@@ -95,111 +96,75 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 170.0,
-                          width: MediaQuery.of(context).size.width,
-                          child: Carousel(
-                            boxFit: BoxFit.cover,
-                            autoplay: true,
-                            animationCurve: Curves.fastOutSlowIn,
-                            animationDuration:
-                            Duration(milliseconds: 1000),
-                            dotSize: 4.0,
-                            dotIncreasedColor: Colors.black54,
-                            dotBgColor: Colors.transparent,
-                            dotPosition: DotPosition.bottomCenter,
-                            dotVerticalPadding: 10.0,
-                            showIndicator: true,
-                            indicatorBgPadding: 7.0,
-                            images: packageInfo
-                                .map((item) => Container(
-                                child: Image.network(
-                                    IMG_URL + item["ProductdetailImages"],
-                                    fit: BoxFit.fill)))
-                                .toList(),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 12.0, left: 18.0, right: 10.0),
+                      child: Text(
+                          "${packageInfo.length > 0 ? packageInfo[currentIndex]["ProductdetailName"] : productdetail[0]["ProductName"]}",
+                          style: TextStyle(fontSize: 16)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0, top: 4.0),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                                "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"] : productdetail[0]["ProductSrp"]}",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 12.0, left: 18.0, right: 10.0),
-                          child: Text(
-                              "${packageInfo.length > 0 ? packageInfo[currentIndex]["ProductdetailName"] : productdetail[0]["ProductName"]}",
-                              style: TextStyle(fontSize: 18)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0, top: 4.0),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                    "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"] : productdetail[0]["ProductSrp"]}",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: RichText(
-                                  text: TextSpan(
-                                      text: 'MRP: ',
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: RichText(
+                              text: TextSpan(
+                                  text: 'MRP: ',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 13),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"] : productdetail[0]["ProductMrp"]}",
                                       style: TextStyle(
-                                          color: Colors.grey, fontSize: 13),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text:
-                                              "${packageInfo.length > 0 ? Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"] : productdetail[0]["ProductMrp"]}",
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 15,
-                                              decoration:
-                                                  TextDecoration.lineThrough),
-                                        )
-                                      ]),
-                                ),
-                              ),
-/*
-                              Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.redAccent,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(4.0))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4.0,
-                                        right: 4.0,
-                                        top: 2.0,
-                                        bottom: 2.0),
-                                    child: Text("20 %",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
-                                  )),
-*/
-                            ],
+                                          color: Colors.grey,
+                                          fontSize: 15,
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    )
+                                  ]),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Expanded(
                       child: ListView(
-                        physics: BouncingScrollPhysics(),
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Image.network(
-                                    '${IMG_URL + productdetail[0]["ProductImages"]}',
-                                    height: 300),
-                              ),
-                            ],
+                          SizedBox(
+                            height: 250,
+                            width: MediaQuery.of(context).size.width,
+                            child: Image.network(
+                                IMG_URL + productdetail[0]["ProductImages"][0])
+                            /*child: Carousel(
+                    boxFit: BoxFit.cover,
+                    autoplay: true,
+                    animationCurve: Curves.fastOutSlowIn,
+                    animationDuration: Duration(milliseconds: 1000),
+                    dotSize: 4.0,
+                    dotIncreasedColor: Colors.black54,
+                    dotBgColor: Colors.transparent,
+                    dotPosition: DotPosition.bottomCenter,
+                    dotVerticalPadding: 10.0,
+                    showIndicator: true,
+                    indicatorBgPadding: 7.0,
+                    images: packageImageList
+                        .map((item) =>
+                            Container(child: Image.network(IMG_URL + item)))
+                        .toList(),
+                  )*/
+                            ,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 10.0),
@@ -209,8 +174,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 return InkWell(
                                   onTap: () {
                                     setState(() {
-                                      currentIndex = index;
+                                      currentImageIndex = index;
+                                      packageImageList =
+                                          packageInfo[currentImageIndex]
+                                              ["ProductdetailImages"];
                                     });
+                                    print(packageImageList);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -219,31 +188,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         width: 55,
                                         decoration: BoxDecoration(
                                             border: Border.all(
-                                                width: index == currentIndex
-                                                    ? 1.0
-                                                    : 0.5,
-                                                color: index == currentIndex
-                                                    ? Colors.lightGreen
-                                                    : Colors.grey[400]),
+                                                width:
+                                                    index == currentImageIndex
+                                                        ? 1.0
+                                                        : 0.5,
+                                                color:
+                                                    index == currentImageIndex
+                                                        ? Colors.lightGreen
+                                                        : Colors.grey[400]),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(4.0))),
                                         child: Padding(
                                           padding: const EdgeInsets.all(2.0),
-                                          /*child: Image.network(
-                                              '${IMG_URL + packageInfo[index]["ProductdetailImage"]}',
+                                          child: Image.network(
+                                              '${IMG_URL + packageInfo[currentImageIndex]["ProductdetailImages"][0]}',
                                               fit: BoxFit.cover,
-                                              width: 50),*/
+                                              width: 50),
                                         )),
                                   ),
                                 );
                               }),
                             ),
-                          ),
-                          Divider(),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Text('Pack Sizes',
-                                style: TextStyle(fontSize: 16)),
                           ),
                           packageInfo.length > 0
                               ? Column(
@@ -256,7 +221,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         });
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Container(
                                             width: MediaQuery.of(context)
                                                 .size
@@ -269,8 +234,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(4.0))),
                                             child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2.0),
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0, right: 6.0),
                                                 child: Row(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
@@ -319,17 +284,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                         ],
                                                       ),
                                                     ),
-                                                    Text(
-                                                        "${packageInfo[index]["ProductdetailName"]}"),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 8.0,
+                                                                top: 4.0),
+                                                        child: Text(
+                                                            "${packageInfo[index]["ProductdetailName"]}",
+                                                            style: TextStyle(
+                                                                fontSize: 13)),
+                                                      ),
+                                                    ),
                                                     currentIndex == index
-                                                        ? Icon(
-                                                            Icons
-                                                                .radio_button_checked,
-                                                            size: 20)
-                                                        : Icon(
-                                                            Icons
-                                                                .radio_button_unchecked,
-                                                            size: 20)
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right: 8.0),
+                                                            child: Icon(
+                                                                Icons
+                                                                    .radio_button_checked,
+                                                                size: 20),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right: 8.0),
+                                                            child: Icon(
+                                                                Icons
+                                                                    .radio_button_unchecked,
+                                                                size: 20),
+                                                          )
                                                   ],
                                                 ))),
                                       ),
@@ -408,13 +396,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         setState(() {
           isLoading = true;
         });
-        Services.postforlist(apiname: 'getProductDetailData', body: data).then(
-            (responselist) async {
+        Services.postforlist(apiname: 'getProductDetailDataTest', body: data)
+            .then((responselist) async {
           if (responselist.length > 0) {
             setState(() {
               isLoading = false;
               productdetail = responselist;
-              packageInfo = responselist[1]["Packinfo"];
+              packageInfo = responselist[1]["PackInfo"];
             });
           } else {
             setState(() {

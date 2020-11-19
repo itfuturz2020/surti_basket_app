@@ -27,15 +27,26 @@ class _ProductComponentState extends State<ProductComponent> {
   bool iscartlist = false;
   bool iscartLoading = false;
   String CustomerId;
+  List packageInfo = [];
+  int currentIndex = 0;
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     CustomerId = await preferences.getString(Session.customerId);
   }
 
+  getPackageInfo() {
+    setState(() {
+      packageInfo = widget.product["PackInfo"];
+    });
+    print(
+        "Packages ${widget.product["ProductId"]}---------------${packageInfo.length}");
+  }
+
   @override
   void initState() {
     getlocaldata();
+    getPackageInfo();
   }
 
   int Qty = 0;
@@ -52,6 +63,83 @@ class _ProductComponentState extends State<ProductComponent> {
         Qty--;
       });
     }
+  }
+
+  showPackageInfo() {
+    showDialog(
+        context: context,
+        child: Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text("Pack Variation",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+              Divider(),
+              Column(
+                children: List.generate(packageInfo.length, (index) {
+                  return InkWell(
+                      onTap: () {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                    " ${packageInfo[index]["ProductdetailName"]}",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.black)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          text: 'MRP: ',
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 14),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text:
+                                                  "${packageInfo[index]["ProductdetailMRP"]}",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 15,
+                                                  decoration: TextDecoration
+                                                      .lineThrough),
+                                            )
+                                          ]),
+                                    ),
+                                    Text(
+                                        " ${packageInfo[index]["ProductdetailSRP"]}",
+                                        style: TextStyle(
+                                            fontSize: 15, color: Colors.black)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 0.5,
+                            color: Colors.grey[200],
+                          )
+                        ],
+                      ));
+                }),
+              )
+            ],
+          ),
+        ));
   }
 
   @override
@@ -77,20 +165,10 @@ class _ProductComponentState extends State<ProductComponent> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            SlideLeftRoute(
-                                page: ProductDetailScreen(
-                                    productId:
-                                        "${widget.product["ProductId"]}")));
-                      },
-                      child: Image.network(
-                        '${IMG_URL + widget.product["ProductImages"]}',
-                        width: 110,
-                        height: 110,
-                      ),
+                    Image.network(
+                      '${IMG_URL + widget.product["ProductImages"]}',
+                      width: 110,
+                      height: 110,
                     ),
                     Expanded(
                       child: Padding(
@@ -110,31 +188,57 @@ class _ProductComponentState extends State<ProductComponent> {
                                   TextStyle(fontSize: 14, color: Colors.grey),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            RichText(
-                              text: TextSpan(
-                                  text: 'MRP: ',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 14),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          "${Inr_Rupee + widget.product["ProductMrp"]} ",
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
-                                          decoration:
-                                              TextDecoration.lineThrough),
-                                    )
-                                  ]),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6.0),
+                              child: InkWell(
+                                onTap: () {
+                                  showPackageInfo();
+                                },
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Center(
+                                      child: Text(
+                                          "${packageInfo[currentIndex]["ProductdetailName"]}",
+                                          style: TextStyle(fontSize: 10)),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(4.0)),
+                                      border: Border.all(
+                                          width: 1, color: Colors.grey)),
+                                ),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 10.0),
+                              child: RichText(
+                                text: TextSpan(
+                                    text: '${Inr_Rupee}: ',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 15),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            "${packageInfo[currentIndex]["ProductdetailMRP"]}",
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 15,
+                                            decoration:
+                                                TextDecoration.lineThrough),
+                                      )
+                                    ]),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 2.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                      " ${Inr_Rupee + widget.product["ProductSrp"]}",
+                                      " ${Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"]}",
                                       style: TextStyle(
                                           fontSize: 17, color: Colors.black)),
                                   Padding(
@@ -265,7 +369,7 @@ class _ProductComponentState extends State<ProductComponent> {
           "CustomerId": CustomerId,
           "ProductId": "${widget.product["ProductId"]}",
           "CartQuantity": "1",
-          "ProductDetailId": "",
+          "ProductDetailId": "${packageInfo[currentIndex]["ProductdetailId"]}",
         });
         print(body.fields);
         Services.postForSave(apiname: 'addToCart', body: body).then(
