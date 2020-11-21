@@ -23,8 +23,8 @@ class _ProductListingState extends State<ProductListing> {
 
   @override
   void initState() {
-    _getProducts();
     super.initState();
+    _getProducts();
   }
 
   @override
@@ -32,30 +32,19 @@ class _ProductListingState extends State<ProductListing> {
     return Scaffold(
         backgroundColor: isLoading == true ? Colors.white : Colors.grey[200],
         appBar: AppBar(
-          centerTitle: true,
-          title: Text("Surti Basket",
-              style: TextStyle(color: Colors.white, fontSize: 18)),
+          title: Text("Products"),
         ),
         body: isLoading == true
             ? LoadingComponent()
             : _Product.length > 0
-                ? ListView(
+                ? Column(
                     children: [
-                      Container(
-                        color: Colors.white,
-                        height: 30,
-                        child: Center(
-                            child: Text(
-                          'ATTA,FLOOR & SOOJI',
-                          style: TextStyle(fontSize: 15),
-                        )),
-                      ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('105 Items',
+                            Text('Items:${_Product.length}',
                                 style: TextStyle(
                                     fontSize: 15, color: Colors.black54)),
                             FlatButton(
@@ -85,12 +74,14 @@ class _ProductListingState extends State<ProductListing> {
                           ],
                         ),
                       ),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _Product.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ProductComponent(product: _Product[index]);
-                          }),
+                      Expanded(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _Product.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ProductComponent(product: _Product[index]);
+                            }),
+                      ),
                     ],
                   )
                 : NoFoundComponent(

@@ -166,7 +166,7 @@ class _ProductComponentState extends State<ProductComponent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.network(
-                      '${IMG_URL + widget.product["ProductImages"]}',
+                      '${IMG_URL + widget.product["ProductImages"][0]}',
                       width: 110,
                       height: 110,
                     ),

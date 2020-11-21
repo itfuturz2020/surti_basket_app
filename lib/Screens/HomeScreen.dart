@@ -186,7 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           child: ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: _suggestedProductList.length,
+                              itemCount: 1,
+                              //itemCount: _suggestedProductList.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return ProductComponent(

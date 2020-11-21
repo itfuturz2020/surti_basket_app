@@ -49,7 +49,7 @@ class CartProvider extends ChangeNotifier {
         Services.postforlist(apiname: 'getCarttest', body: body).then(
             (responselist) async {
           if (responselist.length > 0) {
-            setCartCount(responselist.length);
+            setCartCount(responselist[0]["Cart"].length);
           } else
             return 0;
         }, onError: (e) {

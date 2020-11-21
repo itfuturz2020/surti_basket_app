@@ -56,6 +56,7 @@ class _SetFilterScreenState extends State<SetFilterScreen> {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         FormData body = FormData.fromMap(widget.filterdata);
+        print(body.fields);
         Services.postforlist(apiname: 'setFilter', body: body).then(
             (responseList) async {
           setState(() {

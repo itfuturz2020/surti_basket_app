@@ -162,7 +162,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             Fluttertoast.showToast(
                                 msg: "Please select any one");
                           } else {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
