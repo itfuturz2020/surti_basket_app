@@ -24,7 +24,7 @@ class ProductComponent extends StatefulWidget {
 }
 
 class _ProductComponentState extends State<ProductComponent> {
-  bool iscartlist = false;
+  List iscartlist;
   bool iscartLoading = false;
   String CustomerId;
   List packageInfo = [];
@@ -144,6 +144,7 @@ class _ProductComponentState extends State<ProductComponent> {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider provider = Provider.of<CartProvider>(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -165,11 +166,17 @@ class _ProductComponentState extends State<ProductComponent> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      '${IMG_URL + widget.product["ProductImages"][0]}',
-                      width: 110,
-                      height: 110,
-                    ),
+                    widget.product["ProductImages"] != ""
+                        ? Image.network(
+                            '${IMG_URL + widget.product["ProductImages"][0]}',
+                            width: 110,
+                            height: 110,
+                          )
+                        : Image.asset(
+                            'assets/no-image.png',
+                            width: 110,
+                            height: 110,
+                          ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
@@ -253,7 +260,9 @@ class _ProductComponentState extends State<ProductComponent> {
                                         color: Colors.redAccent,
                                         child: iscartLoading
                                             ? LoadingComponent()
-                                            : iscartlist == true
+                                            : provider.cartIdList.contains(
+                                                    int.parse(widget
+                                                        .product["ProductId"]))
                                                 ? Text('Added',
                                                     style: TextStyle(
                                                         color: Colors.white,
@@ -378,9 +387,9 @@ class _ProductComponentState extends State<ProductComponent> {
             // Navigator.push(context, FadeRoute(page: MyCartScreen()));
             setState(() {
               iscartLoading = false;
-              iscartlist = !iscartlist;
             });
-            Provider.of<CartProvider>(context, listen: false).increaseCart();
+            Provider.of<CartProvider>(context, listen: false).increaseCart(
+                productId: int.parse(widget.product["ProductId"]));
             Fluttertoast.showToast(
                 msg: "Added Successfully", gravity: ToastGravity.BOTTOM);
           }

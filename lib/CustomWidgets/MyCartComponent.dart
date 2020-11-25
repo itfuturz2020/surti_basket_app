@@ -14,9 +14,9 @@ import 'package:surti_basket_app/Providers/CartProvider.dart';
 class MyCartComponent extends StatefulWidget {
   var cartData;
 
-  Function onRemove;
+  Function onRemove, onQtyUpdate;
 
-  MyCartComponent({this.cartData, this.onRemove});
+  MyCartComponent({this.cartData, this.onRemove, this.onQtyUpdate});
 
   @override
   _MyCartComponentState createState() => _MyCartComponentState();
@@ -26,7 +26,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
   bool iscartremoveLoading = false;
   bool isupdateLoading = false;
 
-  int Qty = 1;
+  int Qty = 0;
 
   void add() {
     setState(() {
@@ -44,12 +44,12 @@ class _MyCartComponentState extends State<MyCartComponent> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   setState(() {
-  //     Qty = int.parse("${widget.cartData["CartQuantity"]}");
-  //   });
-  // }
+  @override
+  void initState() {
+    setState(() {
+      Qty = int.parse("${widget.cartData["CartQuantity"]}");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +73,15 @@ class _MyCartComponentState extends State<MyCartComponent> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Image.network(
-                    IMG_URL + "${widget.cartData["ProductImages"]}",
-                    width: 120,
-                    height: 120),
+                child: widget.cartData["PackInfo"][0]["ProductdetailImages"] !=
+                        ""
+                    ? Image.network(
+                        IMG_URL +
+                            "${widget.cartData["PackInfo"][0]["ProductdetailImages"]}",
+                        width: 120,
+                        height: 120)
+                    : Image.asset("assets/no-image.png",
+                        width: 120, height: 120),
               ),
               Expanded(
                 child: Padding(
@@ -94,7 +99,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
                             children: <TextSpan>[
                               TextSpan(
                                 text: "${Inr_Rupee}" +
-                                    "${widget.cartData["ProductMrp"]}",
+                                    "${widget.cartData["PackInfo"][0]["ProductdetailMRP"]}",
                                 style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 14,
@@ -107,7 +112,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
                           Expanded(
                             child: Text(
                                 " $Inr_Rupee " +
-                                    "${widget.cartData["ProductSrp"]}",
+                                    "${widget.cartData["PackInfo"][0]["ProductdetailSRP"]}",
                                 style: TextStyle(
                                     fontSize: 17,
                                     color: Colors.black,
@@ -283,10 +288,12 @@ class _MyCartComponentState extends State<MyCartComponent> {
             (responseremove) async {
           if (responseremove.IsSuccess == true && responseremove.Data == "1") {
             widget.onRemove();
-            Provider.of<CartProvider>(context, listen: false).decreaseCart();
+            Provider.of<CartProvider>(context, listen: false).decreaseCart(
+                productId: int.parse(widget.cartData["ProductId"]));
             setState(() {
               iscartremoveLoading = false;
             });
+            widget.onQtyUpdate();
             Fluttertoast.showToast(
                 msg: "Product Removed Successfully",
                 gravity: ToastGravity.BOTTOM);
@@ -321,6 +328,7 @@ class _MyCartComponentState extends State<MyCartComponent> {
               print("update");
               isupdateLoading = false;
             });
+            widget.onQtyUpdate();
           } else {
             setState(() {
               isupdateLoading = false;

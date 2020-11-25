@@ -12,6 +12,7 @@ class CartProvider extends ChangeNotifier {
   int cartCount = 0;
 
   List settingList = [];
+  List cartIdList = [];
 
   CartProvider() {
     log("Cart Provider");
@@ -24,18 +25,21 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void increaseCart() {
+  void increaseCart({int productId}) {
     cartCount++;
+    cartIdList.add(productId);
     notifyListeners();
   }
 
-  void decreaseCart() {
+  void decreaseCart({int productId}) {
     cartCount--;
+    cartIdList.remove(productId);
     notifyListeners();
   }
 
   void removecart() {
     cartCount = 0;
+    cartIdList.clear();
     notifyListeners();
   }
 
@@ -50,6 +54,11 @@ class CartProvider extends ChangeNotifier {
             (responselist) async {
           if (responselist.length > 0) {
             setCartCount(responselist[0]["Cart"].length);
+            cartIdList.clear();
+            for (int i = 0; i < responselist[0]["Cart"].length; i++) {
+              cartIdList.add(responselist[0]["Cart"][i]["CartId"]);
+            }
+            print(cartIdList);
           } else
             return 0;
         }, onError: (e) {
@@ -72,8 +81,6 @@ class CartProvider extends ChangeNotifier {
           if (responselist.length > 0) {
             settingList = responselist;
             notifyListeners();
-            log("->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" +
-                responselist.toString());
           }
           return 0;
         }, onError: (e) {

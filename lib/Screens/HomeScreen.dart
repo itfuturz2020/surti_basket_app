@@ -63,10 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       locationData = await location.getLocation();
       if (locationData != null) {
-        final coordinates =
-            new Coordinates(locationData.latitude, locationData.longitude);
-        var addresses =
-            await Geocoder.local.findAddressesFromCoordinates(coordinates);
         setState(() {
           latitude = locationData.latitude.toString();
           longitude = locationData.longitude.toString();
@@ -186,8 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           child: ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: 1,
-                              //itemCount: _suggestedProductList.length,
+                              itemCount: _suggestedProductList.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return ProductComponent(

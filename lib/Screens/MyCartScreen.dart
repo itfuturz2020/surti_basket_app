@@ -29,6 +29,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
   List cartList = [];
   List priceList = [];
+  int Total = 0, Save = 0;
   String CustomerId,
       AddressId,
       AddressHouseNo,
@@ -100,7 +101,39 @@ class _MyCartScreenState extends State<MyCartScreen> {
               priceList = responselist[1]["carttotal"];
               print(body.fields);
             });
-            print(cartList);
+            getCartTotal();
+          } else {
+            Fluttertoast.showToast(msg: "No Product Found!");
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
+  getCartTotal() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        FormData body = FormData.fromMap({"CustomerId": CustomerId});
+        Services.postforlist(apiname: 'getCartTotal', body: body).then(
+            (responselist) async {
+          setState(() {
+            isLoading = false;
+          });
+          if (responselist.length > 0) {
+            setState(() {
+              priceList = responselist;
+              Total = priceList[0]["Total"];
+              Save = priceList[0]["Save"];
+            });
           } else {
             Fluttertoast.showToast(msg: "No Product Found!");
           }
@@ -144,6 +177,9 @@ class _MyCartScreenState extends State<MyCartScreen> {
                                   cartList.removeAt(index);
                                 });
                               },
+                              onQtyUpdate: () {
+                                getCartTotal();
+                              },
                             );
                           },
                           itemCount: cartList.length,
@@ -157,7 +193,8 @@ class _MyCartScreenState extends State<MyCartScreen> {
                 )
               : NoFoundComponent(
                   ImagePath: 'assets/noProduct.png',
-                  Title: 'Your cart is empty'),
+                  Title: 'Your cart is empty',
+                  fromWhere: "Cart"),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(
@@ -176,39 +213,54 @@ class _MyCartScreenState extends State<MyCartScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Rs: ${priceList[0]["Total"]}",
+                          "Rs: ${Total}",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        Text("Saved  Rs. ${priceList[0]["Save"]}"),
+                        Text("Saved  Rs. ${Save}"),
                       ],
                     )
                   : Container(),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: FlatButton(
-                color: Colors.red[400],
-                textColor: Colors.white,
-                splashColor: Colors.white24,
+              padding: const EdgeInsets.only(right: 10.0),
+              child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    side: BorderSide(color: Colors.red)),
                 onPressed: () {
                   Navigator.push(context, SlideLeftRoute(page: CheckoutPage()));
                 },
-                child: Row(
-                  children: [
-                    Text(
-                      "Place Order",
-                      style: TextStyle(
-                          fontSize: 17.0, fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Icon(Icons.arrow_forward, size: 20),
-                    )
-                  ],
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text("Check out".toUpperCase(),
+                    style: TextStyle(fontSize: 14)),
+              ),
+            ),
+/*
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: FlatButton(
+                color: cartList.length == 0 ? Colors.black12 : Colors.red[400],
+                textColor: cartList.length == 0 ? Colors.grey : Colors.white,
+                splashColor: Colors.white24,
+                onPressed: () {
+                  if (cartList.length != 0) {
+                    Navigator.push(
+                        context, SlideLeftRoute(page: CheckoutPage()));
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Place Order",
+                    style:
+                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             )
+*/
           ],
         ),
       ),

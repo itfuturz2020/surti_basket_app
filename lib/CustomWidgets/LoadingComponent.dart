@@ -8,10 +8,9 @@ class LoadingComponent extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: Center(
-        child: SpinKitRipple(
-          color: appPrimaryMaterialColor,
-        )
-      ),
+          child: SpinKitCircle(
+        color: appPrimaryMaterialColor,
+      )),
     );
   }
 }

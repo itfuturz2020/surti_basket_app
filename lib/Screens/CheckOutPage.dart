@@ -13,6 +13,7 @@ import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
+import 'package:surti_basket_app/Screens/CheckPincode.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
@@ -40,11 +41,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
       AddressPincode,
       City;
   bool isLoading = false;
-  String PaymentMode;
+  String PaymentMode = "Cash";
   SharedPreferences preferences;
   bool _usePoints = false;
   List priceList = [];
+  bool isPincodeChecking = false;
   List specificationList = [];
+  TextEditingController pincode = new TextEditingController();
 
   getlocaldata() async {
     preferences = await SharedPreferences.getInstance();
@@ -143,6 +146,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
   }
 
+  void displayBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (ctx) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: CheckPincode(PlaceOrder: () {
+              _placeOrder();
+            }),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     CartProvider provider = Provider.of<CartProvider>(context);
@@ -161,9 +178,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
               color: Colors.white,
               width: MediaQuery.of(context).size.width,
               child: AddressId == null
-                  ? FlatButton(onPressed: () {
-                _changeAddress(context);
-              }, child: Text("+ Add Address"))
+                  ? FlatButton(
+                      onPressed: () {
+                        _changeAddress(context);
+                      },
+                      child: Text("+ Add Address"))
                   : Padding(
                       padding: const EdgeInsets.all(9.0),
                       child: Column(
@@ -414,8 +433,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("${specificationList[index]["Key"]}"),
-                                  Text("${specificationList[index]["Value"]}"),
+                                  Text("${specificationList[index]["Text1"]}"),
+                                  Text("${specificationList[index]["Text3"]}"),
                                 ],
                               ),
                             ],
@@ -437,7 +456,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             if (PaymentMode == "Online") {
                               openPaymentGateway();
                             } else {
-                              _placeOrder();
+                              displayBottomSheet(context);
+                              //_placeOrder();
                             }
                           },
                           child: Row(
@@ -478,6 +498,49 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
+  _checkPinCode() async {
+    if (pincode.text != null) {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            isPincodeChecking = true;
+          });
+          FormData body = FormData.fromMap({"PincodeNo": pincode.text});
+          Services.postForSave(apiname: 'checkPincode', body: body).then(
+              (responseremove) async {
+            if (responseremove.IsSuccess == true &&
+                responseremove.Data == "1") {
+              setState(() {
+                isPincodeChecking = false;
+              });
+            } else {
+              setState(() {
+                isPincodeChecking = false;
+              });
+            }
+          }, onError: (e) {
+            setState(() {
+              isPincodeChecking = false;
+            });
+            print("error on call -> ${e.message}");
+            Fluttertoast.showToast(msg: "something went wrong");
+          });
+        }
+      } on SocketException catch (_) {
+        setState(() {
+          isPincodeChecking = false;
+        });
+        Fluttertoast.showToast(msg: "No Internet Connection");
+      }
+    } else {
+      setState(() {
+        isPincodeChecking = false;
+      });
+      Fluttertoast.showToast(msg: "Please Enter PinCode");
+    }
+  }
+
   _placeOrder({String transactionId}) async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -494,6 +557,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           "OrderTransactionNo": "",
           "OrderBonusPoint": ""
         });
+        print(body.fields);
         Services.postForSave(apiname: 'placeOrder', body: body).then(
             (responseremove) async {
           if (responseremove.IsSuccess == true && responseremove.Data == "1") {
@@ -532,7 +596,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           "Promocode": "",
           "Points": "",
         });
-        Services.postforlist(apiname: 'beforePlaceOrder', body: body).then(
+        Services.postforlist(apiname: 'beforePlaceOrderTest', body: body).then(
             (responselist) async {
           if (responselist.length > 0) {
             setState(() {

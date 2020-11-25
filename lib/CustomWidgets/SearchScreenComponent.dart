@@ -23,6 +23,8 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
   bool iscartLoading = false;
   bool iscartlist = false;
   String CustomerId;
+  int currentIndex = 0;
+  List packageInfo;
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -32,18 +34,102 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
   @override
   void initState() {
     getlocaldata();
+    getPackageInfo();
+  }
+
+  getPackageInfo() {
+    setState(() {
+      packageInfo = widget.searchdata["PackInfo"];
+    });
+  }
+
+  showPackageInfo() {
+    showDialog(
+        context: context,
+        child: Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text("Pack Variation",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+              Divider(),
+              Column(
+                children: List.generate(packageInfo.length, (index) {
+                  return InkWell(
+                      onTap: () {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                    " ${packageInfo[index]["ProductdetailName"]}",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.black)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          text: 'MRP: ',
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 14),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text:
+                                                  "${packageInfo[index]["ProductdetailMRP"]}",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 15,
+                                                  decoration: TextDecoration
+                                                      .lineThrough),
+                                            )
+                                          ]),
+                                    ),
+                                    Text(
+                                        " ${packageInfo[index]["ProductdetailSRP"]}",
+                                        style: TextStyle(
+                                            fontSize: 15, color: Colors.black)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 0.5,
+                            color: Colors.grey[200],
+                          )
+                        ],
+                      ));
+                }),
+              )
+            ],
+          ),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ProductDetailScreen(
-                productId: widget.searchdata["ProductId"],
-              )),
+                    productId: widget.searchdata["ProductId"],
+                  )),
         );
       },
       child: Padding(
@@ -57,11 +143,17 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      '${IMG_URL + widget.searchdata["ProductImages"]}',
-                      width: 110,
-                      height: 110,
-                    ),
+                    widget.searchdata["ProductImages"] != ""
+                        ? Image.network(
+                            '${IMG_URL + widget.searchdata["ProductImages"]}',
+                            width: 110,
+                            height: 110,
+                          )
+                        : Image.asset(
+                            'assets/no-image.png',
+                            width: 110,
+                            height: 110,
+                          ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
@@ -70,38 +162,67 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "${widget.searchdata["ProductName"]}",
+                              "${packageInfo[currentIndex]["ProductdetailName"]}",
                               style: TextStyle(fontSize: 15),
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              "${widget.searchdata["SubcategoryName"]}",
-                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                              "${packageInfo[currentIndex]["ProductdetailBrandname"]}",
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.grey),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            RichText(
-                              text: TextSpan(
-                                  text: 'MRP : ',
-                                  style:
-                                      TextStyle(color: Colors.grey, fontSize: 14),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          "${Inr_Rupee + widget.searchdata["ProductMrp"]} ",
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
-                                          decoration: TextDecoration.lineThrough),
-                                    )
-                                  ]),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6.0),
+                              child: InkWell(
+                                onTap: () {
+                                  showPackageInfo();
+                                },
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Center(
+                                      child: Text(
+                                          "${packageInfo[currentIndex]["ProductdetailName"]}",
+                                          style: TextStyle(fontSize: 10)),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(4.0)),
+                                      border: Border.all(
+                                          width: 1, color: Colors.grey)),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: RichText(
+                                text: TextSpan(
+                                    text: 'MRP : ',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 14),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            "${Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"]} ",
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                            decoration:
+                                                TextDecoration.lineThrough),
+                                      )
+                                    ]),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                      " ${Inr_Rupee + widget.searchdata["ProductSrp"]}",
+                                      " ${Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"]}",
                                       style: TextStyle(
                                           fontSize: 17, color: Colors.black)),
                                   Padding(
@@ -155,9 +276,9 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         FormData body = FormData.fromMap({
           "CustomerId": CustomerId,
-          "ProductId": "",
+          "ProductId": "${widget.searchdata["ProductId"]}",
           "CartQuantity": "1",
-          "ProductDetailId": "",
+          "ProductDetailId": "${packageInfo[currentIndex]["ProductdetailId"]}",
         });
         print(body.fields);
         Services.postForSave(apiname: 'addToCart', body: body).then(
