@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -143,17 +144,13 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.searchdata["ProductImages"] != ""
+                    packageInfo[0]["ProductdetailImages"] != ""
                         ? Image.network(
-                            '${IMG_URL + widget.searchdata["ProductImages"]}',
-                            width: 110,
-                            height: 110,
-                          )
-                        : Image.asset(
-                            'assets/no-image.png',
-                            width: 110,
-                            height: 110,
-                          ),
+                            "${IMG_URL + packageInfo[0]["ProductdetailImages"][0]}",
+                            height: 80,
+                            width: 80)
+                        : Image.asset("assets/no-image.png",
+                            height: 80, width: 80),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
@@ -162,7 +159,7 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "${packageInfo[currentIndex]["ProductdetailName"]}",
+                              "${widget.searchdata["ProductName"]}",
                               style: TextStyle(fontSize: 15),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -216,7 +213,7 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
+                              padding: const EdgeInsets.only(top: 5.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
