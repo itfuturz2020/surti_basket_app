@@ -806,8 +806,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context, SlideLeftRoute(page: MyPointScreen()));
+                              Navigator.push(context,
+                                  SlideLeftRoute(page: MyPointScreen()));
                             },
                             child: Container(
                               color: Colors.white,
@@ -1048,7 +1048,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               AddressPincode = ResponseList[0]["AddressPincode"];
               AddressAppartmentName = ResponseList[0]["AddressAppartmentName"];
               AddressHouseNo = ResponseList[0]["AddressHouseNo"];
-              City =ResponseList[0]["AddressCityName"];
+              City = ResponseList[0]["AddressCityName"];
             });
           } else {
             setState(() {
