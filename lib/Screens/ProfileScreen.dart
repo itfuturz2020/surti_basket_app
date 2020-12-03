@@ -266,12 +266,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isgetaddressLoading = false;
   List getaddressList = [];
   bool isLoading = false;
+  bool isPointsLoading = false;
   List generaldatalist = [];
+  String Points = "0";
+  List pointList = [];
 
   void initState() {
     getlocaldata();
     _getAddress();
     _SettingApi();
+    _points();
+  }
+
+  _points() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isPointsLoading = true;
+        });
+        FormData body = FormData.fromMap({"CustomerId": CustomerId});
+        print(body.fields);
+        Services.postforlist(apiname: 'getPointsTest', body: body).then(
+            (responselist) async {
+          setState(() {
+            isPointsLoading = false;
+          });
+          if (responselist.length > 0) {
+            setState(() {
+              pointList = responselist;
+              Points = responselist[0]["PointsDetail"]["Total"].toString();
+            });
+          } else {
+            Fluttertoast.showToast(msg: "Data Not Found!");
+          }
+        }, onError: (e) {
+          setState(() {
+            isPointsLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
   }
 
   String whatsapp, msg, address;
@@ -830,7 +869,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-                        Text('00.00',
+                        Text('${Points}',
                             style: TextStyle(color: Colors.green, fontSize: 16))
                       ],
                     ),
