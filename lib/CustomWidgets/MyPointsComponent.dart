@@ -25,7 +25,7 @@ class _MyPointsComponentState extends State<MyPointsComponent> {
                   Padding(
                     padding: const EdgeInsets.only(left: 5.0, top: 8),
                     child: Text(
-                      "${widget.pointsdata["OrderDate"]}",
+                      "${widget.pointsdata["PointsDate"]}",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
@@ -44,30 +44,12 @@ class _MyPointsComponentState extends State<MyPointsComponent> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 15.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Order Id",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
-                              ),
-                              Text(
-                                "  :  ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
-                              ),
-                              Text(
-                                "${widget.pointsdata["OrderId"]}",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
-                              ),
-                            ],
+                          child: Text(
+                            "${widget.pointsdata["PontsDescription"]}",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14),
                           ),
                         ),
                       ],
@@ -80,14 +62,14 @@ class _MyPointsComponentState extends State<MyPointsComponent> {
                   Padding(
                     padding: const EdgeInsets.only(right: 10.0),
                     child: Text(
-                      "${widget.pointsdata["BonusType"]}",
+                      "${widget.pointsdata["PointsType"]}",
                       style: TextStyle(color: Colors.green),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 10.0, top: 6),
                     child: Text(
-                      "${widget.pointsdata["BonusPoints"]}",
+                      "${widget.pointsdata["Points"]}",
                       style: TextStyle(color: Colors.green),
                     ),
                   ),

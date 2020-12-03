@@ -1,67 +1,65 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
-import 'package:surti_basket_app/CustomWidgets/Promocodecomponent.dart';
+import 'package:surti_basket_app/CustomWidgets/OfferComponent.dart';
 
-class promoCode extends StatefulWidget {
+class OfferScreen extends StatefulWidget {
   @override
-  _promoCodeState createState() => _promoCodeState();
+  _OfferScreenState createState() => _OfferScreenState();
 }
 
-class _promoCodeState extends State<promoCode> {
+class _OfferScreenState extends State<OfferScreen> {
   bool isLoading = false;
-  List promoCodeList = [];
+  List offerList = [];
 
   @override
   void initState() {
-    super.initState();
-    getPromoCodes();
+    _getOffer();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Promocode",
+        title: Text("My Offers",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
       body: isLoading == true
           ? LoadingComponent()
-          : promoCodeList.length > 0
+          : offerList.length > 0
               ? ListView.separated(
                   padding: EdgeInsets.only(top: 10),
                   physics: BouncingScrollPhysics(),
-                  itemCount: promoCodeList.length,
+                  itemCount: offerList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return promocodeComponent(promoCode: promoCodeList[index]);
+                    return OfferComponent(
+                      Offerdata: offerList[index],
+                    );
                   },
                   separatorBuilder: (BuildContext context, int index) =>
                       Container(),
                 )
-              : NoFoundComponent(Title: "No PromoCode available"),
+              : NoFoundComponent(),
     );
   }
 
-  getPromoCodes() async {
+  _getOffer() async {
     try {
       setState(() {
         isLoading = true;
       });
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        Services.postforlist(apiname: 'getPromoCode').then(
-            (responselist) async {
+        Services.postforlist(apiname: 'getOffer').then((responselist) async {
           if (responselist.length > 0) {
             setState(() {
               isLoading = false;
-              promoCodeList = responselist;
+              offerList = responselist;
             });
           } else {
             setState(() {

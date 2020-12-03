@@ -14,8 +14,8 @@ import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/LoginScreen.dart';
 import 'package:surti_basket_app/Screens/MyOrder.dart';
 import 'package:surti_basket_app/Screens/MyPointScreen.dart';
+import 'package:surti_basket_app/Screens/PromocodePage.dart';
 import 'package:surti_basket_app/Screens/Tearmscondition.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -294,8 +294,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           });
           if (responselist.length > 0) {
             setState(() {
-              pointList = responselist;
-              Points = responselist[0]["PointsDetail"]["Total"].toString();
+              pointList = responselist[1]["Points"];
+              Points = responselist[0]["PointsDetail"][0]["Total"].toString();
             });
           } else {
             Fluttertoast.showToast(msg: "Data Not Found!");
@@ -845,8 +845,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context,
-                                  SlideLeftRoute(page: MyPointScreen()));
+                              Navigator.push(
+                                  context,
+                                  SlideLeftRoute(
+                                      page: MyPointScreen(
+                                          pointsData: pointList)));
                             },
                             child: Container(
                               color: Colors.white,
@@ -875,6 +878,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   )
                 : Container(),
+            Container(
+              height: 0.8,
+              color: Colors.grey[300],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, SlideLeftRoute(page: promoCode()));
+                },
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.asset('assets/coupon.png',
+                            width: 26, color: Colors.grey[700]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text("My Promocode",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Container(
               height: 0.8,
               color: Colors.grey[300],

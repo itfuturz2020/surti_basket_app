@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
@@ -16,6 +18,7 @@ import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/FilterScreen.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
+import 'package:surti_basket_app/Screens/OfferScreen.dart';
 import 'package:surti_basket_app/Screens/ProfileScreen.dart';
 import 'package:surti_basket_app/Screens/PromocodePage.dart';
 import 'package:surti_basket_app/Screens/SearchProductPage.dart';
@@ -40,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Location location = new Location();
   LocationData locationData;
   String latitude, longitude;
+  String CustomerName;
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -52,10 +56,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.value(true);
   }
 
+  getlocaldata() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      CustomerName = preferences.getString(Session.CustomerName);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _dashboardData();
+    getlocaldata();
   }
 
   @override
@@ -67,30 +79,34 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: isLoading == true ? Colors.white : Colors.grey[400],
         appBar: AppBar(
           centerTitle: false,
-          actions: [
-            IconButton(
-                icon: Icon(Icons.account_box),
-                onPressed: () {
-                  Navigator.push(
-                      context, SlideLeftRoute(page: ProfileScreen()));
-                })
-          ],
-          title: InkWell(
+          title: GestureDetector(
             onTap: () {
-              Navigator.push(context, SlideLeftRoute(page: AddressScreen()));
+              Navigator.push(context, SlideLeftRoute(page: ProfileScreen()));
             },
             child: Row(
               children: [
-                Icon(Icons.location_on),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Surat-395008",
-                        style: TextStyle(fontSize: 15, color: Colors.white)),
-                    Text("Your Location",
-                        style: TextStyle(fontSize: 11, color: Colors.white)),
-                  ],
+                Icon(
+                  Icons.account_box,
+                  size: 27,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Hello,",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                      Text("${CustomerName}",
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -188,7 +204,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
-                            return OfferComponent(_Offerlist[index]);
+                            return OfferComponent(
+                              Offerdata: _Offerlist[index],
+                            );
                           },
                           itemCount: _Offerlist.length,
                         )
@@ -257,7 +275,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(context, SlideLeftRoute(page: promoCode()));
+                    Navigator.push(
+                        context, SlideLeftRoute(page: OfferScreen()));
                   },
                 ),
               ),
