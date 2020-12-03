@@ -39,7 +39,7 @@ class _promoCodeState extends State<promoCode> {
               ? ListView.separated(
                   padding: EdgeInsets.only(top: 10),
                   physics: BouncingScrollPhysics(),
-                  itemCount: 5,
+                  itemCount: promoCodeList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return promocodeComponent(promoCode: promoCodeList[index]);
                   },

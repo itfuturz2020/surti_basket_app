@@ -342,7 +342,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         color: Colors.red[400],
         child: GestureDetector(
           onTap: () {
-            _addTocart();
+            if (provider.cartIdList.contains(int.parse(widget.productId))) {
+              Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
+            } else {
+              _addTocart();
+            }
           },
           child: iscartLoading
               ? Center(
@@ -356,7 +360,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         width: 26, color: Colors.white),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: iscartlist == true
+                      child: provider.cartIdList
+                              .contains(int.parse(widget.productId))
                           ? Text("Already in cart",
                               style: TextStyle(
                                   color: Colors.white,
@@ -422,7 +427,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         FormData body = FormData.fromMap({
           "CustomerId": CustomerId,
           "ProductId": "${productdetail[0]["ProductId"]}",
-          "CartQuantity": "${productdetail[0]["ProductQty"]}",
+          "CartQuantity": "1",
           "ProductDetailId": "${packageInfo[currentIndex]["ProductdetailId"]}"
         });
         print(body.fields);
@@ -434,7 +439,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               iscartlist = !iscartlist;
             });
             Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
-            Provider.of<CartProvider>(context, listen: false).increaseCart();
+            Provider.of<CartProvider>(context, listen: false).increaseCart(
+                productId: int.parse(productdetail[0]["ProductId"]));
             Fluttertoast.showToast(
                 msg: "Added Successfully", gravity: ToastGravity.BOTTOM);
           }

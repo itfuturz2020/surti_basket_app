@@ -11,9 +11,11 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/Providers/Addressprovider.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/CheckPincode.dart';
+import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
@@ -51,20 +53,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   getlocaldata() async {
     preferences = await SharedPreferences.getInstance();
+    CartProvider addressProvider =
+        Provider.of<CartProvider>(context, listen: false);
     setState(() {
       CustomerId = preferences.getString(Session.customerId);
       CustomerName = preferences.getString(Session.CustomerName);
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
-      AddressId = preferences.getString(AddressSession.AddressId);
-      AddressHouseNo = preferences.getString(AddressSession.AddressHouseNo);
-      AddressPincode = preferences.getString(AddressSession.AddressPincode);
+      //From Provider
+      AddressId = addressProvider.addressList[0]["AddressId"];
+      AddressHouseNo = addressProvider.addressList[0]["AddressHouseNo"];
+      AddressPincode = addressProvider.addressList[0]["AddressPincode"];
       AddressAppartmentName =
-          preferences.getString(AddressSession.AddressAppartmentName);
-      AddressStreet = preferences.getString(AddressSession.AddressStreet);
-      AddressLandmark = preferences.getString(AddressSession.AddressLandmark);
-      AddressArea = preferences.getString(AddressSession.AddressArea);
-      AddressType = preferences.getString(AddressSession.AddressType);
-      City = preferences.getString(AddressSession.City);
+          addressProvider.addressList[0]["AddressAppartmentName"];
+      AddressStreet = addressProvider.addressList[0]["AddressStreet"];
+      AddressLandmark = addressProvider.addressList[0]["AddressLandmark"];
+      AddressArea = addressProvider.addressList[0]["AddressArea"];
+      AddressType = addressProvider.addressList[0]["AddressType"];
+      City = addressProvider.addressList[0]["AddressCityName"];
     });
   }
 
@@ -562,9 +567,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
             (responseremove) async {
           if (responseremove.IsSuccess == true && responseremove.Data == "1") {
             Provider.of<CartProvider>(context, listen: false).removecart();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => HomeScreen()),
+                (route) => false);
             setState(() {
               isLoading = false;
             });
+
             Fluttertoast.showToast(msg: "Order Place Successfully");
           } else {
             setState(() {

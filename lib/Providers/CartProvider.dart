@@ -13,11 +13,13 @@ class CartProvider extends ChangeNotifier {
 
   List settingList = [];
   List cartIdList = [];
+  List addressList = [];
 
   CartProvider() {
     log("Cart Provider");
     getCartdata();
     getSettingData();
+    getAdressData();
   }
 
   void setCartCount(int count) {
@@ -56,9 +58,10 @@ class CartProvider extends ChangeNotifier {
             setCartCount(responselist[0]["Cart"].length);
             cartIdList.clear();
             for (int i = 0; i < responselist[0]["Cart"].length; i++) {
-              cartIdList.add(responselist[0]["Cart"][i]["CartId"]);
+              cartIdList
+                  .add(int.parse(responselist[0]["Cart"][i]["ProductId"]));
             }
-            print(cartIdList);
+            print("Cart List" + "$cartIdList");
           } else
             return 0;
         }, onError: (e) {
@@ -83,6 +86,32 @@ class CartProvider extends ChangeNotifier {
             notifyListeners();
           }
           return 0;
+        }, onError: (e) {
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+          return 0;
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+      return 0;
+    }
+  }
+
+  Future<int> getAdressData() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        FormData body = FormData.fromMap(
+            {"CustomerId": preferences.getString(Session.customerId)});
+        Services.postforlist(apiname: 'getAddress', body: body).then(
+            (responselist) async {
+          if (responselist.length > 0) {
+            addressList = responselist;
+            notifyListeners();
+            print(addressList);
+          }
         }, onError: (e) {
           print("error on call -> ${e.message}");
           Fluttertoast.showToast(msg: "something went wrong");

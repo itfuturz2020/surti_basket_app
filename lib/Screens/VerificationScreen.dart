@@ -253,7 +253,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       maxLength: 6,
                       pinBoxDecoration:
                           ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-                      pinTextStyle: TextStyle(fontSize: 20),
+                      pinTextStyle: TextStyle(fontSize: 17),
                     ),
                   ),
                   Padding(

@@ -56,21 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _dashboardData();
-    _getLocation();
-  }
-
-  _getLocation() async {
-    try {
-      locationData = await location.getLocation();
-      if (locationData != null) {
-        setState(() {
-          latitude = locationData.latitude.toString();
-          longitude = locationData.longitude.toString();
-        });
-      }
-    } catch (e) {
-      locationData = null;
-    }
   }
 
   @override

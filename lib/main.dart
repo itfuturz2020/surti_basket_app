@@ -5,6 +5,7 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
+import 'package:surti_basket_app/Providers/Addressprovider.dart';
 import 'package:surti_basket_app/Providers/SettingProvider.dart';
 import 'package:surti_basket_app/Screens/SplashScreen.dart';
 
@@ -16,7 +17,6 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        // ChangeNotifierProvider(create: (context) => SettingProviderData()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
       child: MyApp(),

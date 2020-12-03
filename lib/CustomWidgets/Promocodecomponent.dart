@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 
 class promocodeComponent extends StatefulWidget {
-  List promoCode;
+  var promoCode;
   promocodeComponent({this.promoCode});
 
   @override

@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -255,11 +257,27 @@ class _ProductComponentState extends State<ProductComponent> {
                                       width: 75,
                                       child: FlatButton(
                                         onPressed: () {
-                                          _addTocart();
+                                          if (provider.cartIdList.contains(
+                                              int.parse(widget
+                                                  .product["ProductId"]))) {
+                                            Fluttertoast.showToast(
+                                                msg: "Already in Cart!");
+                                          } else {
+                                            _addTocart();
+                                          }
                                         },
                                         color: Colors.redAccent,
-                                        child: iscartLoading
-                                            ? LoadingComponent()
+                                        child: iscartLoading == true
+                                            ? Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                child: Center(
+                                                    child: SpinKitCircle(
+                                                  color: Colors.white,
+                                                  size: 25,
+                                                )),
+                                              )
                                             : provider.cartIdList.contains(
                                                     int.parse(widget
                                                         .product["ProductId"]))

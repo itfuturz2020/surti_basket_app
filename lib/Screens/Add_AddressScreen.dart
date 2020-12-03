@@ -10,7 +10,6 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
-import 'package:surti_basket_app/transitions/ShowUp.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   @override
@@ -30,16 +29,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   int selected_Index;
   String SelectedCity;
   bool isAddressLoading = false;
-  bool isLoading=false;
+  bool isLoading = false;
   List _City = [];
   Location location = new Location();
   LocationData locationData;
-  String latitude,longitude;
+  String latitude, longitude;
 
   @override
   void initState() {
     getCityData();
-    _getLocation();
     super.initState();
   }
 
@@ -105,23 +103,26 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 children: [
                   Flexible(
                     child: Padding(
-                      padding: const EdgeInsets.only(top:13.0,left:12),
-                      child: _City.length > 0 ? DropdownButton(
-                        hint: Text('Please Select City',style: TextStyle(fontSize: 14)),
-                        // Not necessary for Option 1
-                        value: SelectedCity,
-                        onChanged: (newValue) {
-                          setState(() {
-                            SelectedCity = newValue;
-                          });
-                        },
-                        items: _City.map((City) {
-                          return DropdownMenuItem<String>(
-                            child: new Text(City),
-                            value: City,
-                          );
-                        }).toList(),
-                      ):CircularProgressIndicator(),
+                      padding: const EdgeInsets.only(top: 13.0, left: 12),
+                      child: _City.length > 0
+                          ? DropdownButton(
+                              hint: Text('Please Select City',
+                                  style: TextStyle(fontSize: 14)),
+                              // Not necessary for Option 1
+                              value: SelectedCity,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  SelectedCity = newValue;
+                                });
+                              },
+                              items: _City.map((City) {
+                                return DropdownMenuItem<String>(
+                                  child: new Text(City),
+                                  value: City,
+                                );
+                              }).toList(),
+                            )
+                          : CircularProgressIndicator(),
                     ),
                   ),
                   Flexible(
@@ -230,11 +231,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   _getLocation() async {
     try {
       locationData = await location.getLocation();
-      if(locationData != null){
+      if (locationData != null) {
         setState(() {
-          latitude=locationData.latitude.toString();
-          longitude=locationData.longitude.toString();
+          latitude = locationData.latitude.toString();
+          longitude = locationData.longitude.toString();
         });
+        print("---------------->" + "${latitude}" + "${longitude}");
       }
     } catch (e) {
       locationData = null;
@@ -291,20 +293,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        Services.postforlist(apiname: 'getCity').then(
-                (responselist) async {
-              setState(() {
-                isLoading = false;
-              });
-              if (responselist.length > 0) {
-                setState(() {
-                  _City = responselist;
-                });
-                print(_City);
-              } else {
-                Fluttertoast.showToast(msg: "No City Found!");
-              }
-            }, onError: (e) {
+        Services.postforlist(apiname: 'getCity').then((responselist) async {
+          setState(() {
+            isLoading = false;
+          });
+          if (responselist.length > 0) {
+            setState(() {
+              _City = responselist;
+            });
+            _getLocation();
+            print(_City);
+          } else {
+            Fluttertoast.showToast(msg: "No City Found!");
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });
@@ -316,6 +318,4 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       Fluttertoast.showToast(msg: "No Internet Connection");
     }
   }
-
-
 }
