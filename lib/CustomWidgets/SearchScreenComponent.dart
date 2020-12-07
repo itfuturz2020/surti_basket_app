@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
@@ -233,7 +235,16 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                                         },
                                         color: Colors.redAccent,
                                         child: iscartLoading == true
-                                            ? LoadingComponent()
+                                            ? Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                child: Center(
+                                                    child: SpinKitCircle(
+                                                  color: Colors.white,
+                                                  size: 25,
+                                                )),
+                                              )
                                             : iscartlist == true
                                                 ? Text('Added',
                                                     style: TextStyle(

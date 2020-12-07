@@ -22,7 +22,6 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   var _fullnameController = new TextEditingController();
-  var _companynameController = new TextEditingController();
   var _emailController = new TextEditingController();
   var _phonenumberController = new TextEditingController();
   final _formkey = new GlobalKey<FormState>();
@@ -43,7 +42,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   saveDataToSession(var data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Session.customerId, data["CustomerId"].toString());
-//            prefs.setString(Session.addressId,responselist[0]["addressId"]);
     await prefs.setString(Session.CustomerName, data["CustomerName"]);
     await prefs.setString(Session.CustomerEmailId, data["CustomerEmailId"]);
     await prefs.setString(Session.CustomerPhoneNo, data["CustomerPhoneNo"]);
@@ -363,7 +361,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }
       } on SocketException catch (_) {
         Fluttertoast.showToast(msg: "No Internet Connection");
-//      showMsg("No Internet Connection.");
       }
     } else
       Fluttertoast.showToast(msg: "Please fill all the fields");

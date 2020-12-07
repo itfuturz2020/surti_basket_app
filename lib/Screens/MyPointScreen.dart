@@ -3,11 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:surti_basket_app/Common/Constant.dart';
-import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/MyPointsComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
 
 class MyPointScreen extends StatefulWidget {
   List pointsData = [];
@@ -31,9 +29,8 @@ class _MyPointScreenState extends State<MyPointScreen> {
         title: Text("My Points",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
-      body: isPointsLoading == true
-          ? LoadingComponent()
-          : ListView.separated(
+      body: widget.pointsData.length > 0
+          ? ListView.separated(
               padding: EdgeInsets.only(top: 10),
               physics: BouncingScrollPhysics(),
               itemCount: widget.pointsData.length,
@@ -46,6 +43,10 @@ class _MyPointScreenState extends State<MyPointScreen> {
                 color: Colors.white,
                 height: 10,
               ),
+            )
+          : NoFoundComponent(
+              Title: "No Points Found",
+              ImagePath: "assets/coins.png",
             ),
     );
   }

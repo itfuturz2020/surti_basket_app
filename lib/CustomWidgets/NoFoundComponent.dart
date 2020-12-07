@@ -19,14 +19,17 @@ class NoFoundComponent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("${ImagePath}", width: 200),
+              Image.asset("${ImagePath}", width: 80),
             ],
           ),
-          Text("${Title}",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.black54)),
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Text("${Title}",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.black54)),
+          ),
           if (fromWhere == "Cart") ...[
             Padding(
               padding: const EdgeInsets.all(8.0),

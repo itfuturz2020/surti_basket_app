@@ -9,12 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
-import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
-import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
-import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class ProductComponent extends StatefulWidget {
   var product;
