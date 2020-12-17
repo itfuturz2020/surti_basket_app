@@ -96,8 +96,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 12.0, left: 18.0, right: 10.0),
-                      child: Text(
-                          "${packageInfo.length > 0 ? packageInfo[currentIndex]["ProductdetailName"] : productdetail[0]["ProductName"]}",
+                      child: Text("${productdetail[0]["ProductName"]}",
                           style: TextStyle(fontSize: 16)),
                     ),
                     Padding(
