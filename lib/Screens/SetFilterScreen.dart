@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/SetFilterComponent.dart';
 
 class SetFilterScreen extends StatefulWidget {
@@ -31,23 +32,25 @@ class _SetFilterScreenState extends State<SetFilterScreen> {
         title: Text("Filter Products",
             style: TextStyle(color: Colors.white, fontSize: 18)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: ListView.separated(
-          itemBuilder: (BuildContext context, int index) {
-            return SetFilterComponent(
-              setfilter: SetfilterList[index],
-            );
-          },
-          itemCount: SetfilterList.length,
-          separatorBuilder: (context, index) {
-            return Container(
-              height: 1,
-              color: Colors.grey[200],
-            );
-          },
-        ),
-      ),
+      body: isFilterLoading == true
+          ? LoadingComponent()
+          : Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  return SetFilterComponent(
+                    setfilter: SetfilterList[index],
+                  );
+                },
+                itemCount: SetfilterList.length,
+                separatorBuilder: (context, index) {
+                  return Container(
+                    height: 1,
+                    color: Colors.grey[200],
+                  );
+                },
+              ),
+            ),
     );
   }
 
@@ -56,6 +59,9 @@ class _SetFilterScreenState extends State<SetFilterScreen> {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         FormData body = FormData.fromMap(widget.filterdata);
+        setState(() {
+          isFilterLoading = true;
+        });
         print(body.fields);
         Services.postforlist(apiname: 'setFilter', body: body).then(
             (responseList) async {

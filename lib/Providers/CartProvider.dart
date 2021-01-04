@@ -110,7 +110,7 @@ class CartProvider extends ChangeNotifier {
           if (responselist.length > 0) {
             addressList = responselist;
             notifyListeners();
-            print(addressList);
+            print(responselist);
           }
         }, onError: (e) {
           print("error on call -> ${e.message}");

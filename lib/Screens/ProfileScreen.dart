@@ -1113,12 +1113,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             setState(() {
               getaddressList = ResponseList;
               isgetaddressLoading = false;
+
               AddressStreet = ResponseList[0]["AddressStreet"];
               AddressArea = ResponseList[0]["AddressArea"];
               AddressLandmark = ResponseList[0]["AddressLandmark"];
               AddressAppartmentName = ResponseList[0]["AddressAppartmentName"];
               AddressPincode = ResponseList[0]["AddressPincode"];
-              AddressAppartmentName = ResponseList[0]["AddressAppartmentName"];
               AddressHouseNo = ResponseList[0]["AddressHouseNo"];
               City = ResponseList[0]["AddressCityName"];
             });

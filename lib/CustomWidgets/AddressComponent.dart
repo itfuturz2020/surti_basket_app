@@ -27,7 +27,7 @@ class _AddressComponentState extends State<AddressComponent> {
   String CustomerId;
   String CustomerName;
   String Customerphone;
-  List data=[];
+  List data = [];
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -53,7 +53,7 @@ class _AddressComponentState extends State<AddressComponent> {
             print(widget.fromwhere);
             if (widget.fromwhere == "Checkout") {
               //print(widget.addressData);
-             Navigator.pop(context, widget.addressData);
+              Navigator.pop(context, widget.addressData);
             }
           },
           child: Padding(
@@ -134,10 +134,16 @@ class _AddressComponentState extends State<AddressComponent> {
                               //"44 , Rambaug Society",
                               style:
                                   TextStyle(fontSize: 14, color: Colors.grey)),
-                          Text("${widget.addressData["AddressStreet"]}",
+                          Text(
+                              "${widget.addressData["AddressStreet"]}" +
+                                  " - " +
+                                  "${widget.addressData["AddressLandmark"]}",
                               style:
                                   TextStyle(fontSize: 14, color: Colors.grey)),
-                          Text("${widget.addressData["AddressLandmark"]}",
+                          Text(
+                              "${widget.addressData["AddressCityName"]}" +
+                                  " - " +
+                                  "${widget.addressData["AddressPincode"]}",
                               style:
                                   TextStyle(fontSize: 14, color: Colors.grey)),
                           Text("${Customerphone}",

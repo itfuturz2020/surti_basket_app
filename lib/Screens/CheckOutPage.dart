@@ -458,12 +458,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               borderRadius: BorderRadius.circular(5),
                               side: BorderSide(color: Colors.grey[200])),
                           onPressed: () {
-                            if (PaymentMode == "Online") {
+                            _placeOrder();
+                            /* if (PaymentMode == "Online") {
                               openPaymentGateway();
                             } else {
                               displayBottomSheet(context);
                               //_placeOrder();
-                            }
+                            }*/
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

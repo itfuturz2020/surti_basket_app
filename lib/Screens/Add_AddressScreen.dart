@@ -10,6 +10,8 @@ import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
+import 'package:surti_basket_app/Screens/LoginScreen.dart';
+import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   @override
@@ -39,6 +41,40 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   void initState() {
     getCityData();
     super.initState();
+  }
+
+  _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Icon(
+            Icons.info_outline_rounded,
+            color: Colors.red,
+          ),
+          content: Column(
+            children: [
+              new Text(
+                "Sorry",
+                style: TextStyle(fontSize: 17),
+              ),
+              Text("we can deliver on this address"),
+            ],
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "Cancel",
+                style: TextStyle(color: appPrimaryMaterialColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -100,6 +136,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Flexible(
                     child: Padding(
@@ -126,14 +163,26 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                   ),
                   Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: InputFiled(
-                          controller: pincodetxt,
-                          hintText: "Pincode",
-                          label: "Pincode",
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: TextFormField(
+                        controller: pincodetxt,
+                        validator: (pin) {
+                          if (pin.length != 6 || pin.length == 0) {
+                            return 'Please enter Valid Pincode';
+                          }
+                          return null;
+                        },
+                        maxLength: 6,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          hintText: 'Enter Pincode',
+                          hintStyle:
+                              TextStyle(fontSize: 13.0, color: Colors.grey),
+                          labelText: "Enter pincode",
+                          labelStyle:
+                              TextStyle(fontSize: 13.0, color: Colors.black),
                         ),
                       ),
                     ),
@@ -236,7 +285,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           latitude = locationData.latitude.toString();
           longitude = locationData.longitude.toString();
         });
-        print("---------------->" + "${latitude}" + "${longitude}");
+        print("---------------->" + "${latitude}" + " " + "${longitude}");
       }
     } catch (e) {
       locationData = null;
@@ -244,49 +293,52 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   _addAddress() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        FormData body = FormData.fromMap({
-          "CustomerId": prefs.getString(Session.customerId),
-          "AddressHouseNo": houseNotxt.text,
-          "AddressAppartmentName": apratmenttxt.text,
-          "AddressStreet": streettxt.text,
-          "AddressLandmark": landmarkttxt.text,
-          "AddressArea": areadetailtxt.text,
-          "AddressType": _addressTypeList[selected_Index].toString(),
-          "AddressPincode": pincodetxt.text,
-          "AddressCityName": SelectedCity,
-          "AddressLat": latitude,
-          "AddressLong": longitude,
-        });
-        print(body.fields);
-        setState(() {
-          isAddressLoading = true;
-        });
-        Services.postForSave(apiname: 'addAddress', body: body).then(
-            (responseList) async {
-          setState(() {
-            isAddressLoading = false;
+    if (_formKey.currentState.validate()) {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          FormData body = FormData.fromMap({
+            "CustomerId": prefs.getString(Session.customerId),
+            "AddressHouseNo": houseNotxt.text,
+            "AddressAppartmentName": apratmenttxt.text,
+            "AddressStreet": streettxt.text,
+            "AddressLandmark": landmarkttxt.text,
+            "AddressArea": areadetailtxt.text,
+            "AddressType": _addressTypeList[selected_Index].toString(),
+            "AddressPincode": pincodetxt.text,
+            "AddressCityName": SelectedCity,
+            "AddressLat": latitude,
+            "AddressLong": longitude,
           });
+          print(body.fields);
+          setState(() {
+            isAddressLoading = true;
+          });
+          Services.postForSave(apiname: 'addAddress', body: body).then(
+              (responseList) async {
+            setState(() {
+              isAddressLoading = false;
+            });
 
-          if (responseList.IsSuccess == true && responseList.Data == "1") {
-            Fluttertoast.showToast(msg: "Address added successfully");
-          } else {
-            Fluttertoast.showToast(msg: "Data Not Found");
-          }
-        }, onError: (e) {
-          setState(() {
-            isAddressLoading = false;
+            if (responseList.IsSuccess == true && responseList.Data == "1") {
+              Fluttertoast.showToast(msg: "Address added successfully");
+            } else {
+              _showDialog(context);
+            }
+          }, onError: (e) {
+            setState(() {
+              isAddressLoading = false;
+            });
+            print("error on call -> ${e.message}");
+            Fluttertoast.showToast(msg: "Something Went Wrong");
           });
-          print("error on call -> ${e.message}");
-          Fluttertoast.showToast(msg: "Something Went Wrong");
-        });
+        }
+      } on SocketException catch (_) {
+        Fluttertoast.showToast(msg: "No Internet Connection.");
       }
-    } on SocketException catch (_) {
-      Fluttertoast.showToast(msg: "No Internet Connection.");
-    }
+    } else
+      Fluttertoast.showToast(msg: "Please fill pincode field");
   }
 
   getCityData() async {

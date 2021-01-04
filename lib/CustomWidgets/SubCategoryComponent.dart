@@ -13,12 +13,15 @@ class SubCategoryComponent extends StatefulWidget {
 }
 
 class _SubCategoryComponentState extends State<SubCategoryComponent> {
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Navigator.push(context, SlideLeftRoute(page: ProductListing(SubCategoryId:'${widget.category["SubcategoryId"]}')));
+      onTap: () {
+        Navigator.push(
+            context,
+            SlideLeftRoute(
+                page: ProductListing(
+                    SubCategoryId: '${widget.category["SubcategoryId"]}')));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -34,7 +37,7 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
           children: <Widget>[
             Flexible(
               child: Image.network(
-                "${IMG_URL+widget.category["SubcategoryImage"]}",
+                "${IMG_URL + widget.category["SubcategoryImage"]}",
                 width: 70,
                 height: 70,
               ),

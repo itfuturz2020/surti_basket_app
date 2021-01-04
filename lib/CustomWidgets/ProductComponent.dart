@@ -274,17 +274,14 @@ class _ProductComponentState extends State<ProductComponent> {
                                                   size: 25,
                                                 )),
                                               )
-                                            : provider.cartIdList.contains(
+                                            :
+                                            /*provider.cartIdList.contains(
                                                     int.parse(widget
-                                                        .product["ProductId"]))
-                                                ? Text('Added',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 14))
-                                                : Text('Add',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15)),
+                                                        .product["ProductId"]))*/
+                                            Text('Add',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15)),
                                       ),
                                     ),
                                   ),
