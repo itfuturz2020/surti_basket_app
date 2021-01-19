@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -77,64 +78,62 @@ class _ProductComponentState extends State<ProductComponent> {
               ),
               Divider(),
               Column(
-                children: List.generate(packageInfo.length, (index) {
-                  return InkWell(
-                      onTap: () {
-                        setState(() {
-                          currentIndex = index;
-                        });
-                        Navigator.of(context).pop();
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                    " ${packageInfo[index]["ProductdetailName"]}",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.black)),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                          text: 'MRP: ',
-                                          style: TextStyle(
-                                              color: Colors.grey, fontSize: 14),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                              text:
-                                                  "${packageInfo[index]["ProductdetailMRP"]}",
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 15,
-                                                  decoration: TextDecoration
-                                                      .lineThrough),
-                                            )
-                                          ]),
-                                    ),
-                                    Text(
-                                        " ${packageInfo[index]["ProductdetailSRP"]}",
+                  children: List.generate(packageInfo.length, (index) {
+                return InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = index;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                  " ${packageInfo[index]["ProductdetailName"]}",
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.black)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                        text: 'MRP: ',
                                         style: TextStyle(
-                                            fontSize: 15, color: Colors.black)),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                            color: Colors.grey, fontSize: 14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text:
+                                                "${packageInfo[index]["ProductdetailMRP"]}",
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 15,
+                                                decoration:
+                                                    TextDecoration.lineThrough),
+                                          )
+                                        ]),
+                                  ),
+                                  Text(
+                                      " ${packageInfo[index]["ProductdetailSRP"]}",
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.black)),
+                                ],
+                              ),
+                            ],
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 0.5,
-                            color: Colors.grey[200],
-                          )
-                        ],
-                      ));
-                }),
-              )
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 0.5,
+                          color: Colors.grey[200],
+                        )
+                      ],
+                    ));
+              }))
             ],
           ),
         ));
@@ -164,9 +163,10 @@ class _ProductComponentState extends State<ProductComponent> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.product["ProductImages"] != ""
+                    widget.product["PackInfo"][0]["ProductdetailImages"][0] !=
+                            ""
                         ? Image.network(
-                            '${IMG_URL + widget.product["ProductImages"][0]}',
+                            '${IMG_URL + widget.product["PackInfo"][0]["ProductdetailImages"][0]}',
                             width: 110,
                             height: 110,
                           )
@@ -253,14 +253,15 @@ class _ProductComponentState extends State<ProductComponent> {
                                       width: 75,
                                       child: FlatButton(
                                         onPressed: () {
-                                          if (provider.cartIdList.contains(
+                                          _addTocart();
+                                          /*if (provider.cartIdList.contains(
                                               int.parse(widget
                                                   .product["ProductId"]))) {
                                             Fluttertoast.showToast(
                                                 msg: "Already in Cart!");
                                           } else {
                                             _addTocart();
-                                          }
+                                          }*/
                                         },
                                         color: Colors.redAccent,
                                         child: iscartLoading == true

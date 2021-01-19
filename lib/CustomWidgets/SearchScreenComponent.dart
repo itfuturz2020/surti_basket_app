@@ -245,15 +245,15 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                                                   size: 25,
                                                 )),
                                               )
-                                            : iscartlist == true
+                                            /* : iscartlist == true
                                                 ? Text('Added',
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 14))
-                                                : Text('Add',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 14)),
+                                                        fontSize: 14))*/
+                                            : Text('Add',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14)),
                                       ),
                                     ),
                                   ),

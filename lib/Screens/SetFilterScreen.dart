@@ -39,7 +39,7 @@ class _SetFilterScreenState extends State<SetFilterScreen> {
               child: ListView.separated(
                 itemBuilder: (BuildContext context, int index) {
                   return SetFilterComponent(
-                    setfilter: SetfilterList[index],
+                    setfilterData: SetfilterList[index],
                   );
                 },
                 itemCount: SetfilterList.length,

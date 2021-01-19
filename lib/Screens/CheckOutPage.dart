@@ -16,6 +16,7 @@ import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/CheckPincode.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
+import 'package:surti_basket_app/Screens/ThankyouScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
@@ -472,7 +473,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left: 3.0),
-                                child: isLoading
+                                child: isLoading == true
                                     ? Center(
                                         child: CircularProgressIndicator(
                                           valueColor:
@@ -560,7 +561,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
           "OrderPaymentMethod": "${PaymentMode}",
           "OrderTransactionNo": "${transactionId}",
           "OrderPromoCode": "",
-          "OrderTransactionNo": "",
           "OrderBonusPoint": ""
         });
         print(body.fields);
@@ -570,7 +570,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Provider.of<CartProvider>(context, listen: false).removecart();
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
-                    builder: (BuildContext context) => HomeScreen()),
+                    builder: (BuildContext context) => ThankyouScreen()),
                 (route) => false);
             setState(() {
               isLoading = false;

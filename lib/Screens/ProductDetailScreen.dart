@@ -341,11 +341,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         color: Colors.red[400],
         child: GestureDetector(
           onTap: () {
-            if (provider.cartIdList.contains(int.parse(widget.productId))) {
+            _addTocart();
+            /* if (provider.cartIdList.contains(int.parse(widget.productId))) {
               Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
             } else {
-              _addTocart();
-            }
+
+            }*/
           },
           child: iscartLoading
               ? Center(
@@ -359,13 +360,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         width: 26, color: Colors.white),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: provider.cartIdList
+                      child:
+                          /*provider.cartIdList
                               .contains(int.parse(widget.productId))
                           ? Text("Already in cart",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold))
-                          : Text("Add to cart",
+                          : */
+                          Text("Add to cart",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)),

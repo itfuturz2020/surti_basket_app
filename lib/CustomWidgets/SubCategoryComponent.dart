@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/ProductListing.dart';
@@ -13,6 +15,13 @@ class SubCategoryComponent extends StatefulWidget {
 }
 
 class _SubCategoryComponentState extends State<SubCategoryComponent> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    log(widget.category.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -36,12 +45,21 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Flexible(
-              child: Image.network(
-                "${IMG_URL + widget.category["SubcategoryImage"]}",
-                width: 70,
-                height: 70,
-              ),
+              child: widget.category["SubcategoryImage"] == ""
+                  ? Image.network(
+                      "${IMG_URL + widget.category["SubcategoryImage"]}",
+                      width: 70,
+                      height: 70,
+                    )
+                  : Image.asset(
+                      'assets/no-image.png',
+                      width: 110,
+                      height: 110,
+                    ),
             ),
+            //  packageInfo[0]["ProductdetailImages"] != ""
+            //                         ? Image.network(
+            //                             "${IMG_URL + packageInfo[0]["ProductdetailImages"][0]}",
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(

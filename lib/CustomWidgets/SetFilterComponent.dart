@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,8 +13,8 @@ import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
 
 class SetFilterComponent extends StatefulWidget {
-  var setfilter;
-  SetFilterComponent({this.setfilter});
+  var setfilterData;
+  SetFilterComponent({this.setfilterData});
 
   @override
   _SetFilterComponentState createState() => _SetFilterComponentState();
@@ -23,15 +24,101 @@ class _SetFilterComponentState extends State<SetFilterComponent> {
   bool iscartLoading = false;
   bool iscartlist = false;
   String CustomerId;
+  List packageInfo = [];
+  int currentIndex = 0;
+
+  showPackageInfo() {
+    showDialog(
+        context: context,
+        child: Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text("Pack Variation",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+              Divider(),
+              Column(
+                  children: List.generate(packageInfo.length, (index) {
+                return InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = index;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                  " ${packageInfo[index]["ProductdetailName"]}",
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.black)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                        text: 'MRP: ',
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text:
+                                                "${packageInfo[index]["ProductdetailMRP"]}",
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 15,
+                                                decoration:
+                                                    TextDecoration.lineThrough),
+                                          )
+                                        ]),
+                                  ),
+                                  Text(
+                                      " ${packageInfo[index]["ProductdetailSRP"]}",
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.black)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 0.5,
+                          color: Colors.grey[200],
+                        )
+                      ],
+                    ));
+              }))
+            ],
+          ),
+        ));
+  }
 
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     CustomerId = await preferences.getString(Session.customerId);
   }
 
+  getPackageInfo() {
+    setState(() {
+      packageInfo = widget.setfilterData["PackInfo"];
+    });
+    print(
+        "Packages ${widget.setfilterData["ProductId"]}---------------${packageInfo.length}");
+  }
+
   @override
   void initState() {
     getlocaldata();
+    getPackageInfo();
   }
 
   @override
@@ -42,7 +129,7 @@ class _SetFilterComponentState extends State<SetFilterComponent> {
           context,
           MaterialPageRoute(
               builder: (context) => ProductDetailScreen(
-                    productId: widget.setfilter["ProductId"],
+                    productId: widget.setfilterData["ProductId"],
                   )),
         );
       },
@@ -57,11 +144,19 @@ class _SetFilterComponentState extends State<SetFilterComponent> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      '${widget.setfilter["ProductImages"]}',
-                      width: 110,
-                      height: 110,
-                    ),
+                    widget.setfilterData["PackInfo"][0]["ProductdetailImages"]
+                                [0] !=
+                            ""
+                        ? Image.network(
+                            '${IMG_URL + widget.setfilterData["PackInfo"][0]["ProductdetailImages"][0]}',
+                            width: 110,
+                            height: 110,
+                          )
+                        : Image.asset(
+                            'assets/no-image.png',
+                            width: 110,
+                            height: 110,
+                          ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
@@ -70,17 +165,40 @@ class _SetFilterComponentState extends State<SetFilterComponent> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "${widget.setfilter["ProductName"]}",
+                              "${widget.setfilterData["ProductName"]}",
                               style: TextStyle(fontSize: 15),
                               overflow: TextOverflow.ellipsis,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 2.0),
                               child: Text(
-                                "${widget.setfilter["ProductBrandName"]}",
+                                "${widget.setfilterData["ProductBrandName"]}",
                                 style:
                                     TextStyle(fontSize: 14, color: Colors.grey),
                                 overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3.0),
+                              child: InkWell(
+                                onTap: () {
+                                  showPackageInfo();
+                                },
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Center(
+                                      child: Text(
+                                          "${packageInfo[currentIndex]["ProductdetailName"]}",
+                                          style: TextStyle(fontSize: 10)),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(4.0)),
+                                      border: Border.all(
+                                          width: 1, color: Colors.grey)),
+                                ),
                               ),
                             ),
                             Padding(
@@ -93,7 +211,7 @@ class _SetFilterComponentState extends State<SetFilterComponent> {
                                     children: <TextSpan>[
                                       TextSpan(
                                         text:
-                                            "${Inr_Rupee + widget.setfilter["ProductMrp"]}",
+                                            "${Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"]}",
                                         style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 14,
@@ -104,14 +222,15 @@ class _SetFilterComponentState extends State<SetFilterComponent> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
+                              padding: const EdgeInsets.only(top: 5.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                       "${Inr_Rupee}" +
-                                          "${widget.setfilter["ProductSrp"]}",
+                                          packageInfo[currentIndex]
+                                              ["ProductdetailSRP"],
                                       // " ${Inr_Rupee + widget.product["ProductSrp"]}",
                                       style: TextStyle(
                                           fontSize: 17, color: Colors.black)),
@@ -126,16 +245,25 @@ class _SetFilterComponentState extends State<SetFilterComponent> {
                                         },
                                         color: Colors.redAccent,
                                         child: iscartLoading
-                                            ? LoadingComponent()
-                                            : iscartlist == true
+                                            ? Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                child: Center(
+                                                    child: SpinKitCircle(
+                                                  color: Colors.white,
+                                                  size: 25,
+                                                )),
+                                              )
+                                            /*  : iscartlist == true
                                                 ? Text('Added',
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 14))
-                                                : Text('Add',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 14)),
+                                                        fontSize: 14))*/
+                                            : Text('Add',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14)),
                                       ),
                                     ),
                                   ),
