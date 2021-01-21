@@ -163,10 +163,12 @@ class _MyCartScreenState extends State<MyCartScreen> {
           ? LoadingComponent()
           : cartList.length > 0
               ? SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ListView.separated(
-                          padding: EdgeInsets.only(left: 5, right: 5),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 3.0, right: 3, top: 2),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          padding: EdgeInsets.only(left: 7, right: 7, top: 10),
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) {
@@ -183,12 +185,14 @@ class _MyCartScreenState extends State<MyCartScreen> {
                             );
                           },
                           itemCount: cartList.length,
-                          separatorBuilder: (BuildContext context, int index) =>
-                              Container(
-                                height: 7,
-                                color: Colors.grey[300],
-                              )),
-                    ],
+                          /* separatorBuilder: (BuildContext context, int index) =>
+                                Container(
+                                  height: 7,
+                                  color: Colors.grey[300],
+                                )),*/
+                        ),
+                      ],
+                    ),
                   ),
                 )
               : NoFoundComponent(

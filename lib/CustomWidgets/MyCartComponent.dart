@@ -65,210 +65,227 @@ class _MyCartComponentState extends State<MyCartComponent> {
         //     ],
         //   ),
         // ),
-        Container(
-          height: 120,
-          color: Colors.white,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: widget.cartData["PackInfo"][0]["ProductdetailImages"] !=
-                        ""
-                    ? Image.network(
-                        IMG_URL +
-                            "${widget.cartData["PackInfo"][0]["ProductdetailImages"]}",
-                        width: 120,
-                        height: 120)
-                    : Image.asset("assets/no-image.png",
-                        width: 120, height: 120),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text("${widget.cartData["ProductName"]}",
-                          style: TextStyle(fontSize: 15)),
-                      RichText(
-                        text: TextSpan(
-                            text: 'MRP: ',
-                            style: TextStyle(color: Colors.grey, fontSize: 14),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "${Inr_Rupee}" +
-                                    "${widget.cartData["PackInfo"][0]["ProductdetailMRP"]}",
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                    decoration: TextDecoration.lineThrough),
-                              )
-                            ]),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                                " $Inr_Rupee " +
-                                    "${widget.cartData["PackInfo"][0]["ProductdetailSRP"]}",
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
+        Padding(
+          padding: const EdgeInsets.only(top: 3.0, bottom: 3),
+          child: Container(
+            height: 120,
+            color: Colors.white,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: widget.cartData["PackInfo"][0]["ProductdetailImages"]
+                              [0] !=
+                          ""
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 4.0, bottom: 4),
+                          child: Image.network(
+                            '${IMG_URL + widget.cartData["PackInfo"][0]["ProductdetailImages"][0]}',
+                            width: 100,
+                            height: 120,
+                            /*  IMG_URL +
+                                "${widget.cartData["PackInfo"][0]["ProductdetailImages"][0]}",
+                            width: 120,
+                            height: 120*/
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: Row(
-                              children: [
-                                Qty == 1
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          _removefromcart();
-                                        },
-                                        child: iscartremoveLoading == true
-                                            ? Container(
-                                                width: 30,
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey[300],
-                                                        blurRadius: 2.0,
-                                                      ),
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0),
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color:
-                                                            Colors.red[400])),
-                                                child: Center(
-                                                  child: Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .height,
-                                                    child: Center(
-                                                        child: SpinKitRipple(
-                                                      color: Colors.red[400],
-                                                    )),
+                        )
+                      : Image.asset("assets/no-image.png",
+                          width: 120, height: 120),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text("${widget.cartData["ProductName"]}",
+                            style: TextStyle(fontSize: 15)),
+                        RichText(
+                          text: TextSpan(
+                              text: 'MRP: ',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: "${Inr_Rupee}" +
+                                      "${widget.cartData["PackInfo"][0]["ProductdetailMRP"]}",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      decoration: TextDecoration.lineThrough),
+                                )
+                              ]),
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                  " $Inr_Rupee " +
+                                      "${widget.cartData["PackInfo"][0]["ProductdetailSRP"]}",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Row(
+                                children: [
+                                  Qty == 1
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            _removefromcart();
+                                          },
+                                          child: iscartremoveLoading == true
+                                              ? Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color:
+                                                              Colors.grey[300],
+                                                          blurRadius: 2.0,
+                                                        ),
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.0),
+                                                      border: Border.all(
+                                                          width: 1,
+                                                          color:
+                                                              Colors.red[400])),
+                                                  child: Center(
+                                                    child: Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .height,
+                                                      child: Center(
+                                                          child: SpinKitRipple(
+                                                        color: Colors.red[400],
+                                                      )),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color:
+                                                              Colors.grey[300],
+                                                          blurRadius: 2.0,
+                                                        ),
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4.0),
+                                                      border: Border.all(
+                                                          width: 1,
+                                                          color:
+                                                              Colors.red[400])),
+                                                  child: Center(
+                                                    child: Icon(Icons.delete,
+                                                        color: Colors.red[400],
+                                                        size: 20),
                                                   ),
                                                 ),
-                                              )
-                                            : Container(
-                                                width: 30,
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey[300],
-                                                        blurRadius: 2.0,
-                                                      ),
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0),
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color:
-                                                            Colors.red[400])),
-                                                child: Center(
-                                                  child: Icon(Icons.delete,
-                                                      color: Colors.red[400],
-                                                      size: 20),
-                                                ),
-                                              ),
-                                      )
-                                    : InkWell(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey[300],
-                                                  blurRadius: 2.0,
-                                                ),
-                                              ],
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                              border: Border.all(
-                                                  width: 1,
-                                                  color: Colors.red[400])),
-                                          width: 30,
-                                          height: 30,
-                                          child: Center(
-                                            child: Icon(Icons.remove,
-                                                color: Colors.red[400],
-                                                size: 20),
+                                        )
+                                      : InkWell(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey[300],
+                                                    blurRadius: 2.0,
+                                                  ),
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(4.0),
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: Colors.red[400])),
+                                            width: 30,
+                                            height: 30,
+                                            child: Center(
+                                              child: Icon(Icons.remove,
+                                                  color: Colors.red[400],
+                                                  size: 20),
+                                            ),
                                           ),
+                                          onTap: () {
+                                            remove();
+                                          },
                                         ),
-                                        onTap: () {
-                                          remove();
-                                        },
-                                      ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10.0, right: 10.0),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Text(
-                                        "${Qty}",
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                      isupdateLoading == true
-                                          ? Center(
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 3.5,
-                                                valueColor:
-                                                    new AlwaysStoppedAnimation<
-                                                        Color>(Colors.red[400]),
-                                              ),
-                                            )
-                                          : Container(),
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    add();
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey[300],
-                                            blurRadius: 2.0,
-                                          ),
-                                        ],
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                        border: Border.all(
-                                            width: 1, color: Colors.red[400])),
-                                    width: 30,
-                                    height: 30,
-                                    child: Center(
-                                      child: Icon(Icons.add,
-                                          color: Colors.red[400], size: 20),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10.0, right: 10.0),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Text(
+                                          "${Qty}",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        isupdateLoading == true
+                                            ? Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 3.5,
+                                                  valueColor:
+                                                      new AlwaysStoppedAnimation<
+                                                              Color>(
+                                                          Colors.red[400]),
+                                                ),
+                                              )
+                                            : Container(),
+                                      ],
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    ],
+                                  InkWell(
+                                    onTap: () {
+                                      add();
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey[300],
+                                              blurRadius: 2.0,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(4.0),
+                                          border: Border.all(
+                                              width: 1,
+                                              color: Colors.red[400])),
+                                      width: 30,
+                                      height: 30,
+                                      child: Center(
+                                        child: Icon(Icons.add,
+                                            color: Colors.red[400], size: 20),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ],

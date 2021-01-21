@@ -159,21 +159,25 @@ class _ProductComponentState extends State<ProductComponent> {
             Container(
               color: Colors.white,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(
+                    top: 8.0, bottom: 8, left: 4, right: 8),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     widget.product["PackInfo"][0]["ProductdetailImages"][0] !=
                             ""
-                        ? Image.network(
-                            '${IMG_URL + widget.product["PackInfo"][0]["ProductdetailImages"][0]}',
-                            width: 110,
-                            height: 110,
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Image.network(
+                              '${IMG_URL + widget.product["PackInfo"][0]["ProductdetailImages"][0]}',
+                              width: 120,
+                              height: 120,
+                            ),
                           )
                         : Image.asset(
                             'assets/no-image.png',
-                            width: 110,
-                            height: 110,
+                            width: 120,
+                            height: 120,
                           ),
                     Expanded(
                       child: Padding(
