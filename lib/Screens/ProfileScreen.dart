@@ -995,7 +995,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context,
                       SlideLeftRoute(
                           page: TearmsCon(
-                        tearmscondition: getaddressList[0]
+                        tearmscondition: generaldatalist[0]
                             ["SettingTermsConditionURL"],
                         title: "Tearms & Condition",
                       )));

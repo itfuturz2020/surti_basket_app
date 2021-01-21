@@ -1,10 +1,13 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
+import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/Screens/RegistrationScreen.dart';
 import 'package:flutter/services.dart';
 
@@ -20,15 +23,23 @@ class VerificationScreen extends StatefulWidget {
 
 class _VerificationScreenState extends State<VerificationScreen> {
   bool isLoading = false;
+  bool isFCMtokenLoading = false;
   String rndnumber;
   TextEditingController txtOTP = new TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String _verificationId;
+  String fcmToken;
 
   @override
   void initState() {
     _onVerifyCode();
-    log("->>>>" + widget.logindata.toString());
+    _firebaseMessaging.getToken().then((token) {
+      setState(() {
+        fcmToken = token;
+      });
+      print('----------->' + '${token}');
+    });
   }
 
   void _onVerifyCode() async {
@@ -41,7 +52,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
           print(value.user);
           if (widget.logindata != null) {
             log("OTP sent successfully");
-            widget.onLoginSuccess();
+            _updateFCMtoken();
+            //widget.onLoginSuccess();
           } else {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
@@ -316,5 +328,35 @@ class _VerificationScreenState extends State<VerificationScreen> {
         ),
       ),
     );
+  }
+
+  _updateFCMtoken() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isFCMtokenLoading = true;
+        });
+        var body = {"mobile": "${widget.mobile}", "fcmToken": "${fcmToken}"};
+
+        Services.postForSave(apiname: 'signIn', body: body).then(
+            (response) async {
+          if (response.IsSuccess == true && response.Data == "1") {
+            setState(() {
+              isFCMtokenLoading = false;
+            });
+            widget.onLoginSuccess();
+          }
+        }, onError: (e) {
+          setState(() {
+            isFCMtokenLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
   }
 }
