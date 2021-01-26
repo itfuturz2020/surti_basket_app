@@ -359,7 +359,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   )
                 : Container(),
-            provider.settingList[0]["SettingShowOnlinePayment"] == false
+            provider.settingList[0]["SettingShowOnlinePayment"] == true
                 ? Column(
                     children: [
                       Container(
