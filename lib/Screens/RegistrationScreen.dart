@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,19 +26,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   var _emailController = new TextEditingController();
   var _phonenumberController = new TextEditingController();
   final _formkey = new GlobalKey<FormState>();
+  bool isFCMtokenLoading = false;
+  String fcmToken;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   List Registrationdata = [];
   bool isLoading = false;
 
   @override
   void initState() {
-    setState(() {
-      _phonenumberController.text = widget.Mobile;
+    _firebaseMessaging.getToken().then((token) {
+      setState(() {
+        _phonenumberController.text = widget.Mobile;
+        fcmToken = token;
+        print('----------->' + '${token}');
+      });
     });
 
     print(_phonenumberController.text);
     super.initState();
   }
+  //  _firebaseMessaging.getToken().then((token) {
+  //       setState(() {
+  //         fcmToken = token;
+  //       });
+  //       print('----------->' + '${token}');
+  //     });
 
   saveDataToSession(var data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -343,6 +357,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             "CustomerName": _fullnameController.text,
             "CustomerEmailId": _emailController.text,
             "CustomerPhoneNo": _phonenumberController.text.toString(),
+            "CutomerFCMToken": "${fcmToken}"
           });
           Services.postforlist(apiname: 'addCustomer', body: body).then(
               (responselist) async {

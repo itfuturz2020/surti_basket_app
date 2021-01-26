@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -31,6 +32,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   String CustomerId,
+      CustomerEmailId,
       CustomerName,
       Customerphone,
       AddressId,
@@ -50,6 +52,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   List priceList = [];
   bool isPincodeChecking = false;
   List specificationList = [];
+  int amount;
   TextEditingController pincode = new TextEditingController();
 
   getlocaldata() async {
@@ -60,6 +63,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       CustomerId = preferences.getString(Session.customerId);
       CustomerName = preferences.getString(Session.CustomerName);
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
+      CustomerEmailId = preferences.getString(Session.CustomerEmailId);
       //From Provider
       AddressId = addressProvider.addressList[0]["AddressId"];
       AddressHouseNo = addressProvider.addressList[0]["AddressHouseNo"];
@@ -122,13 +126,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
   }
 
-  void openPaymentGateway() async {
+  void openPaymentGateway(var amount) async {
+    print("---------------------*******-------${amount}");
+    int finalamount = amount * 100;
     var options = {
       'key': 'rzp_live_XCxat4CzDhDGNj',
-      'amount': 100,
-      'name': 'Keval',
+      'amount': finalamount,
+      'name': '${CustomerName}',
       'description': '-Shopping',
-      'prefill': {'contact': '9429828152', 'email': 'kevaltech9teen@gmail.com'},
+      'prefill': {'contact': '${Customerphone}', 'email': '${CustomerEmailId}'},
       'external': {
         'wallets': ['paytm']
       }
@@ -353,7 +359,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   )
                 : Container(),
-            provider.settingList[0]["SettingShowOnlinePayment"] == true
+            provider.settingList[0]["SettingShowOnlinePayment"] == false
                 ? Column(
                     children: [
                       Container(
@@ -459,13 +465,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               borderRadius: BorderRadius.circular(5),
                               side: BorderSide(color: Colors.grey[200])),
                           onPressed: () {
-                            _placeOrder();
-                            /* if (PaymentMode == "Online") {
-                              openPaymentGateway();
+                            if (PaymentMode == "Online") {
+                              openPaymentGateway(amount);
                             } else {
-                              displayBottomSheet(context);
-                              //_placeOrder();
-                            }*/
+                              _placeOrder();
+                            }
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -614,6 +618,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
               isLoading = false;
               priceList = responselist;
               specificationList = responselist[2]["tot"];
+              amount = responselist[2]["Total"][0]["total"];
+              log("----------------------->${amount}");
             });
           } else {
             setState(() {

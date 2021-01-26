@@ -52,8 +52,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
           print(value.user);
           if (widget.logindata != null) {
             log("OTP sent successfully");
-            _updateFCMtoken();
-            //widget.onLoginSuccess();
+            // _updateFCMtoken();
+            widget.onLoginSuccess();
           } else {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
@@ -345,7 +345,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
             setState(() {
               isFCMtokenLoading = false;
             });
+            log("----------------------------------->response");
             widget.onLoginSuccess();
+          } else {
+            Fluttertoast.showToast(msg: "something went wrong");
           }
         }, onError: (e) {
           setState(() {

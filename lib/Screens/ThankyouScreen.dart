@@ -16,13 +16,6 @@ class _ThankyouScreenState extends State<ThankyouScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.grey),
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 21),
-            onPressed: () {
-              // Navigator.of(context).pop();
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/HomeScreen', (route) => false);
-            }),
         // title: Row(
         //   children: [
         //     Image.asset(
