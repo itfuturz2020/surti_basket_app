@@ -1,12 +1,11 @@
 import 'dart:io';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
@@ -15,14 +14,10 @@ import 'package:surti_basket_app/CustomWidgets/OfferComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/ProductComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
-import 'package:surti_basket_app/Screens/AddressScreen.dart';
-import 'package:surti_basket_app/Screens/FilterScreen.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/OfferScreen.dart';
 import 'package:surti_basket_app/Screens/ProfileScreen.dart';
-import 'package:surti_basket_app/Screens/PromocodePage.dart';
 import 'package:surti_basket_app/Screens/SearchProductPage.dart';
-import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 

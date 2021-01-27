@@ -58,8 +58,6 @@ PODS:
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
-  - geocoder (0.0.1):
-    - Flutter
   - GoogleDataTransport (7.5.1):
     - nanopb (~> 1.30906.0)
   - GoogleUtilities/AppDelegateSwizzler (6.7.2):
@@ -79,7 +77,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.7.2):
     - GoogleUtilities/Logger
-  - GTMSessionFetcher/Core (1.4.0)
+  - GTMSessionFetcher/Core (1.5.0)
   - location (0.0.1):
     - Flutter
   - nanopb (1.30906.0):
@@ -87,9 +85,9 @@ PODS:
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
-  - PromisesObjC (1.2.10)
-  - Protobuf (3.13.0)
-  - razorpay-pod (1.1.10)
+  - PromisesObjC (1.2.12)
+  - Protobuf (3.14.0)
+  - razorpay-pod (1.1.11)
   - razorpay_flutter (1.1.10):
     - Flutter
     - razorpay-pod
@@ -108,7 +106,6 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
-  - geocoder (from `.symlinks/plugins/geocoder/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - razorpay_flutter (from `.symlinks/plugins/razorpay_flutter/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -146,8 +143,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_statusbarcolor/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
-  geocoder:
-    :path: ".symlinks/plugins/geocoder/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
   razorpay_flutter:
@@ -173,21 +168,20 @@ SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
-  geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
-  GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
-  PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
-  Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
-  razorpay-pod: ee8dc073c65baee8df6e8c4275b1c989bab614a2
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  Protobuf: 0cde852566359049847168e51bd1c690e0f70056
+  razorpay-pod: 968635ba3bed4572f5ea9fe72be705225dcbce48
   razorpay_flutter: 84b3bfd206ae9c9c2a9ba585524a1b3d8102b6c1
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 4a4b189c4ed0b097c3d02b77ce96b67b261f6e5a
 
 COCOAPODS: 1.10.0
