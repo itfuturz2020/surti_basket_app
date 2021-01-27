@@ -11,7 +11,10 @@ import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Screens/LoginScreen.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
+
+import 'AddressScreen.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   @override
@@ -48,30 +51,45 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Icon(
-            Icons.info_outline_rounded,
-            color: Colors.red,
-          ),
           content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              new Text(
-                "Sorry",
-                style: TextStyle(fontSize: 17),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Icon(
+                  Icons.info_outline_rounded,
+                  color: Colors.red,
+                ),
               ),
-              Text("we can deliver on this address"),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  "Sorry",
+                  style: TextStyle(fontSize: 17),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Text("we can deliver on this address"),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0, bottom: 10),
+                child: FlatButton(
+                  child: new Text(
+                    "Cancel",
+                    style: TextStyle(color: appPrimaryMaterialColor),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
             ],
           ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text(
-                "Cancel",
-                style: TextStyle(color: appPrimaryMaterialColor),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+          contentPadding: const EdgeInsets.only(
+            top: 6.0,
+            bottom: 0.0,
+          ),
         );
       },
     );
@@ -239,6 +257,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         side: BorderSide(color: Colors.grey[200])),
                     onPressed: () {
                       _addAddress();
+                      Navigator.push(
+                          context, FadeRoute(page: (AddressScreen())));
                     },
                     child: isAddressLoading == true
                         ? Center(

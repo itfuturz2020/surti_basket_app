@@ -65,16 +65,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
       CustomerEmailId = preferences.getString(Session.CustomerEmailId);
       //From Provider
-      AddressId = addressProvider.addressList[0]["AddressId"];
-      AddressHouseNo = addressProvider.addressList[0]["AddressHouseNo"];
-      AddressPincode = addressProvider.addressList[0]["AddressPincode"];
-      AddressAppartmentName =
-          addressProvider.addressList[0]["AddressAppartmentName"];
-      AddressStreet = addressProvider.addressList[0]["AddressStreet"];
-      AddressLandmark = addressProvider.addressList[0]["AddressLandmark"];
-      AddressArea = addressProvider.addressList[0]["AddressArea"];
-      AddressType = addressProvider.addressList[0]["AddressType"];
-      City = addressProvider.addressList[0]["AddressCityName"];
+      if (AddressId != null) {
+        AddressId = addressProvider.addressList[0]["AddressId"];
+        AddressHouseNo = addressProvider.addressList[0]["AddressHouseNo"];
+        AddressPincode = addressProvider.addressList[0]["AddressPincode"];
+        AddressAppartmentName =
+            addressProvider.addressList[0]["AddressAppartmentName"];
+        AddressStreet = addressProvider.addressList[0]["AddressStreet"];
+        AddressLandmark = addressProvider.addressList[0]["AddressLandmark"];
+        AddressArea = addressProvider.addressList[0]["AddressArea"];
+        AddressType = addressProvider.addressList[0]["AddressType"];
+        City = addressProvider.addressList[0]["AddressCityName"];
+      } else {
+        Fluttertoast.showToast(msg: "Please add address firstly");
+      }
     });
   }
 
@@ -359,7 +363,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   )
                 : Container(),
-            provider.settingList[0]["SettingShowOnlinePayment"] == true
+            provider.settingList[0]["SettingShowOnlinePayment"] == false
                 ? Column(
                     children: [
                       Container(
@@ -466,9 +470,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               side: BorderSide(color: Colors.grey[200])),
                           onPressed: () {
                             if (PaymentMode == "Online") {
-                              openPaymentGateway(amount);
+                              if (AddressId != null) {
+                                openPaymentGateway(amount);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Please add address firstly");
+                              }
                             } else {
-                              _placeOrder();
+                              if (AddressId != null) {
+                                _placeOrder();
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Please add address firstly");
+                              }
                             }
                           },
                           child: Row(

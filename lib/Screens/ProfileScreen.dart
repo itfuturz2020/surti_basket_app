@@ -16,6 +16,7 @@ import 'package:surti_basket_app/Screens/MyOrder.dart';
 import 'package:surti_basket_app/Screens/MyPointScreen.dart';
 import 'package:surti_basket_app/Screens/PromocodePage.dart';
 import 'package:surti_basket_app/Screens/Tearmscondition.dart';
+import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -723,10 +724,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            SlideLeftRoute(
-                                                page: AddressScreen()));
+                                        Navigator.push(context,
+                                            FadeRoute(page: AddressScreen()));
                                       },
                                       child: Padding(
                                         padding:
