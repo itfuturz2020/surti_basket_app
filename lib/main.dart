@@ -16,6 +16,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     MultiProvider(
+
       providers: [
         ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
