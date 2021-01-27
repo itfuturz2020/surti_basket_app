@@ -34,6 +34,15 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>CFBundleURLTypes</key>
+        	<array>
+        		<dict>
+        			<key>CFBundleURLSchemes</key>
+        			<array>
+        				<string>com.googleusercontent.apps.859114356681-e3485l6agcol76cskqgpg2kpep5u1afv</string>
+        			</array>
+        		</dict>
+        	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -49,14 +58,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
-    	<array>
-    		<dict>
-    			<key>CFBundleURLSchemes</key>
-    			<array>
-    				<string>com.googleusercontent.apps.859114356681-857oqjur2g35lckrdie52m72riaemjfk</string>
-    			</array>
-    		</dict>
-    	</array>
+
 </dict>
 </plist>
