@@ -1,13 +1,13 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 

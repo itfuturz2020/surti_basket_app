@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
-import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/MyCartScreen.dart';
 import 'package:surti_basket_app/Screens/OrderTab.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';

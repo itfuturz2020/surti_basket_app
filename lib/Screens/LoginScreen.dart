@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         fcmToken = token;
       });
-      print('----------->' + '${token}');
+      print('--------------++++---------------------->' + '${token}');
     });
   }
 
@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     CartProvider provider = Provider.of<CartProvider>(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -262,6 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
             setState(() {
               isLoading = false;
             });
+            print(responselist);
             if (responselist.length > 0) {
               if (Platform.isIOS) {
                 if (OTPstatus == "0") {

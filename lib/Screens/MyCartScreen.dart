@@ -4,20 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/MyCartComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
-import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/CheckOutPage.dart';
-import 'package:surti_basket_app/Screens/HomeScreen.dart';
-import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class MyCartScreen extends StatefulWidget {
@@ -27,6 +21,7 @@ class MyCartScreen extends StatefulWidget {
 
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
+  bool isBottomLoading = true;
   List cartList = [];
   List priceList = [];
   int Total = 0, Save = 0;
@@ -97,6 +92,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
           });
           if (responselist.length > 0) {
             setState(() {
+              isLoading = false;
               cartList = responselist[0]["Cart"];
               priceList = responselist[1]["carttotal"];
               print(body.fields);
@@ -126,10 +122,11 @@ class _MyCartScreenState extends State<MyCartScreen> {
         Services.postforlist(apiname: 'getCartTotal', body: body).then(
             (responselist) async {
           setState(() {
-            isLoading = false;
+            isBottomLoading = false;
           });
           if (responselist.length > 0) {
             setState(() {
+              isBottomLoading = false;
               priceList = responselist;
               Total = priceList[0]["Total"];
               Save = priceList[0]["Save"];
@@ -139,7 +136,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
           }
         }, onError: (e) {
           setState(() {
-            isLoading = false;
+            isBottomLoading = false;
           });
           print("error on call -> ${e.message}");
           Fluttertoast.showToast(msg: "something went wrong");
@@ -199,48 +196,53 @@ class _MyCartScreenState extends State<MyCartScreen> {
                   ImagePath: 'assets/noProduct.png',
                   Title: 'Your cart is empty',
                   fromWhere: "Cart"),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 2.0,
-          ),
-        ]),
-        height: 70,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 12.0),
-              child: priceList.length > 0
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Rs: ${Total}",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        Text("Saved  Rs. ${Save}"),
-                      ],
-                    )
-                  : Container(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    side: BorderSide(color: Colors.red)),
-                onPressed: () {
-                  Navigator.push(context, SlideLeftRoute(page: CheckoutPage()));
-                },
-                color: Colors.red,
-                textColor: Colors.white,
-                child: Text("Check out".toUpperCase(),
-                    style: TextStyle(fontSize: 14)),
-              ),
-            ),
+      bottomNavigationBar: isBottomLoading == true
+          ? LoadingComponent()
+          : Container(
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 2.0,
+                ),
+              ]),
+              height: 70,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, top: 12.0),
+                    child: priceList.length > 0
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Rs: ${Total}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Text("Saved  Rs. ${Save}"),
+                            ],
+                          )
+                        : Container(),
+                  ),
+                  priceList[0]["Total"] != 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                                side: BorderSide(color: Colors.red)),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  SlideLeftRoute(page: CheckoutPage()));
+                            },
+                            color: Colors.red,
+                            textColor: Colors.white,
+                            child: Text("Check out".toUpperCase(),
+                                style: TextStyle(fontSize: 14)),
+                          ),
+                        )
+                      : Container(),
 /*
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
@@ -265,9 +267,9 @@ class _MyCartScreenState extends State<MyCartScreen> {
               ),
             )
 */
-          ],
-        ),
-      ),
+                ],
+              ),
+            ),
     );
   }
 }

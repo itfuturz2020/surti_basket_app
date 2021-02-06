@@ -11,7 +11,6 @@ import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/NoFoundComponent.dart';
 import 'package:surti_basket_app/Screens/Add_AddressScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
-import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class AddressScreen extends StatefulWidget {
   var Address, fromwehere;
@@ -59,9 +58,7 @@ class _AddressScreenState extends State<AddressScreen> {
                       InkWell(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              FadeRoute(
-                                  page: UpdateProfileScreen()));
+                              context, FadeRoute(page: UpdateProfileScreen()));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

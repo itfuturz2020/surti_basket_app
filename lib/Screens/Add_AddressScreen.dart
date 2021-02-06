@@ -9,10 +9,7 @@ import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
-import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
-import 'package:surti_basket_app/Screens/LoginScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
-import 'package:surti_basket_app/transitions/slide_route.dart';
 
 import 'AddressScreen.dart';
 

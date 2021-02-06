@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TearmsLogin extends StatefulWidget {

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
-import 'package:surti_basket_app/Screens/CheckOutPage.dart';
-import 'package:surti_basket_app/Screens/ProductListing.dart';
 import 'package:surti_basket_app/Screens/SearchProductPage.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 

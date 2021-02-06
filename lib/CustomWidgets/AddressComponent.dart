@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
-import 'package:surti_basket_app/Screens/CheckOutPage.dart';
 import 'package:surti_basket_app/Screens/UpdateAddressScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 

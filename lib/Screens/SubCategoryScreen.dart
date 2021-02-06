@@ -5,9 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
-import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/Common/services.dart';
-import 'package:surti_basket_app/CustomWidgets/CategoryComponent.dart';
+import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/SubCategoryComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
 

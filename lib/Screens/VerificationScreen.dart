@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/Screens/RegistrationScreen.dart';
-import 'package:flutter/services.dart';
 
 class VerificationScreen extends StatefulWidget {
   var mobile, logindata;

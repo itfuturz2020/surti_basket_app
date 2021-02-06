@@ -7,8 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
-import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
-import 'package:surti_basket_app/CustomWidgets/NormalLoadingComponent.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
 
 class MyCartComponent extends StatefulWidget {

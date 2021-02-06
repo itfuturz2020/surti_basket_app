@@ -4,22 +4,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
-import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
-import 'package:surti_basket_app/Providers/Addressprovider.dart';
 import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/AddressScreen.dart';
 import 'package:surti_basket_app/Screens/CheckPincode.dart';
-import 'package:surti_basket_app/Screens/HomeScreen.dart';
 import 'package:surti_basket_app/Screens/ThankyouScreen.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
-import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class CheckoutPage extends StatefulWidget {
   var addressdata;
@@ -363,7 +357,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   )
                 : Container(),
-            provider.settingList[0]["SettingShowOnlinePayment"] == false
+            provider.settingList[0]["SettingShowOnlinePayment"] == true
                 ? Column(
                     children: [
                       Container(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Screens/SubCategoryScreen.dart';
-import 'package:surti_basket_app/transitions/fade_route.dart';
 import 'package:surti_basket_app/transitions/slide_route.dart';
 
 class CategoryComponent extends StatefulWidget {
