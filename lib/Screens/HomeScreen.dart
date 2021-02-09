@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   LocationData locationData;
   String latitude, longitude;
   String CustomerName;
+  String abc;
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();

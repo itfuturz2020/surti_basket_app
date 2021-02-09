@@ -43,7 +43,7 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Flexible(
-              child: widget.category["SubcategoryImage"] == ""
+              child: widget.category["SubcategoryImage"] != ""
                   ? Image.network(
                       "${IMG_URL + widget.category["SubcategoryImage"]}",
                       width: 70,

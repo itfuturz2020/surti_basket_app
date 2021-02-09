@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:carousel_pro/carousel_pro.dart';
@@ -12,7 +13,9 @@ import 'package:surti_basket_app/CustomWidgets/TitlePattern.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   var categoryId;
+
   SubCategoryScreen({this.categoryId});
+
   @override
   _SubCategoryScreenState createState() => _SubCategoryScreenState();
 }
@@ -109,7 +112,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         var data =
             FormData.fromMap({"CategoryId": "${widget.categoryId.toString()}"});
-        print("CategoryId");
+        log("CategoryId==========${widget.categoryId.toString()}");
         setState(() {
           isLoading = true;
         });
