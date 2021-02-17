@@ -303,7 +303,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         setState(() {
           latitude = locationData.latitude.toString();
           longitude = locationData.longitude.toString();
+          isLoading = false;
         });
+
         print("---------------->" + "${latitude}" + " " + "${longitude}");
       }
     } catch (e) {
@@ -410,9 +412,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         Services.postforlist(apiname: 'getCity').then((responselist) async {
-          setState(() {
-            isLoading = false;
-          });
           if (responselist.length > 0) {
             setState(() {
               _City = responselist;
@@ -420,6 +419,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             _getLocation();
             print(_City);
           } else {
+            setState(() {
+              isLoading = false;
+            });
             Fluttertoast.showToast(msg: "No City Found!");
           }
         }, onError: (e) {
