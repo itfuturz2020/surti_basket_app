@@ -337,47 +337,92 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ],
                 )
               : NoFoundComponent(),
-      bottomNavigationBar: Container(
-        height: 50,
-        color: Colors.red[400],
-        child: GestureDetector(
-          onTap: () {
-            _addTocart();
-            /* if (provider.cartIdList.contains(int.parse(widget.productId))) {
+      bottomNavigationBar: isLoading == true
+          ? LoadingComponent()
+          : "${packageInfo[currentIndex]["ProductdetailProductShow"]}" == "1"
+              ? Container(
+                  height: 50,
+                  color: Colors.red[400],
+                  child: GestureDetector(
+                    onTap: () {
+                      //  _addTocart();
+                      /* if (provider.cartIdList.contains(int.parse(widget.productId))) {
               Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
             } else {
 
             }*/
-          },
-          child: iscartLoading
-              ? Center(
-                  child: SpinKitRipple(
-                  color: Colors.white,
-                ))
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/shoppingcart.png',
-                        width: 26, color: Colors.white),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child:
-                          /*provider.cartIdList
+                    },
+                    child: iscartLoading
+                        ? Center(
+                            child: SpinKitRipple(
+                            color: Colors.white,
+                          ))
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset('assets/shoppingcart.png',
+                                  width: 26, color: Colors.white),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child:
+                                    /*provider.cartIdList
                               .contains(int.parse(widget.productId))
                           ? Text("Already in cart",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold))
                           : */
-                          Text("Add to cart",
+                                    Text(
+                                        "${packageInfo[currentIndex]["ProductdetailMessage"]}",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                              )
+                            ],
+                          ),
+                  ),
+                )
+              : Container(
+                  height: 50,
+                  color: Colors.red[400],
+                  child: GestureDetector(
+                    onTap: () {
+                      _addTocart();
+                      /* if (provider.cartIdList.contains(int.parse(widget.productId))) {
+              Navigator.push(context, SlideLeftRoute(page: MyCartScreen()));
+            } else {
+
+            }*/
+                    },
+                    child: iscartLoading
+                        ? Center(
+                            child: SpinKitRipple(
+                            color: Colors.white,
+                          ))
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset('assets/shoppingcart.png',
+                                  width: 26, color: Colors.white),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child:
+                                    /*provider.cartIdList
+                              .contains(int.parse(widget.productId))
+                          ? Text("Already in cart",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                    )
-                  ],
+                                  fontWeight: FontWeight.bold))
+                          : */
+                                    Text("Add to cart",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                              )
+                            ],
+                          ),
+                  ),
                 ),
-        ),
-      ),
     );
   }
 

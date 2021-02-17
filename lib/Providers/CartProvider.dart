@@ -107,11 +107,9 @@ class CartProvider extends ChangeNotifier {
             {"CustomerId": preferences.getString(Session.customerId)});
         Services.postforlist(apiname: 'getAddress', body: body).then(
             (responselist) async {
-          if (responselist.length > 0) {
-            addressList = responselist;
-            notifyListeners();
-            print(responselist);
-          }
+          addressList = responselist;
+          notifyListeners();
+          print(responselist);
         }, onError: (e) {
           print("error on call -> ${e.message}");
           Fluttertoast.showToast(msg: "something went wrong");

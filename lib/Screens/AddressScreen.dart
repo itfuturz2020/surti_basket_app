@@ -57,7 +57,7 @@ class _AddressScreenState extends State<AddressScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context, FadeRoute(page: UpdateProfileScreen()));
                         },
                         child: Padding(

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/LoadingComponent.dart';
 import 'package:surti_basket_app/CustomWidgets/SearchScreenComponent.dart';
@@ -67,6 +69,14 @@ class _SearchProductPageState extends State<SearchProductPage> {
                 itemBuilder: (BuildContext context, int index) {
                   return SearchScreenComponent(
                     searchdata: searchlist[index],
+                    // onRemove: () {
+                    //   setState(() {
+                    //     searchlist.removeAt(index);
+                    //   });
+                    // },
+                    // onQtyUpdate: () {
+                    //   //   getCartTotal();
+                    // },
                   );
                 },
                 itemCount: searchlist.length,
@@ -80,6 +90,43 @@ class _SearchProductPageState extends State<SearchProductPage> {
             ),
     );
   }
+
+  // getCartTotal() async {
+  //   try {
+  //     final result = await InternetAddress.lookup('google.com');
+  //     SharedPreferences preferences = await SharedPreferences.getInstance();
+  //
+  //     var CustomerId = preferences.getString(Session.customerId);
+  //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+  //
+  //       FormData body = FormData.fromMap({"CustomerId": CustomerId});
+  //       Services.postforlist(apiname: 'getCartTotal', body: body).then(
+  //               (responselist) async {
+  //             setState(() {
+  //               isBottomLoading = false;
+  //             });
+  //             if (responselist.length > 0) {
+  //               setState(() {
+  //                 isBottomLoading = false;
+  //                 priceList = responselist;
+  //                 Total = priceList[0]["Total"];
+  //                 Save = priceList[0]["Save"];
+  //               });
+  //             } else {
+  //               Fluttertoast.showToast(msg: "No Product Found!");
+  //             }
+  //           }, onError: (e) {
+  //         setState(() {
+  //           isBottomLoading = false;
+  //         });
+  //         print("error on call -> ${e.message}");
+  //         Fluttertoast.showToast(msg: "something went wrong");
+  //       });
+  //     }
+  //   } on SocketException catch (_) {
+  //     Fluttertoast.showToast(msg: "No Internet Connection");
+  //   }
+  // }
 
   _getSearching() async {
     try {

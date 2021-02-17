@@ -4,11 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 import 'package:surti_basket_app/CustomWidgets/InputField.dart';
+import 'package:surti_basket_app/Providers/Addressprovider.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 
 import 'AddressScreen.dart';
@@ -253,9 +256,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         borderRadius: BorderRadius.circular(5),
                         side: BorderSide(color: Colors.grey[200])),
                     onPressed: () {
-                      _addAddress();
-                      Navigator.push(
-                          context, FadeRoute(page: (AddressScreen())));
+                      //_addAddress();
+                      _checkPinCode();
                     },
                     child: isAddressLoading == true
                         ? Center(
@@ -309,6 +311,46 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
+  _checkPinCode() async {
+    if (_formKey.currentState.validate()) {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            isAddressLoading = true;
+          });
+          FormData body = FormData.fromMap({"PincodeNo": pincodetxt.text});
+          Services.postForSave(apiname: 'checkPincode', body: body).then(
+              (responseremove) async {
+            if (responseremove.IsSuccess == true &&
+                responseremove.Data != "0") {
+              setState(() {
+                isAddressLoading = false;
+              });
+              _addAddress();
+            } else {
+              setState(() {
+                Fluttertoast.showToast(msg: responseremove.Message);
+                //responseMessage = responseremove.Message;
+                isAddressLoading = false;
+              });
+            }
+          }, onError: (e) {
+            setState(() {
+              isAddressLoading = false;
+            });
+            print("error on call -> ${e.message}");
+            Fluttertoast.showToast(msg: "something went wrong");
+          });
+        }
+      } on SocketException catch (_) {
+        Fluttertoast.showToast(msg: "No Internet Connection");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Please Enter All Fields");
+    }
+  }
+
   _addAddress() async {
     if (_formKey.currentState.validate()) {
       try {
@@ -340,6 +382,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
             if (responseList.IsSuccess == true && responseList.Data == "1") {
               Fluttertoast.showToast(msg: "Address added successfully");
+              //Navigator.push(context, FadeRoute(page: (AddressScreen())));
+              await Provider.of<CartProvider>(context, listen: false)
+                  .getAdressData();
+              Navigator.pushReplacement(
+                  context, FadeRoute(page: (AddressScreen())));
             } else {
               _showDialog(context);
             }

@@ -1,7 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
 
 class AddressProviderData extends ChangeNotifier {
@@ -15,7 +19,13 @@ class AddressProviderData extends ChangeNotifier {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        Services.postforlist(apiname: 'getAddress').then((responselist) async {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+
+        var CustomerId = preferences.getString(Session.customerId);
+        log("Customer Id=============================${CustomerId}");
+        FormData body = FormData.fromMap({"CustomerId": CustomerId});
+        Services.postforlist(apiname: 'getAddress', body: body).then(
+            (responselist) async {
           if (responselist.length > 0) {
             addresslist = responselist;
             notifyListeners();

@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +16,9 @@ import 'package:surti_basket_app/Screens/ProductDetailScreen.dart';
 
 class SearchScreenComponent extends StatefulWidget {
   var searchdata;
-  SearchScreenComponent({this.searchdata});
+  Function onRemove, onQtyUpdate;
+
+  SearchScreenComponent({this.searchdata, this.onQtyUpdate, this.onRemove});
 
   @override
   _SearchScreenComponentState createState() => _SearchScreenComponentState();
@@ -30,6 +34,27 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
   getlocaldata() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     CustomerId = await preferences.getString(Session.customerId);
+  }
+
+  bool iscartremoveLoading = false;
+  bool isupdateLoading = false;
+
+  int Qty = 0;
+
+  void add() {
+    setState(() {
+      Qty++;
+    });
+    _updateCart();
+  }
+
+  void remove() {
+    if (Qty != 0) {
+      setState(() {
+        Qty--;
+      });
+      _updateCart();
+    }
   }
 
   @override
@@ -145,10 +170,33 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     packageInfo[0]["ProductdetailImages"] != ""
-                        ? Image.network(
-                            "${IMG_URL + packageInfo[0]["ProductdetailImages"][0]}",
-                            height: 80,
-                            width: 80)
+                        ? "${packageInfo[currentIndex]["ProductdetailProductShow"]}" ==
+                                "0"
+                            ? Image.network(
+                                "${IMG_URL + packageInfo[0]["ProductdetailImages"][0]}",
+                                height: 80,
+                                width: 80)
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Stack(children: [
+                                  Image.network(
+                                      "${IMG_URL + packageInfo[0]["ProductdetailImages"][0]}",
+                                      height: 80,
+                                      width: 80),
+                                  Container(
+                                    color: Colors.grey[100],
+                                    width: 120,
+                                    height: 120,
+                                    child: Center(
+                                      child: Text(
+                                          "${packageInfo[currentIndex]["ProductdetailMessage"]}",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15)),
+                                    ),
+                                  )
+                                ]),
+                              )
                         : Image.asset("assets/no-image.png",
                             height: 80, width: 80),
                     Expanded(
@@ -202,7 +250,7 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                                     children: <TextSpan>[
                                       TextSpan(
                                         text:
-                                            "${Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"]} ",
+                                            "${Inr_Rupee + packageInfo[currentIndex]["ProductdetailMRP"].toString()} ",
                                         style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 14,
@@ -219,42 +267,90 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                      " ${Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"]}",
+                                      " ${Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"].toString()}",
                                       style: TextStyle(
                                           fontSize: 17, color: Colors.black)),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: SizedBox(
-                                      height: 35,
-                                      width: 75,
-                                      child: FlatButton(
-                                        onPressed: () {
-                                          _addTocart();
-                                        },
-                                        color: Colors.redAccent,
-                                        child: iscartLoading == true
-                                            ? Container(
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                child: Center(
-                                                    child: SpinKitCircle(
-                                                  color: Colors.white,
-                                                  size: 25,
-                                                )),
-                                              )
-                                            /* : iscartlist == true
-                                                ? Text('Added',
-                                                    style: TextStyle(
+                                  "${packageInfo[currentIndex]["ProductdetailProductShow"]}" ==
+                                          "1"
+                                      ? Flexible(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: SizedBox(
+                                              height: 35,
+                                              // width: 75,
+                                              child: FlatButton(
+                                                onPressed: () {
+                                                  //_addTocart();
+                                                  /*if (provider.cartIdList.contains(
+                                                int.parse(widget
+                                                    .product["ProductId"]))) {
+                                              Fluttertoast.showToast(
+                                                  msg: "Already in Cart!");
+                                            } else {
+                                              _addTocart();
+                                            }*/
+                                                },
+                                                color: Colors.redAccent,
+                                                child: iscartLoading == true
+                                                    ? Container(
+                                                        height: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .height,
+                                                        child: Center(
+                                                            child:
+                                                                SpinKitCircle(
+                                                          color: Colors.white,
+                                                          size: 25,
+                                                        )),
+                                                      )
+                                                    :
+                                                    /*provider.cartIdList.contains(
+                                                      int.parse(widget
+                                                          .product["ProductId"]))*/
+                                                    Text(
+                                                        "${packageInfo[currentIndex]["ProductdetailMessage"]}",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15)),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      :
+                                      //Qty == 0
+                                      //     ?
+                                      Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: SizedBox(
+                                            height: 35,
+                                            width: 75,
+                                            child: FlatButton(
+                                              onPressed: () {
+                                                _addTocart();
+                                              },
+                                              color: Colors.redAccent,
+                                              child: iscartLoading == true
+                                                  ? Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .height,
+                                                      child: Center(
+                                                          child: SpinKitCircle(
                                                         color: Colors.white,
-                                                        fontSize: 14))*/
-                                            : Text('Add',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14)),
-                                      ),
-                                    ),
-                                  ),
+                                                        size: 25,
+                                                      )),
+                                                    )
+                                                  : Text('Add',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14)),
+                                            ),
+                                          ),
+                                        )
                                 ],
                               ),
                             ),
@@ -308,6 +404,80 @@ class _SearchScreenComponentState extends State<SearchScreenComponent> {
       }
     } on SocketException catch (_) {
       Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
+  _removefromcart() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          iscartremoveLoading = true;
+        });
+        FormData body =
+            FormData.fromMap({"CartId": "${widget.searchdata["CartId"]}"});
+        Services.postForSave(apiname: '/removeCart', body: body).then(
+            (responseremove) async {
+          if (responseremove.IsSuccess == true && responseremove.Data == "1") {
+            // widget.onRemove();
+            Provider.of<CartProvider>(context, listen: false).decreaseCart(
+                productId: int.parse(widget.searchdata["ProductId"]));
+            setState(() {
+              iscartremoveLoading = false;
+            });
+            //   widget.onQtyUpdate();
+            Fluttertoast.showToast(
+                msg: "Product Removed Successfully",
+                gravity: ToastGravity.BOTTOM);
+          }
+        }, onError: (e) {
+          setState(() {
+            iscartremoveLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "something went wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+//      showMsg("No Internet Connection.");
+    }
+  }
+
+  _updateCart() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isupdateLoading = true;
+        });
+        FormData body = FormData.fromMap(
+            {"CartId": "${widget.searchdata["CartId"]}", "CartQuantity": Qty});
+        Services.postForSave(apiname: 'updateCartQty', body: body).then(
+            (responseList) async {
+          if (responseList.IsSuccess == true && responseList.Data == "1") {
+            setState(() {
+              print("update");
+              isupdateLoading = false;
+            });
+            // widget.onQtyUpdate();
+          } else {
+            setState(() {
+              isupdateLoading = false;
+            });
+            Fluttertoast.showToast(msg: "Something went wrong");
+            //show "data not found" in dialog
+          }
+        }, onError: (e) {
+          setState(() {
+            isupdateLoading = false;
+          });
+          print("error on call -> ${e.message}");
+          Fluttertoast.showToast(msg: "Something Went Wrong");
+        });
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: "No Internet Connection.");
     }
   }
 }

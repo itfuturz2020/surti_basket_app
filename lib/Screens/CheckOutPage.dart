@@ -51,16 +51,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   getlocaldata() async {
     preferences = await SharedPreferences.getInstance();
-    CartProvider addressProvider =
-        Provider.of<CartProvider>(context, listen: false);
     setState(() {
       CustomerId = preferences.getString(Session.customerId);
       CustomerName = preferences.getString(Session.CustomerName);
       Customerphone = preferences.getString(Session.CustomerPhoneNo);
       CustomerEmailId = preferences.getString(Session.CustomerEmailId);
+
       //From Provider
-      if (AddressId != null) {
+      getAddressData();
+    });
+  }
+
+  getAddressData() {
+    CartProvider addressProvider =
+        Provider.of<CartProvider>(context, listen: false);
+    // AddressId = addressProvider.addressList[0]["AddressId"];
+    setState(() {
+      //From Provider
+      // if (AddressId != null) {
+      if (addressProvider.addressList.length > 0) {
         AddressId = addressProvider.addressList[0]["AddressId"];
+        log("===================`${addressProvider.addressList[0]["AddressId"]}");
         AddressHouseNo = addressProvider.addressList[0]["AddressHouseNo"];
         AddressPincode = addressProvider.addressList[0]["AddressPincode"];
         AddressAppartmentName =
@@ -71,6 +82,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         AddressType = addressProvider.addressList[0]["AddressType"];
         City = addressProvider.addressList[0]["AddressCityName"];
       } else {
+        log("===================`Please");
+        AddressId = null;
         Fluttertoast.showToast(msg: "Please add address firstly");
       }
     });
@@ -83,18 +96,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
           builder: (context) => AddressScreen(fromwehere: "Checkout")),
     );
     print(_addressData);
-    setState(() {
-      CustomerId = _addressData["CustomerId"];
-      AddressId = _addressData["AddressId"];
-      AddressHouseNo = _addressData["AddressHouseNo"];
-      AddressAppartmentName = _addressData["AddressAppartmentName"];
-      AddressStreet = _addressData["AddressStreet"];
-      AddressLandmark = _addressData["AddressLandmark"];
-      AddressArea = _addressData["AddressArea"];
-      AddressPincode = _addressData["AddressPincode"];
-      AddressType = _addressData["AddressType"];
-      City = _addressData["AddressCityName"];
-    });
+    if (_addressData == null) {
+      getAddressData();
+    } else {
+      setState(() {
+        CustomerId = _addressData["CustomerId"];
+        AddressId = _addressData["AddressId"];
+        AddressHouseNo = _addressData["AddressHouseNo"];
+        AddressAppartmentName = _addressData["AddressAppartmentName"];
+        AddressStreet = _addressData["AddressStreet"];
+        AddressLandmark = _addressData["AddressLandmark"];
+        AddressArea = _addressData["AddressArea"];
+        AddressPincode = _addressData["AddressPincode"];
+        AddressType = _addressData["AddressType"];
+        City = _addressData["AddressCityName"];
+      });
+    }
     print(AddressId);
   }
 
@@ -173,6 +190,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     CartProvider provider = Provider.of<CartProvider>(context);
+    //  getAddressData();
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(

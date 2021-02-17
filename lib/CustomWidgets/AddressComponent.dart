@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surti_basket_app/Common/Colors.dart';
 import 'package:surti_basket_app/Common/Constant.dart';
 import 'package:surti_basket_app/Common/services.dart';
+import 'package:surti_basket_app/Providers/Addressprovider.dart';
+import 'package:surti_basket_app/Providers/CartProvider.dart';
 import 'package:surti_basket_app/Screens/UpdateAddressScreen.dart';
 import 'package:surti_basket_app/transitions/fade_route.dart';
 
@@ -196,6 +199,8 @@ class _AddressComponentState extends State<AddressComponent> {
             prefs.remove(AddressSession.AddressPincode);
             prefs.remove(AddressSession.City);
             prefs.remove(AddressSession.AddressName);
+            await Provider.of<CartProvider>(context, listen: false)
+                .getAdressData();
             Fluttertoast.showToast(
                 msg: "Address Removed Successfully",
                 gravity: ToastGravity.BOTTOM);

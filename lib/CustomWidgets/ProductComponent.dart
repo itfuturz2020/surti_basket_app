@@ -164,14 +164,38 @@ class _ProductComponentState extends State<ProductComponent> {
                   children: [
                     widget.product["PackInfo"][0]["ProductdetailImages"][0] !=
                             ""
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Image.network(
-                              '${IMG_URL + widget.product["PackInfo"][0]["ProductdetailImages"][0]}',
-                              width: 120,
-                              height: 120,
-                            ),
-                          )
+                        ? "${packageInfo[currentIndex]["ProductdetailProductShow"]}" ==
+                                "0"
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Image.network(
+                                  '${IMG_URL + widget.product["PackInfo"][0]["ProductdetailImages"][0]}',
+                                  width: 120,
+                                  height: 120,
+                                ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Stack(children: [
+                                  Image.network(
+                                    '${IMG_URL + widget.product["PackInfo"][0]["ProductdetailImages"][0]}',
+                                    width: 120,
+                                    height: 120,
+                                  ),
+                                  Container(
+                                    color: Colors.grey[100],
+                                    width: 120,
+                                    height: 120,
+                                    child: Center(
+                                      child: Text(
+                                          "${packageInfo[currentIndex]["ProductdetailMessage"]}",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15)),
+                                    ),
+                                  )
+                                ]),
+                              )
                         : Image.asset(
                             'assets/no-image.png',
                             width: 120,
@@ -245,18 +269,67 @@ class _ProductComponentState extends State<ProductComponent> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                      " ${Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"]}",
+                                      " ${Inr_Rupee + packageInfo[currentIndex]["ProductdetailSRP"].toString()}",
                                       style: TextStyle(
                                           fontSize: 17, color: Colors.black)),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: SizedBox(
-                                      height: 35,
-                                      width: 75,
-                                      child: FlatButton(
-                                        onPressed: () {
-                                          _addTocart();
-                                          /*if (provider.cartIdList.contains(
+                                  "${packageInfo[currentIndex]["ProductdetailProductShow"]}" ==
+                                          "1"
+                                      ? Flexible(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: SizedBox(
+                                              height: 35,
+                                              // width: 75,
+                                              child: FlatButton(
+                                                onPressed: () {
+                                                  //_addTocart();
+                                                  /*if (provider.cartIdList.contains(
+                                                int.parse(widget
+                                                    .product["ProductId"]))) {
+                                              Fluttertoast.showToast(
+                                                  msg: "Already in Cart!");
+                                            } else {
+                                              _addTocart();
+                                            }*/
+                                                },
+                                                color: Colors.redAccent,
+                                                child: iscartLoading == true
+                                                    ? Container(
+                                                        height: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .height,
+                                                        child: Center(
+                                                            child:
+                                                                SpinKitCircle(
+                                                          color: Colors.white,
+                                                          size: 25,
+                                                        )),
+                                                      )
+                                                    :
+                                                    /*provider.cartIdList.contains(
+                                                      int.parse(widget
+                                                          .product["ProductId"]))*/
+                                                    Text(
+                                                        "${packageInfo[currentIndex]["ProductdetailMessage"]}",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15)),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: SizedBox(
+                                            height: 35,
+                                            width: 75,
+                                            child: FlatButton(
+                                              onPressed: () {
+                                                _addTocart();
+                                                /*if (provider.cartIdList.contains(
                                               int.parse(widget
                                                   .product["ProductId"]))) {
                                             Fluttertoast.showToast(
@@ -264,30 +337,31 @@ class _ProductComponentState extends State<ProductComponent> {
                                           } else {
                                             _addTocart();
                                           }*/
-                                        },
-                                        color: Colors.redAccent,
-                                        child: iscartLoading == true
-                                            ? Container(
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                child: Center(
-                                                    child: SpinKitCircle(
-                                                  color: Colors.white,
-                                                  size: 25,
-                                                )),
-                                              )
-                                            :
-                                            /*provider.cartIdList.contains(
+                                              },
+                                              color: Colors.redAccent,
+                                              child: iscartLoading == true
+                                                  ? Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .height,
+                                                      child: Center(
+                                                          child: SpinKitCircle(
+                                                        color: Colors.white,
+                                                        size: 25,
+                                                      )),
+                                                    )
+                                                  :
+                                                  /*provider.cartIdList.contains(
                                                     int.parse(widget
                                                         .product["ProductId"]))*/
-                                            Text('Add',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15)),
-                                      ),
-                                    ),
-                                  ),
+                                                  Text('Add',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15)),
+                                            ),
+                                          ),
+                                        ),
 
                                   // : Padding(
                                   //     padding:
