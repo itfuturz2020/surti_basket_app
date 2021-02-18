@@ -327,6 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AddressStreet,
       AddressLandmark,
       AddressArea,
+      AddressDetail,
       AddressType,
       AddressPincode,
       City;
@@ -342,6 +343,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AddressId = preferences.getString(AddressSession.AddressId);
       AddressHouseNo = preferences.getString(AddressSession.AddressHouseNo);
       AddressPincode = preferences.getString(AddressSession.AddressPincode);
+      AddressDetail = preferences.getString(AddressSession.AddressDetail);
       AddressAppartmentName =
           preferences.getString(AddressSession.AddressAppartmentName);
       AddressStreet = preferences.getString(AddressSession.AddressStreet);
@@ -679,27 +681,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 5.0),
-                                                child: Text(
-                                                    "${AddressHouseNo}" +
-                                                        "," +
-                                                        "${AddressAppartmentName}" +
-                                                        "," +
-                                                        "${AddressStreet}",
-                                                    style: TextStyle(
-                                                      color: Colors.grey[700],
-                                                      fontSize: 14,
-                                                    )),
-                                              ),
+                                              // Padding(
+                                              //   padding: const EdgeInsets.only(
+                                              //       top: 5.0),
+                                              //   child: Text(
+                                              //       "${AddressHouseNo}" +
+                                              //           "," +
+                                              //           "${AddressAppartmentName}" +
+                                              //           "," +
+                                              //           "${AddressStreet}",
+                                              //       style: TextStyle(
+                                              //         color: Colors.grey[700],
+                                              //         fontSize: 14,
+                                              //       )),
+                                              // ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 2.0),
                                                 child: Text(
-                                                    "${AddressLandmark}" +
-                                                        "," +
-                                                        "${AddressArea}",
+                                                    // "${AddressLandmark}" +
+                                                    //     "," +
+                                                    "${AddressArea}"
+                                                            "," +
+                                                        "\n${AddressDetail}",
                                                     style: TextStyle(
                                                       color: Colors.grey[700],
                                                       fontSize: 14,

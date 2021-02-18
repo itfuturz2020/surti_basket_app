@@ -30,7 +30,7 @@ class _UpdateAddressState extends State<UpdateAddress> {
   String SelectedCity;
   Location location = new Location();
   LocationData locationData;
-  String latitude,longitude;
+  String latitude, longitude;
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController houseNotxt = new TextEditingController();
@@ -39,7 +39,7 @@ class _UpdateAddressState extends State<UpdateAddress> {
   TextEditingController landmarkttxt = new TextEditingController();
   TextEditingController areadetailtxt = new TextEditingController();
   TextEditingController pincodetxt = new TextEditingController();
-
+  TextEditingController addDescriptiontxt = new TextEditingController();
 
   @override
   void initState() {
@@ -50,7 +50,8 @@ class _UpdateAddressState extends State<UpdateAddress> {
       landmarkttxt.text = widget.updateaddress["AddressLandmark"];
       areadetailtxt.text = widget.updateaddress["AddressArea"];
       pincodetxt.text = widget.updateaddress["AddressPincode"];
-      SelectedCity=widget.updateaddress["AddressCityName"];
+      SelectedCity = widget.updateaddress["AddressCityName"];
+      addDescriptiontxt.text = widget.updateaddress["AddressDetail"];
       if (widget.updateaddress["AddressType"] == "Home") {
         setState(() {
           selected_Index = 0;
@@ -77,46 +78,46 @@ class _UpdateAddressState extends State<UpdateAddress> {
         child: Form(
             key: _formKey,
             child: Column(children: <Widget>[
-              Row(
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: InputFiled(
-                        controller: houseNotxt,
-                        hintText: "Home/Apt No",
-                        label: "*House No",
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: InputFiled(
-                        controller: apratmenttxt,
-                        hintText: "Apartment Name",
-                        label: "Apartment Name",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: InputFiled(
-                  controller: streettxt,
-                  hintText: "Street details you locate",
-                  label: "Street details you locate",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: InputFiled(
-                  controller: landmarkttxt,
-                  hintText: "Landmark for easy to reach out",
-                  label: "Landmark for easy to reach out",
-                ),
-              ),
+              // Row(
+              //   children: [
+              //     Flexible(
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(4.0),
+              //         child: InputFiled(
+              //           controller: houseNotxt,
+              //           hintText: "Home/Apt No",
+              //           label: "*House No",
+              //         ),
+              //       ),
+              //     ),
+              //     Flexible(
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(4.0),
+              //         child: InputFiled(
+              //           controller: apratmenttxt,
+              //           hintText: "Apartment Name",
+              //           label: "Apartment Name",
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.all(4.0),
+              //   child: InputFiled(
+              //     controller: streettxt,
+              //     hintText: "Street details you locate",
+              //     label: "Street details you locate",
+              //   ),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.all(4.0),
+              //   child: InputFiled(
+              //     controller: landmarkttxt,
+              //     hintText: "Landmark for easy to reach out",
+              //     label: "Landmark for easy to reach out",
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: InputFiled(
@@ -125,27 +126,38 @@ class _UpdateAddressState extends State<UpdateAddress> {
                   label: "*Area Details",
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: InputFiled(
+                  controller: addDescriptiontxt,
+                  hintText: "Add Descriptions",
+                  label: "*Add Descriptions",
+                ),
+              ),
               Row(
                 children: [
                   Flexible(
                     child: Padding(
-                      padding: const EdgeInsets.only(top:13.0,left:12),
-                      child: _City.length > 0 ? DropdownButton(
-                        hint: Text('Please Select City',style: TextStyle(fontSize: 14)),
-                        // Not necessary for Option 1
-                        value: SelectedCity,
-                        onChanged: (newValue) {
-                          setState(() {
-                            SelectedCity = newValue;
-                          });
-                        },
-                        items: _City.map((City) {
-                          return DropdownMenuItem<String>(
-                            child: new Text(City),
-                            value: City,
-                          );
-                        }).toList(),
-                      ):CircularProgressIndicator(),
+                      padding: const EdgeInsets.only(top: 13.0, left: 12),
+                      child: _City.length > 0
+                          ? DropdownButton(
+                              hint: Text('Please Select City',
+                                  style: TextStyle(fontSize: 14)),
+                              // Not necessary for Option 1
+                              value: SelectedCity,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  SelectedCity = newValue;
+                                });
+                              },
+                              items: _City.map((City) {
+                                return DropdownMenuItem<String>(
+                                  child: new Text(City),
+                                  value: City,
+                                );
+                              }).toList(),
+                            )
+                          : CircularProgressIndicator(),
                     ),
                   ),
                   Flexible(
@@ -248,15 +260,18 @@ class _UpdateAddressState extends State<UpdateAddress> {
   }
 
   saveDataToSession() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AddressSession.AddressId, widget.updateaddress["AddressId"].toString());
+    await prefs.setString(
+        AddressSession.AddressId, widget.updateaddress["AddressId"].toString());
     await prefs.setString(AddressSession.AddressHouseNo, houseNotxt.text);
-    await prefs.setString(AddressSession.AddressAppartmentName,apratmenttxt.text);
+    await prefs.setString(AddressSession.AddressDetail, addDescriptiontxt.text);
+    await prefs.setString(
+        AddressSession.AddressAppartmentName, apratmenttxt.text);
     await prefs.setString(AddressSession.AddressStreet, streettxt.text);
     await prefs.setString(AddressSession.AddressLandmark, landmarkttxt.text);
     await prefs.setString(AddressSession.AddressArea, areadetailtxt.text);
-    await prefs.setString(AddressSession.AddressType,_addressTypeList[selected_Index].toString() );
+    await prefs.setString(AddressSession.AddressType,
+        _addressTypeList[selected_Index].toString());
     await prefs.setString(AddressSession.AddressPincode, pincodetxt.text);
     await prefs.setString(AddressSession.City, SelectedCity);
     print(SelectedCity);
@@ -272,16 +287,17 @@ class _UpdateAddressState extends State<UpdateAddress> {
 
         FormData body = FormData.fromMap({
           "AddressId": "${widget.updateaddress["AddressId"]}",
-          "AddressHouseNo": houseNotxt.text,
-          "AddressAppartmentName": apratmenttxt.text,
-          "AddressStreet": streettxt.text,
-          "AddressLandmark": landmarkttxt.text,
+          "AddressHouseNo": "",
+          "AddressAppartmentName": "",
+          "AddressStreet": "",
+          "AddressLandmark": "",
           "AddressArea": areadetailtxt.text,
           "AddressPincode": pincodetxt.text,
           "AddressType": _addressTypeList[selected_Index].toString(),
           "AddressCityName": SelectedCity,
-          "AddressLat": latitude,
-          "AddressLong": longitude,
+          "AddressLat": "",
+          "AddressLong": "",
+          "AddressDetail": addDescriptiontxt.text,
         });
         Services.postForSave(apiname: 'updateAddress', body: body).then(
             (response) async {
@@ -308,10 +324,10 @@ class _UpdateAddressState extends State<UpdateAddress> {
   _getLocation() async {
     try {
       locationData = await location.getLocation();
-      if(locationData != null){
+      if (locationData != null) {
         setState(() {
-          latitude=locationData.latitude.toString();
-          longitude=locationData.longitude.toString();
+          latitude = locationData.latitude.toString();
+          longitude = locationData.longitude.toString();
         });
         print(locationData);
       }
@@ -324,20 +340,19 @@ class _UpdateAddressState extends State<UpdateAddress> {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        Services.postforlist(apiname: 'getCity').then(
-                (responselist) async {
-              setState(() {
-                isLoading = false;
-              });
-              if (responselist.length > 0) {
-                setState(() {
-                  _City = responselist;
-                });
-                print(_City);
-              } else {
-                Fluttertoast.showToast(msg: "No City Found!");
-              }
-            }, onError: (e) {
+        Services.postforlist(apiname: 'getCity').then((responselist) async {
+          setState(() {
+            isLoading = false;
+          });
+          if (responselist.length > 0) {
+            setState(() {
+              _City = responselist;
+            });
+            print(_City);
+          } else {
+            Fluttertoast.showToast(msg: "No City Found!");
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });

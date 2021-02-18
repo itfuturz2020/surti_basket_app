@@ -1,5 +1,3 @@
-
-
 const String API_URL = "http://surti.amohatrendz.in/Admin/Ajax/";
 const String IMG_URL = "http://surti.amohatrendz.in/resources/images/";
 const Inr_Rupee = "₹";
@@ -26,5 +24,6 @@ class AddressSession {
   static const String AddressArea = "AddressArea";
   static const String AddressType = "AddressType";
   static const String AddressPincode = "AddressPincode";
+  static const String AddressDetail = "AddressDetail";
   static const String City = "City";
 }

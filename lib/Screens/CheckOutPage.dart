@@ -36,6 +36,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       AddressStreet,
       AddressLandmark,
       AddressArea,
+      AddressDetail,
       AddressType,
       AddressPincode,
       City;
@@ -79,6 +80,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         AddressStreet = addressProvider.addressList[0]["AddressStreet"];
         AddressLandmark = addressProvider.addressList[0]["AddressLandmark"];
         AddressArea = addressProvider.addressList[0]["AddressArea"];
+        AddressDetail = addressProvider.addressList[0]["AddressDetail"];
         AddressType = addressProvider.addressList[0]["AddressType"];
         City = addressProvider.addressList[0]["AddressCityName"];
       } else {
@@ -108,6 +110,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         AddressLandmark = _addressData["AddressLandmark"];
         AddressArea = _addressData["AddressArea"];
         AddressPincode = _addressData["AddressPincode"];
+        AddressDetail = _addressData["AddressDetail"];
         AddressType = _addressData["AddressType"];
         City = _addressData["AddressCityName"];
       });
@@ -250,13 +253,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             padding: const EdgeInsets.only(
                                 top: 6.0, left: 4.0, bottom: 4.0),
                             child: Text(
-                                "${AddressHouseNo}-" +
-                                    "${AddressAppartmentName}" +
-                                    "," +
-                                    "${AddressStreet}" +
-                                    "\n${AddressLandmark}, " +
-                                    "${AddressArea} ," +
-                                    "${City}-" +
+                                // "${AddressHouseNo}-" +
+                                //     "${AddressAppartmentName}" +
+                                //     "," +
+                                //     "${AddressStreet}" +
+                                //     "\n${AddressLandmark}, " +
+                                "${AddressArea} ," +
+                                    "\n${AddressDetail} ," +
+                                    "\n${City}-" +
                                     "${AddressPincode}",
                                 style: TextStyle(color: Colors.grey[700])),
                           ),

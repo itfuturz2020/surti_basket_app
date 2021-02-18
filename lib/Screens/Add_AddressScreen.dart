@@ -28,6 +28,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController streettxt = new TextEditingController();
   TextEditingController landmarkttxt = new TextEditingController();
   TextEditingController areadetailtxt = new TextEditingController();
+  TextEditingController addDescriptiontxt = new TextEditingController();
   TextEditingController pincodetxt = new TextEditingController();
 
   final List<String> _addressTypeList = ["Home", "Office", "Other"];
@@ -105,52 +106,60 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         child: Form(
             key: _formKey,
             child: Column(children: <Widget>[
-              Row(
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: InputFiled(
-                        controller: houseNotxt,
-                        hintText: "Home/Apt No",
-                        label: "*House No",
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: InputFiled(
-                        controller: apratmenttxt,
-                        hintText: "Apartment Name",
-                        label: "Apartment Name",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: InputFiled(
-                  controller: streettxt,
-                  hintText: "Street details you locate",
-                  label: "Street details you locate",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: InputFiled(
-                  controller: landmarkttxt,
-                  hintText: "Landmark for easy to reach out",
-                  label: "Landmark for easy to reach out",
-                ),
-              ),
+              // Row(
+              //   children: [
+              //     Flexible(
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(4.0),
+              //         child: InputFiled(
+              //           controller: houseNotxt,
+              //           hintText: "Home/Apt No",
+              //           label: "*House No",
+              //         ),
+              //       ),
+              //     ),
+              //     Flexible(
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(4.0),
+              //         child: InputFiled(
+              //           controller: apratmenttxt,
+              //           hintText: "Apartment Name",
+              //           label: "Apartment Name",
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.all(4.0),
+              //   child: InputFiled(
+              //     controller: streettxt,
+              //     hintText: "Street details you locate",
+              //     label: "Street details you locate",
+              //   ),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.all(4.0),
+              //   child: InputFiled(
+              //     controller: landmarkttxt,
+              //     hintText: "Landmark for easy to reach out",
+              //     label: "Landmark for easy to reach out",
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: InputFiled(
                   controller: areadetailtxt,
                   hintText: "Area Details",
                   label: "*Area Details",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: InputFiled(
+                  controller: addDescriptiontxt,
+                  hintText: "Add Descriptions",
+                  label: "*Add Descriptions",
                 ),
               ),
               Row(
@@ -361,16 +370,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           FormData body = FormData.fromMap({
             "CustomerId": prefs.getString(Session.customerId),
-            "AddressHouseNo": houseNotxt.text,
-            "AddressAppartmentName": apratmenttxt.text,
-            "AddressStreet": streettxt.text,
-            "AddressLandmark": landmarkttxt.text,
+            "AddressHouseNo": "",
+            "AddressAppartmentName": "",
+            "AddressStreet": "",
+            "AddressLandmark": "",
             "AddressArea": areadetailtxt.text,
             "AddressType": _addressTypeList[selected_Index].toString(),
             "AddressPincode": pincodetxt.text,
             "AddressCityName": SelectedCity,
-            "AddressLat": latitude,
-            "AddressLong": longitude,
+            "AddressLat": "",
+            "AddressLong": "",
+            "AddressDetail": addDescriptiontxt.text,
           });
           print(body.fields);
           setState(() {

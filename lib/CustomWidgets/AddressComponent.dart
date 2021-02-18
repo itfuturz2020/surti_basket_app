@@ -129,17 +129,23 @@ class _AddressComponentState extends State<AddressComponent> {
                           Text("${CustomerName}",
                               style:
                                   TextStyle(fontSize: 14, color: Colors.grey)),
-                          Text(
-                              "${widget.addressData["AddressHouseNo"]}" +
-                                  " - " +
-                                  "${widget.addressData["AddressAppartmentName"]}",
-                              //"44 , Rambaug Society",
+                          // Text(
+                          //     "${widget.addressData["AddressHouseNo"]}" +
+                          //         " - " +
+                          //         "${widget.addressData["AddressAppartmentName"]}",
+                          //     //"44 , Rambaug Society",
+                          //     style:
+                          //         TextStyle(fontSize: 14, color: Colors.grey)),
+                          // Text(
+                          //     "${widget.addressData["AddressStreet"]}" +
+                          //         " - " +
+                          //         "${widget.addressData["AddressLandmark"]}",
+                          //     style:
+                          //         TextStyle(fontSize: 14, color: Colors.grey)),
+                          Text("${widget.addressData["AddressArea"]}",
                               style:
                                   TextStyle(fontSize: 14, color: Colors.grey)),
-                          Text(
-                              "${widget.addressData["AddressStreet"]}" +
-                                  " - " +
-                                  "${widget.addressData["AddressLandmark"]}",
+                          Text("${widget.addressData["AddressDetail"]}",
                               style:
                                   TextStyle(fontSize: 14, color: Colors.grey)),
                           Text(
