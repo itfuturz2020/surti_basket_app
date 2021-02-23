@@ -46,28 +46,30 @@ class _SubCategoryComponentState extends State<SubCategoryComponent> {
               child: widget.category["SubcategoryImage"] != ""
                   ? Image.network(
                       "${IMG_URL + widget.category["SubcategoryImage"]}",
-                      width: 70,
-                      height: 70,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      fit: BoxFit.fill,
+                      //height: 70,
                     )
                   : Image.asset(
                       'assets/no-image.png',
-                      width: 110,
-                      height: 110,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
                     ),
             ),
             //  packageInfo[0]["ProductdetailImages"] != ""
             //                         ? Image.network(
             //                             "${IMG_URL + packageInfo[0]["ProductdetailImages"][0]}",
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "${widget.category["SubcategoryName"]}",
-                maxLines: 1,
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Text(
+            //     "${widget.category["SubcategoryName"]}",
+            //     maxLines: 1,
+            //     softWrap: true,
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(fontSize: 11),
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:859114356681:android:7e564a6b6e6906e58bb218",
+        "mobilesdk_app_id": "1:859114356681:android:91664b26086cf7e58bb218",
         "android_client_info": {
-          "package_name": "com.surti_basket_app"
+          "package_name": "com.surati_basket_app"
         }
       },
       "oauth_client": [
@@ -30,6 +30,13 @@
             {
               "client_id": "859114356681-uukkts92ubrh650op530mis5lfn2o988.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "859114356681-857oqjur2g35lckrdie52m72riaemjfk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.surtiBasketApp"
+              }
             }
           ]
         }

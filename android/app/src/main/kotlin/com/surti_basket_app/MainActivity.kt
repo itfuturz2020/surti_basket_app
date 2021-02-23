@@ -1,4 +1,4 @@
-package com.surti_basket_app
+package com.surati_basket_app
 
 import io.flutter.embedding.android.FlutterActivity
 

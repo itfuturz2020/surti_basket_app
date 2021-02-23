@@ -11,12 +11,15 @@ class CategoryComponent extends StatefulWidget {
 }
 
 class _CategoryComponentState extends State<CategoryComponent> {
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Navigator.push(context, SlideLeftRoute(page: SubCategoryScreen(categoryId: "${widget.category["CategoryId"]}")));
+      onTap: () {
+        Navigator.push(
+            context,
+            SlideLeftRoute(
+                page: SubCategoryScreen(
+                    categoryId: "${widget.category["CategoryId"]}")));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -31,22 +34,24 @@ class _CategoryComponentState extends State<CategoryComponent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Flexible(
-              child: Image.network(IMG_URL+
-                "${widget.category["CategoryImage"]}",
-                width: 70,
-                height: 70,
+              child: Image.network(
+                IMG_URL + "${widget.category["CategoryImage"]}",
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                fit: BoxFit.fill,
+                // height: 70,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "${widget.category["CategoryName"]}",
-                maxLines: 1,
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Text(
+            //     "${widget.category["CategoryName"]}",
+            //     maxLines: 1,
+            //     softWrap: true,
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(fontSize: 11),
+            //   ),
+            // ),
           ],
         ),
       ),
